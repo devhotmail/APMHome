@@ -4,39 +4,38 @@
                 xmlns:ui="http://java.sun.com/jsf/facelets"
                 xmlns:p="http://primefaces.org/ui"
                 template="/WEB-INF/template.xhtml">
-
     <ui:define name="head">
         <h:outputStylesheet name="css/inspection.css"/>
     </ui:define>
     <ui:define name="content">
         <div class="ui-g clearfix">
             <div class="ui-g-12 card cardTitle">
-                <p:outputLabel class="pageTitle" value="#{msg.InspectionWorkOrder}"/>
+                <p:outputLabel class="pageTitle" value="#{msg.MetrologWorkOrder}"/>
             </div>
 
             <div class="ui-g-12 card">
+
                 <h:form id="InspectionOrderEditForm">
                     <p:fieldset legend="#{msg.BasicInfo}" style="margin-bottom:20px">
                         <p:panelGrid columns="4" layout="grid" styleClass="ui-panelgrid-blank form-group" >
                             <h:panelGroup>
                                 <label class="label">#{msg.name}</label>
-                                <p:inputText id="name" value="#{inspectionOrderController.selected.name}"/>
+                                <p:inputText id="name" value="#{metrologyOrderController.selected.name}"/>
                             </h:panelGroup>
                             <h:panelGroup>
                                 <label class="label">#{msg.creatorName}*</label>
-                                <p:inputText id="creator" value="#{inspectionOrderController.selected.creatorName}"  readonly="true"/>
+                                <p:inputText id="creator" value="#{metrologyOrderController.selected.creatorName}"  readonly="true"/>
                             </h:panelGroup>
                             <h:panelGroup>
                                 <label class="label">#{msg.createTime}*</label>
-                                <p:calendar timeZone="GMT+8"  id="createTime" pattern="yyyy/MM/dd HH:mm" value="#{inspectionOrderController.selected.createTime}" readonly="true" showOn="button" readonlyInput="false" showButtonPanel="true" navigator="true" mask="true"/>
+                                <p:calendar timeZone="GMT+8"  id="createTime" pattern="yyyy/MM/dd HH:mm" value="#{metrologyOrderController.selected.createTime}" readonly="true" showOn="button" readonlyInput="false" showButtonPanel="true" navigator="true" mask="true"/>
                             </h:panelGroup>
                             <h:panelGroup>
                                 <label class="label">#{msg.ownerName}*</label>
-                                <!--<p:inputText id="ownerName" value="#{inspectionOrderController.selected.ownerName}" readonly="true"/>-->
-                                <p:selectOneMenu id="ownerName" value="#{inspectionOrderController.owner}" converter="userAccountConverter"  var="t"  filter="true" filterMatchMode="startsWith"   >
-                                    <p:ajax listener="#{inspectionOrderController.onOwnerChange}" process="@this" update="ownerOrgId"/>
+                                <p:selectOneMenu id="ownerName" value="#{metrologyOrderController.owner}" converter="userAccountConverter"  var="t"  filter="true" filterMatchMode="startsWith"   >
+                                    <p:ajax listener="#{metrologyOrderController.onOwnerChange}" process="@this" update="ownerOrgId"/>
                                     <f:selectItem itemLabel="" />
-                                    <f:selectItems value="#{inspectionOrderController.ownerList}" var="item" itemLabel="#{item.name}" itemValue="#{item}"/>
+                                    <f:selectItems value="#{metrologyOrderController.ownerList}" var="item" itemLabel="#{item.name}" itemValue="#{item}"/>
                                     <p:column>
                                         <h:outputText value="#{t.name}"/>
                                     </p:column>
@@ -47,29 +46,29 @@
                             </h:panelGroup>
                             <h:panelGroup>
                                 <label class="label">#{msg.ownerOrgId}*</label>
-                                <p:inputText id="ownerOrgId" value="#{inspectionOrderController.selected.ownerOrgName}" readonly="true"/>
+                                <p:inputText id="ownerOrgId" value="#{metrologyOrderController.selected.ownerOrgName}" readonly="true"/>
                             </h:panelGroup>
                             <h:panelGroup>
                                 <label class="label">#{msg.startTime}</label>
-                                <p:calendar timeZone="GMT+8"  id="startTime" pattern="yyyy/MM/dd" value="#{inspectionOrderController.selected.startTime}" showOn="button" readonlyInput="false" showButtonPanel="true" navigator="true" mask="true"/>
+                                <p:calendar timeZone="GMT+8"  id="startTime" pattern="yyyy/MM/dd" value="#{metrologyOrderController.selected.startTime}" showOn="button" readonlyInput="false" showButtonPanel="true" navigator="true" mask="true"/>
                             </h:panelGroup>
                             <h:panelGroup>
                                 <label class="label">#{msg.endTime}</label>
-                                <p:calendar timeZone="GMT+8"  id="endTime" pattern="yyyy/MM/dd" value="#{inspectionOrderController.selected.endTime}" showOn="button" readonlyInput="false" showButtonPanel="true" navigator="true" mask="true"/>
+                                <p:calendar timeZone="GMT+8"  id="endTime" pattern="yyyy/MM/dd" value="#{metrologyOrderController.selected.endTime}" showOn="button" readonlyInput="false" showButtonPanel="true" navigator="true" mask="true"/>
                             </h:panelGroup>
 
                             <h:panelGroup>
                                 <label class="label">计划时间*</label>
-                                <p:calendar timeZone="GMT+8"  id="planTime" pattern="yyyy/MM/dd" value="#{inspectionOrderController.selected.planTime}" required="true" requiredMessage="计划时间 #{msg.ValidationRequire}" showOn="button"  Input="false" showButtonPanel="true" navigator="true" mask="true"/>
+                                <p:calendar timeZone="GMT+8"  id="planTime" pattern="yyyy/MM/dd" value="#{metrologyOrderController.selected.planTime}" required="true" requiredMessage="计划时间 #{msg.ValidationRequire}" showOn="button"  Input="false" showButtonPanel="true" navigator="true" mask="true"/>
                             </h:panelGroup>
 
                             <h:panelGroup>
-                                <p:selectBooleanCheckbox id="isFinished" itemLabel="#{msg.isFinished}" value="#{inspectionOrderController.selected.isFinished}"  disabled="true"/>
+                                <p:selectBooleanCheckbox id="isFinished" itemLabel="#{msg.isFinished}" value="#{metrologyOrderController.selected.isFinished}"  disabled="true"/>
                             </h:panelGroup>
 
                             <h:panelGroup>
                                 <label class="label">#{msg.comments}</label>
-                                <p:inputTextarea id="comments" cols="100"  value="#{inspectionOrderController.selected.comments}"/>
+                                <p:inputTextarea id="comments" cols="100"  value="#{metrologyOrderController.selected.comments}"/>
                             </h:panelGroup>
 
                         </p:panelGrid>
@@ -98,17 +97,16 @@
                         </p:dataTable>
                     </p:fieldset>
 
-                    <!--<p:dialog id="InspectionOrderEditDlg" widgetVar="InspectionOrderEditDialog" modal="true" resizable="true" draggable="true" appendTo="@(body)" header="#{inspectionOrderController.CRUDActionName} #{msg.InspectionOrder}">-->
+<!--<p:dialog id="InspectionOrderEditDlg" widgetVar="InspectionOrderEditDialog" modal="true" resizable="true" draggable="true" appendTo="@(body)" header="#{inspectionOrderController.CRUDActionName} #{msg.InspectionOrder}">-->
                     <h:panelGroup id="display">
                         <h:panelGroup >
-                            <p:commandButton value="#{msg.Save}" action="#{inspectionOrderController.updateOrder()}" validateClient="true" style="float:left"/>
-                            <p:commandButton value="#{msg.Return}" action="InspOrderList?faces-redirect=true" immediate="true" style="float:left" icon="ui-icon-arrow-back"/>
+                            <p:commandButton value="#{msg.Save}" action="#{metrologyOrderController.updateOrder()}" validateClient="true" style="float:left"/>
+                            <p:commandButton value="#{msg.Return}" action="MetrologyOrderList?faces-redirect=true" icon="ui-icon-arrow-back" immediate="true" style="float:left"/>  
                         </h:panelGroup>
                     </h:panelGroup>
                 </h:form>
             </div>
         </div>
-
         <!--</p:dialog>-->
 
     </ui:define>

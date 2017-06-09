@@ -1,0 +1,128 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/WEB-INF/template.xhtml"
+                xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+
+
+    <ui:define name="content">
+        <div class="ui-g">
+            <div class="ui-g-12 card cardTitle">
+                <p:outputLabel class="pageTitle" value="#{msg.Import}#{msg.AssetInfo}"/>
+            </div>
+            <div class="ui-g-12 card">
+                <h:form id="importForm">
+                    <p:fieldset  legend="#{msg.ImportAssetDataFile}" id="uploaderContainer">
+
+                        <p:panelGrid columns="1" layout="grid" styleClass="ui-panelgrid-blank form-group" >
+
+                            <h:panelGroup>
+                                <label class="label">#{msg.choseFileToUpload}</label>
+                                <h:outputText   value="#{assetFileImportController.file.fileName}"  rendered="#{not empty assetFileImportController.file}"/>
+                                <p:fileUpload  fileUploadListener="#{assetFileImportController.uploadDataFile}" value="#{assetFileImportController.file}" mode="advanced" dragDropSupport="false" style="width:100%" process="@this"
+                                               multiple="false" sizeLimit="10000000" update="uploaderContainer :importDataForm" auto="true"  invalidSizeMessage="#{msg.invalidSizeMessage}10M"  allowTypes="/(\.|\/)(xls|xlsx)$/" label="#{msg.Add}" rendered="#{empty assetFileImportController.file}" />
+
+                            </h:panelGroup>
+                            <h:panelGroup>
+                                <p>说明</p>
+                                <p>1. <a href="APM_Asset_Template.xlsx" title="download">#{msg.downloadTemplateFile}</a> </p>
+                                <p>2. 文件中填入要导入的资产数据</p>
+                                <p>3. 上传文件进行导入</p>
+                                <!--<p><a href="APM_Asset_Template.xlsx" title="download">#{msg.downloadTemplateFile}</a></p>-->
+
+                            </h:panelGroup>
+                        </p:panelGrid>
+                    </p:fieldset>
+                </h:form>
+            </div>
+            <div class="ui-g-12 card ">
+                <h:form id="importDataForm">
+                    <p:tabView>
+                        <p:tab title="资产导入">
+                            <p:dataTable id="assetTable" value="#{assetFileImportController.importAssetMap.values()}" var="item" rows="10" paginator="true"
+                                         paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                         rowsPerPageTemplate="5,10,15" >
+                                <p:column headerText="#{msg.assetName}" >
+                                    <h:outputText value="#{item.get('asset').name}"/>
+                                </p:column>
+                                <p:column headerText="#{msg.aliasName}"  >
+                                    <h:outputText value="#{item.get('asset').aliasName}"/>
+                                </p:column>
+                                <p:column headerText="#{msg.departNum}"  >
+                                    <h:outputText value="#{item.get('asset').departNum}"/>
+                                </p:column>
+                                <p:column headerText="#{msg.assetOwnerName}"  >
+                                    <h:outputText value="#{item.get('asset').assetOwnerName}"/>
+                                </p:column>
+                                <p:column headerText="#{msg.clinicalDeptName}"  >
+                                    <h:outputText value="#{item.get('asset').clinicalDeptName}"/>
+                                </p:column>
+                                <p:column headerText="#{msg.assetGroup}"  >
+                                    <h:outputText value="#{fieldMsg.fieldValue('assetGroup',item.get('asset').assetGroup)}"/>
+                                </p:column>
+                                <p:column headerText="#{msg.manufacture}"  >
+                                    <h:outputText value="#{item.get('asset').manufacture}"/>
+                                </p:column>
+                                <p:column headerText="#{msg.vendor}"  >
+                                    <h:outputText value="#{item.get('asset').vendor}"/>
+                                </p:column>
+                                <p:column headerText="#{msg.importStatus}" >
+                                    <h:outputText value="#{fieldMsg.fieldValue('importStatus',item.get('status'))}"/><br/>
+                                    <h:outputText value="#{item.get('errmsg')}"/>
+                                </p:column>
+                            </p:dataTable>
+                        </p:tab>
+                        <p:tab title="部门导入">
+                            <p:dataTable  value="#{assetFileImportController.importOrgMap.values()}" var="item" >
+                                <p:column headerText="#{msg.Department}" >
+                                    <h:outputText value="#{item.get('org').name}"/>
+                                </p:column>
+                                <p:column headerText="#{msg.importStatus}" >
+                                    <h:outputText value="#{fieldMsg.fieldValue('importStatus',item.get('status'))}"/>
+                                    <h:outputText value="#{item.get('errmsg')}"/>
+                                </p:column>
+                            </p:dataTable>
+
+                        </p:tab>
+                        <!--                        <p:tab title="人员导入">
+                                                    <p:dataTable  value="#{assetFileImportController.importUserMap.values()}" var="item" >
+                                                        <p:column headerText="#{msg.assetName}"  >
+                                                            <h:outputText value="#{item.get('user').name}"/>
+                                                        </p:column>
+                                                        <p:column headerText="#{msg.telephone}"  >
+                                                            <h:outputText value="#{item.get('user').telephone}"/>
+                                                        </p:column>
+                                                        <p:column headerText="#{msg.orgInfoId}"  >
+                                                            <h:outputText value="#{item.get('org').name}"/>
+                                                        </p:column>
+                                                        <p:column headerText="#{msg.loginName}"  >
+                                                            <h:outputText value="#{item.get('user').loginName}"/>
+                                                        </p:column>
+                                                        <p:column headerText="#{msg.importStatus}" >
+                                                            <h:outputText value="#{item.get('status').toString()}"/>
+                                                        </p:column>
+                                                    </p:dataTable>
+                        
+                                                </p:tab>-->
+                    </p:tabView>
+
+                    <p:panelGrid columns="2" layout="grid" styleClass="ui-panelgrid-blank form-group" >
+
+                        <h:panelGroup>
+                            <p:commandButton validateClient="true" actionListener="#{assetFileImportController.importData()}" value="#{msg.Import}" update=":importDataForm :growl" icon="ui-icon-check" disabled="#{assetFileImportController.isImported}"/>
+                            <p:commandButton validateClient="true"  ajax="false" value="#{msg.Export}" update=" :growl" icon="ui-icon-arrowthick-1-s" onclick="PrimeFaces.monitorDownload(start, stop);" disabled="#{!assetFileImportController.isImported}" rendered="#{assetFileImportController.hasExportData}">
+                                <p:fileDownload value="#{assetFileImportController.exportFile}" />
+                            </p:commandButton>
+                            <p:commandButton immediate="true" value="#{msg.Cancel}" icon="ui-icon-arrow-back" action="assetImport?faces-redirect=true"  update=":growl"/>
+                        </h:panelGroup>
+                    </p:panelGrid>
+                </h:form>
+            </div>
+
+        </div>
+
+    </ui:define>
+
+</ui:composition>

@@ -38,7 +38,6 @@ public class TagSubscriberController extends JpaCRUDController<AssetTagMsgSubscr
     @Override
     protected void init() {
         this.filterBySite =false;
-        
         dao= WebUtil.getBean(AssetTagMsgSubscriberRepository.class);
         assetTagRepository =WebUtil.getBean(AssetTagRepository.class);
         currentUser = UserContextService.getCurrentUserAccount();
@@ -46,10 +45,10 @@ public class TagSubscriberController extends JpaCRUDController<AssetTagMsgSubscr
         i18nMessageRepository = WebUtil.getBean(I18nMessageRepository.class);
         FieldValueMessageController fieldMsg = WebUtil.getBean(FieldValueMessageController.class, "fieldMsg");
         msgModeList = fieldMsg.getFieldValueList("focusOption");
-
         for (I18nMessage local1 : msgModeList) {
             hmMsgMode.put(Integer.parseInt(local1.getMsgKey()), local1.getValue());
         }
+
     }
     public String getTagName(Integer tagId){
         return assetTagRepository.findById(tagId).getName();
@@ -58,6 +57,11 @@ public class TagSubscriberController extends JpaCRUDController<AssetTagMsgSubscr
 
     public String getMsgMode(int msgmode){
         return hmMsgMode.get(msgmode);
+    }
+
+    @Override
+    protected String getActionMessage(String actionName) {
+        return WebUtil.getMessage("标签"+this.getTagName(this.selected.getTagId())+"  "+WebUtil.getMessage(actionName));
     }
 
     @Override
@@ -91,7 +95,6 @@ public class TagSubscriberController extends JpaCRUDController<AssetTagMsgSubscr
     public void prepareEdit() {
         super.prepareEdit();
         assetTags = assetTagRepository.find();
-
     }
 
     @Override

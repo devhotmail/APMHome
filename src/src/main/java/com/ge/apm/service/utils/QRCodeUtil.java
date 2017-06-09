@@ -207,7 +207,7 @@ public class QRCodeUtil {
 //		QRCodeUtil.encode(text, logoFile, "c:/Temp", true);
 
         //    批量生成
-        String srcFolder = "c:/Temp/170516";
+        String srcFolder = "c:/Temp/1706082";
         String[] files = new File(srcFolder).list();
         for (String item : files) {
             System.out.println(item);
@@ -293,7 +293,7 @@ public class QRCodeUtil {
             InputStreamReader read = new InputStreamReader(new FileInputStream(src));
             BufferedReader bufferedReader = new BufferedReader(read);
             String lineTxt = null;
-            int smallCount = 100;
+            int smallCount = 350;
             while ((lineTxt = bufferedReader.readLine()) != null) {
                 System.out.println(lineTxt);
 //                String prefix = UUID.randomUUID().toString();

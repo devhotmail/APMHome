@@ -32,6 +32,7 @@
                             <h:panelGroup>
                                 <label class="label">#{msg.assetGroup}*</label>
                                 <p:selectOneMenu id="assetGroup" value="#{assetInfoController.selected.assetGroup}" required="true" requiredMessage="#{msg.assetGroup} #{msg.ValidationRequire}">
+                                    <p:ajax listener="#{assetInfoController.onAssetGroupChange}" process="@this" update="parentAssetList"/>
                                     <f:selectItem itemLabel="#{msg.selectOneMessage}"/>
                                     <f:selectItems value="#{fieldMsg.getFieldValueList('assetGroup')}" var="item" itemLabel="#{item.value}" itemValue="#{item.msgKey}"/>
                                 </p:selectOneMenu>
@@ -136,6 +137,13 @@
 
                     <p:fieldset  style="margin-bottom:20px">
                         <p:panelGrid columns="4" layout="grid" styleClass="ui-panelgrid-blank form-group" >
+                            <h:panelGroup>
+                                <label class="label">主设备</label>
+                                <p:selectOneMenu id="parentAssetList" value="#{assetInfoController.selected.parentAssetId}" required="false" requiredMessage="#{msg.clinicalOwnerId} #{msg.ValidationRequire}">
+                                    <f:selectItem itemLabel="#{msg.selectOneMessage}"/>
+                                    <f:selectItems value="#{assetInfoController.parentAssetList}" var="item" itemLabel="#{item.name}" itemValue="#{item.id}"/>
+                                </p:selectOneMenu>
+                            </h:panelGroup>
                             <h:panelGroup>
                                 <label class="label">#{msg.systemId}</label>
                                 <p:inputText id="systemId" value="#{assetInfoController.selected.systemId}"/>

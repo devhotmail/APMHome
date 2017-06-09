@@ -542,7 +542,7 @@ INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id)
 INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (1616,'inspectionPeriod','6', '每半年',null,null,-1);
 INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (1617,'inspectionPeriod','7', '每年',null,null,-1);
 
-INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (1621,'depreciationMethodList','1', '平均',null,null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (1621,'depreciationMethodList','1', '平均年限',null,null,-1);
 INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (1622,'depreciationMethodList','2', '加速双倍余额',null,null,-1);
 INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (1623,'depreciationMethodList','3', '加速年限',null,null,-1);
 
@@ -689,6 +689,17 @@ INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id)
 INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (5071,'label','unbundWX','是否解除微信绑定？','unbundWX?',null,-1);
 INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (5072,'label','maxMessageCount','最大消息提醒次数','max message count',null,-1);
 
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (5073,'label','Import','导入','Import',null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (5074,'label','choseFileToUpload','选择文件上传','select one file to upload',null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (5075,'label','downloadTemplateFile','下载模版文件','Download Template File',null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (5076,'label','ImportAssetDataFile','选择文件批量导入','Import Asset Data File',null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (5077,'label','importStatus','导入结果','Import Asset Data File',null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (5078,'importStatus','New','待添加','Will be Added',null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (5079,'importStatus','Exist','已经存在','Already Exist',null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (5080,'importStatus','Created','成功添加','Added',null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (5081,'importStatus','Failure','添加失败','Fail to add',null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (5082,'label','InvalidParameter','错误的参数','Fail to add',null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (5083,'label','ParsingImportFileError','文件不能解析,请检查模版/数据后重新上传','Fail to parse file,please check the tamplate or data!',null,-1);
 
 -- asset head
 

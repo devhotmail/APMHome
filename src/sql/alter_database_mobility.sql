@@ -28,6 +28,7 @@ alter table asset_info add COLUMN system_num4 varchar(32);
 alter table asset_info add COLUMN system_num5 varchar(32);
 
 alter table asset_info add COLUMN is_deleted bool;
+alter table asset_info add COLUMN parent_asset_id int;
 
 create table qr_code_lib(
 id serial not null,
@@ -321,3 +322,5 @@ Alter table user_account add column is_locked bool;	--帐号是否锁定
 
 alter table pm_order add column plan_time timestamp;
 alter table pm_order add column nearest_sr_time timestamp;
+
+alter table inspection_order add column plan_time timestamp;
