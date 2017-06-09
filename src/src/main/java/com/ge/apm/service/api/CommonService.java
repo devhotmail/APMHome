@@ -140,6 +140,15 @@ public class CommonService {
       .cache().toBlocking().single()).getOrElse(ImmutableMap.of());
   }
 
+  @Cacheable(cacheNames = "springCache", key = "'commonService.findSteps'")
+  public Map<Integer, Tuple3<Integer, Integer, String>> findSteps() {
+    return Try.of(() -> db.select(new SQL().SELECT("id", "part_id", "name").FROM("proc_step").toString())
+      .getAs(Integer.class, Integer.class, String.class)
+      .map(t -> Tuple.of(t._1(), t._2(), t._3()))
+      .toMap(Tuple3::_1)
+      .cache().toBlocking().single()).getOrElse(ImmutableMap.of());
+  }
+
   public ResponseEntity.BodyBuilder headerUserProfile(ResponseEntity.BodyBuilder builder, UserAccount user, Map<Integer, Tuple3<Integer, String, String>> hospitals) {
     return builder.header("user-profile", JsonMapper.nonEmptyMapper().toJson(HashMap.empty().put("user.id", user.getId()).put("user.name", user.getName()).put("hospital.name", Option.of(hospitals.get(user.getSiteId())).map(t -> !Strings.isNullOrEmpty(t._3) && t._3.length() > t._2.length() ? t._3 : t._2).getOrElse("")).toJavaMap()));
   }
