@@ -51,7 +51,7 @@
                 #{userContextService.loginUserSiteName}
             </div>
             <div class="profile-name">
-              #{userContextService.hasRole('HospitalHead') ? '' : userContextService.loginUserOrgInfo.name}
+              #{userContextService.hasRole('HospitalHead') or userContextService.hasRole('AssetHead') ? '' : userContextService.loginUserOrgInfo.name}
             </div>
             <div class="profile-name">
               #{userContextService.userName}
