@@ -1759,8 +1759,8 @@ detect-indent@^4.0.0:
     repeating "^2.0.0"
 
 "dew-filterbar@git+https://github.build.ge.com/foundry-sh/dew-filterbar.git":
-  version "2.1.2"
-  resolved "git+https://github.build.ge.com/foundry-sh/dew-filterbar.git#9070f93562c5ac2e3401e13bd6de20581bc0ad2c"
+  version "2.2.0"
+  resolved "git+https://github.build.ge.com/foundry-sh/dew-filterbar.git#63f6b157ea86244a5e5f6a187cb43c567876d8cf"
   dependencies:
     dew-styles "git+https://github.build.ge.com/foundry-sh/dew-styles.git"
 
@@ -1769,8 +1769,8 @@ detect-indent@^4.0.0:
   resolved "git+https://github.build.ge.com/foundry-sh/dew-pager.git#e74d012f918952cb320001a90630752e9a4e0c8f"
 
 "dew-styles@git+https://github.build.ge.com/foundry-sh/dew-styles.git":
-  version "1.0.0"
-  resolved "git+https://github.build.ge.com/foundry-sh/dew-styles.git#d8471eee47b2f8130df45c6af6a973d0868e1b6d"
+  version "1.1.0"
+  resolved "git+https://github.build.ge.com/foundry-sh/dew-styles.git#52d6457b890661c755c61bade677e5e29784c081"
 
 diffie-hellman@^5.0.0:
   version "5.0.2"
