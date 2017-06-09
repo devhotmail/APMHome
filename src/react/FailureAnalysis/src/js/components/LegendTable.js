@@ -42,10 +42,7 @@ let styles = {
   firstCol: {
     textAlign: 'start',
     cursor: 'pointer',
-    opacity: .6,
-    ':hover': {
-      backgroundColor: '#E2E2E2'
-    },
+    opacity: .3,
   },
   centerAlign: {
     textAlign: 'center',
