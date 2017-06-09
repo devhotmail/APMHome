@@ -1,6 +1,7 @@
 // @flow
 import React from 'react'
 import { connect } from 'dva'
+import bowser from 'bowser'
 import withClientRect from '#/HOC/withClientRect'
 import Ring from '#/components/Ring'
 import Gauge from '#/components/Gauge'
@@ -52,18 +53,24 @@ class BubbleChart extends React.PureComponent<*, Props, *> {
     const { width, height } = clientRect
     return (
       <svg viewBox={`0 0 ${width} ${height}`}>
-        <defs>
-          <filter id="drop-shadow" filterUnits="userSpaceOnUse" x="-40%" y="-40%" width="180%" height="180%">
-            <feGaussianBlur in="SourceAlpha" stdDeviation="3" result="blurOut"></feGaussianBlur>
-            <feOffset dx="3" dy="3" result="offsetblur"></feOffset>
-            <feOffset dx="-3" dy="-3" result="offsetblur"></feOffset>
-            <feMerge>
-              <feMergeNode in="BackgroundAlpha"></feMergeNode>
-              <feMergeNode in="SourceGraphic"></feMergeNode>
-              <feMergeNode in="SourceGraphic"></feMergeNode>
-            </feMerge>
-          </filter>
-        </defs>
+        {
+          bowser.msie
+          ?
+          null
+          :
+          <defs>
+            <filter id="drop-shadow" filterUnits="userSpaceOnUse" x="-40%" y="-40%" width="180%" height="180%">
+              <feGaussianBlur in="SourceAlpha" stdDeviation="3" result="blurOut"></feGaussianBlur>
+              <feOffset dx="3" dy="3" result="offsetblur"></feOffset>
+              <feOffset dx="-3" dy="-3" result="offsetblur"></feOffset>
+              <feMerge>
+                <feMergeNode in="BackgroundAlpha"></feMergeNode>
+                <feMergeNode in="SourceGraphic"></feMergeNode>
+                <feMergeNode in="SourceGraphic"></feMergeNode>
+              </feMerge>
+            </filter>
+          </defs>
+        }
         <Ring
           cx={width / 2}
           cy={1.5 * height}
