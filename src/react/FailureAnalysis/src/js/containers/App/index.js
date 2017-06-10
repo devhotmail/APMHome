@@ -138,6 +138,13 @@ export class App extends Component<void, Props, void> {
     }
   }
 
+  isSameDevice(evt) {
+    // id is not a uuid, so also compare name
+    let { id, name } = evt.strips[0].data.key
+    let { selectedId, selectedName } = this.state.selectedDevice
+    return (id === selectedId) && (name === selectedName)
+  }
+
   clickLeftTooth(evt) {
     // 1, central chart: fetch reasons
     let param = {}
@@ -155,7 +162,7 @@ export class App extends Component<void, Props, void> {
     }
     this.props.fetchReasons(param)
     // 2 refresh lengend table
-    if (isFocused) {
+    if (isFocused && this.isSameDevice(evt)) {
       this.hideDevice()
     } else {
       this.showDevice(evt.strips)
@@ -167,7 +174,7 @@ export class App extends Component<void, Props, void> {
 
   clickRightTooth(evt) {
     let isFocused = this.refs.rightChart.isFocused()
-    if (isFocused) {
+    if (isFocused && this.isSameDevice(evt)) {
       this.hideDevice()
     } else {
       this.showDevice(evt.strips)
@@ -181,6 +188,7 @@ export class App extends Component<void, Props, void> {
     const device = {
       show: true,
       name: current.data.key.name,
+      id: current.data.key.id,
       current: {
         'operation_rate': ToPrecentage(current.data.val.avail) ,
         'ftfr': ToPrecentage(current.data.val.ftfr),
