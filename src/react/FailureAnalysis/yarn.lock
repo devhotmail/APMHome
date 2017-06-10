@@ -6744,8 +6744,8 @@ react-dom@^15.5.4:
     prop-types "~15.5.7"
 
 "react-gear-list-chart@git+https://github.build.ge.com/foundry-sh/dew-gear-chart.git":
-  version "0.0.3"
-  resolved "git+https://github.build.ge.com/foundry-sh/dew-gear-chart.git#15430b5a632ba9850a5b5ce6e15bff1a9068f7d8"
+  version "0.0.7"
+  resolved "git+https://github.build.ge.com/foundry-sh/dew-gear-chart.git#af374a7c172bd700834530aba6114a886da80d29"
   dependencies:
     classnames "^2.2.5"
     lodash-es "^4.17.4"
