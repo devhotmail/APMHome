@@ -8,7 +8,6 @@ import SID from 'shortid'
 export function TODO() { throw Error('TODO') }
 
 export function Random(...args) {
-
   if (args[0] === undefined) {
     return Math.random()
   }
@@ -18,7 +17,6 @@ export function Random(...args) {
   if (args.length > 1) {
     return Math.random() * (args[1] - args[0]) + args[0]
   }
-
 }
 
 export function RandomInt(...args) {
