@@ -184,7 +184,8 @@ export class App extends Component<void, Props, void> {
   }
 
   showDevice(strips) {
-    let [ current, lastYear ] = strips
+    let [ current ] = strips
+    let lastYear = strips.lastYear
     const device = {
       show: true,
       name: current.data.key.name,
@@ -383,7 +384,7 @@ const LastYearInidicator = (props, lastYear) => {
   if (lastYearItem === undefined) {
     return null
   }
-
+  current.strips.lastYear = lastYearItem
   let lastYearItemWeight = (current.strips[0].value *  current.strips[0].weight) / lastYearItem.strips[0].value
   let height = (outerRadius - innerRadius) * lastYearItemWeight
 
