@@ -49,11 +49,11 @@ function BriefToothAdapter(array, max, type, lastYear) {
     data: a, 
     mode: 'bar', 
     label: ellipsis(a.key.name, 8),
-    strips: [{color: color, weight: a.val[type] / max, data: a}] 
+    strips: [{color: color, weight: a.val[type] / max, value: a.val[type], data: a}] 
   }))
 }
 
-/* ask designer/BE why about below code*/
+/* ask designer/BE why about below code */
 const MAGIC_NAME = '其它'
 const MAGIC_DATA = { name: MAGIC_NAME }
 
