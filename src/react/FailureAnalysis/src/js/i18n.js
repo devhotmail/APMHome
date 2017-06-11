@@ -20,7 +20,7 @@ i18n
   .use(Cache)
   .use(LanguageDetector)
   .init({
-    fallbackLng: 'en',
+    fallbackLng: 'zh',
     ns: ['common'],
     defaultNS: 'common',
     debug: conf.i18n.debug,
