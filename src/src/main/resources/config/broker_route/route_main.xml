@@ -47,6 +47,10 @@
             <from uri="direct:wxSendMessage"/>
             <wireTap uri="bean:coreService?method=doSendWxTemplateMessage"/>
         </route>
+        <route id="updatePmOrder"  errorHandlerRef="autoRetryErrorHandler">
+            <from uri="direct:updatePmOrder"/>
+            <wireTap uri="bean:pmOrderAggregateService?method=updatePmOrder"/>
+        </route>
 
         <route>
             <from uri="cxf:bean:clinicalDataServiceEndpoint"/>

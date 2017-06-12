@@ -8,6 +8,8 @@ import com.ge.apm.domain.UserAccount;
 import com.ge.apm.view.sysutil.UserContextService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import webapp.framework.broker.SiBroker;
 import webapp.framework.dao.SearchFilter;
 
 import java.time.*;
@@ -15,7 +17,9 @@ import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by 212605082 on 2017/5/18.
@@ -84,6 +88,9 @@ public class PmOrderService {
             Instant endInstant = startLocalDate.atStartOfDay().atZone(zone).toInstant();
             pmOrder.setEndTime(Date.from(endInstant));*/
             pmOrderDao.save(pmOrder);
+            Map<String,Object> param = new HashMap<String,Object>();
+            param.put("assetId", assetInfo.getId());
+            SiBroker.sendMessageWithHeaders("direct:updatePmOrder", null, param);
         }
 
     }

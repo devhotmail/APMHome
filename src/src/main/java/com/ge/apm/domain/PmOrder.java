@@ -109,8 +109,30 @@ public class PmOrder implements Serializable {
     @Column(name = "nearest_sr_time")
     @Temporal(TemporalType.TIMESTAMP)
     private Date nearestSrTime;  //最近的一次报修时间
+    
+    @Column(name = "nearest_days")
+    private Integer nearestDays;//上次保养距今的天数
+    @Column(name = "nearest_pm_id")
+    private Integer nearestPmId;//上次保养的pmOrderId
+    
 
-    public PmOrder() {
+    public Integer getNearestDays() {
+		return nearestDays;
+	}
+
+	public void setNearestDays(Integer nearestDays) {
+		this.nearestDays = nearestDays;
+	}
+
+	public Integer getNearestPmId() {
+		return nearestPmId;
+	}
+
+	public void setNearestPmId(Integer nearestPmId) {
+		this.nearestPmId = nearestPmId;
+	}
+
+	public PmOrder() {
     }
 
     public int getHospitalId() {
