@@ -3,6 +3,7 @@
 package com.ge.apm.domain;
 
 import java.io.Serializable;
+import java.util.UUID;
 import javax.persistence.Basic;
 import javax.persistence.Cacheable;
 import javax.persistence.Column;
@@ -10,6 +11,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.PrePersist;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
@@ -33,6 +35,11 @@ public class SiteInfo implements Serializable {
     @Basic(optional = false)
     @Column(name = "id")
     private Integer id;
+
+    @Column(name = "uid")
+    @Size(max=32)
+    private String uid;
+    
     @Basic(optional = false)
     @NotNull
     @Size(max = 64)
@@ -97,6 +104,21 @@ public class SiteInfo implements Serializable {
         wfAutoStep4 = false;
         wfAutoStep5 = false;
         wfAutoStep6 = false;
+        manhourPrice = 1000.0;
+    }
+
+    @PrePersist
+    public void initializeUid() {
+        if(uid==null)
+            uid = UUID.randomUUID().toString().replace("-", "");
+    }
+    
+    public String getUid() {
+        return uid;
+    }
+
+    public void setUid(String uid) {
+        this.uid = uid;
     }
 
     public Integer getId() {
