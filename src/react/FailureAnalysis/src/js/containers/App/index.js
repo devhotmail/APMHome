@@ -4,13 +4,14 @@ import React, { Component } from 'react'
 import { translate } from 'react-i18next'
 import { connect } from 'react-redux'
 import autobind from 'autobind-decorator'
-import { cloneDeep, memoize, clamp, range } from 'lodash-es'
+import { cloneDeep, memoize, clamp, range, get } from 'lodash-es'
 import { message } from 'antd'
 import EventBus from 'eventbusjs'
 import GearListChart from 'react-gear-list-chart'
 import Header from 'containers/Header'
 import Legend from 'components/Legend'
 import LegendTable from 'components/LegendTable'
+import LastYearMarker from 'components/LastYearMarker'
 import Tooltip from 'dew-tooltip'
 import Pagination from 'components/Pagination'
 import withClientRect from '../../HOC/withClientRect'
@@ -42,24 +43,9 @@ const DisplayOptions = [
   { key: 'display_dept' },
 ]
 
-function mergeItem(current, lastYearDict) {
-  let lastYearItem = lastYearDict[current.data.key.id]
-  if (lastYearItem === undefined) {
-    return current
-  }
-  let copy = cloneDeep(current)
-  copy.strips = copy.strips.concat(cloneDeep(lastYearItem.strips))
-  return copy
-}
-
-function DataOrPlaceHolder(items, lastYearItems, placeholderSize) {
+function DataOrPlaceHolder(items, placeholderSize) {
   // ignore placeholder and empty data
   if (items && items.length && items[0].strips.type !== 'placeholder') {
-    if (lastYearItems && lastYearItems.length) {
-      let dict = {}
-      lastYearItems.forEach(item => dict[item.data.key.id] = item)
-      items = items.map( item => mergeItem(item, dict))
-    }
     return items
   }
   return App.getPlaceholder(placeholderSize)
@@ -70,7 +56,7 @@ function getCurrentPage(skip, top) {
 }
 
 function ensureSize(width, height) {
-  width = clamp(width, 1000, 1500)
+  width = clamp(width, 1000, 1300)
   if (height < 900) {
     width = 1100
   }
@@ -152,6 +138,13 @@ export class App extends Component<void, Props, void> {
     }
   }
 
+  isSameDevice(evt) {
+    // id is not a uuid, so also compare name
+    let { id, name } = evt.strips[0].data.key
+    let { selectedId, selectedName } = this.state.selectedDevice
+    return (id === selectedId) && (name === selectedName)
+  }
+
   clickLeftTooth(evt) {
     // 1, central chart: fetch reasons
     let param = {}
@@ -169,7 +162,7 @@ export class App extends Component<void, Props, void> {
     }
     this.props.fetchReasons(param)
     // 2 refresh lengend table
-    if (isFocused) {
+    if (isFocused && this.isSameDevice(evt)) {
       this.hideDevice()
     } else {
       this.showDevice(evt.strips)
@@ -181,7 +174,7 @@ export class App extends Component<void, Props, void> {
 
   clickRightTooth(evt) {
     let isFocused = this.refs.rightChart.isFocused()
-    if (isFocused) {
+    if (isFocused && this.isSameDevice(evt)) {
       this.hideDevice()
     } else {
       this.showDevice(evt.strips)
@@ -191,10 +184,12 @@ export class App extends Component<void, Props, void> {
   }
 
   showDevice(strips) {
-    let [ current, lastYear ] = strips
+    let [ current ] = strips
+    let lastYear = strips.lastYear
     const device = {
       show: true,
       name: current.data.key.name,
+      id: current.data.key.id,
       current: {
         'operation_rate': ToPrecentage(current.data.val.avail) ,
         'ftfr': ToPrecentage(current.data.val.ftfr),
@@ -330,7 +325,8 @@ export class App extends Component<void, Props, void> {
               onMouseLeave={this.showTooltip}
               clockwise={false}
               clockwiseAnimate={leftClockwise}
-              items={DataOrPlaceHolder(leftItems, lastYear.leftItems, pagination.left.top)} 
+              items={DataOrPlaceHolder(leftItems, pagination.left.top)}
+              extra={renderLastYearData(lastYear.leftItems)} 
               />
             <GearListChart
               id="center-chart"
@@ -339,7 +335,7 @@ export class App extends Component<void, Props, void> {
               margin={8}
               onMouseMove={this.showTooltip}
               onMouseLeave={this.showTooltip}
-              items={DataOrPlaceHolder(centerItems, null, 12)} />
+              items={DataOrPlaceHolder(centerItems, null, 13)} />
             <div id="legend-container">
               <Legend items={Items}>
                 <LegendTable items={ParameterTypes} selectedDevice={selectedDevice.show && selectedDevice} checkBoxes={CheckBoxes}/>
@@ -355,7 +351,9 @@ export class App extends Component<void, Props, void> {
               onMouseMove={this.showTooltip}
               onMouseLeave={this.showTooltip}
               clockwiseAnimate={rightClockwise}
-              items={DataOrPlaceHolder(rightItems, lastYear.rightItems, pagination.right.top)} />
+              items={DataOrPlaceHolder(rightItems, pagination.right.top)}
+              extra={renderLastYearData(lastYear.rightItems)}
+            />
 
           </div>
           { tooltip && <Tooltip mouseX={tooltipX} mouseY={tooltipY} offsetY={-13} anchor="hcb">
@@ -364,7 +362,37 @@ export class App extends Component<void, Props, void> {
         </div>
       </div>
     )
-  } 
+  }
 }
 
+function renderLastYearData(lastYear) {
+  if (!lastYear || !lastYear.length) {
+    return null
+  }
+  return props => LastYearInidicator(props, lastYear)
+}
+
+const LastYearInidicator = (props, lastYear) => {
+  let { innerRadius, outerRadius } = props
+  let current = props.data
+  // create a dict to boost lookup performance. TOOD: do it in converter?
+  if (lastYear.dict === undefined) {
+    lastYear.dict = {}
+    lastYear.forEach(item => lastYear.dict[item.data.key.id] = item)
+  }
+  let lastYearItem = lastYear.dict[get(current, 'data.key.id')]
+  if (lastYearItem === undefined) {
+    return null
+  }
+  current.strips.lastYear = lastYearItem
+  let lastYearItemWeight = (current.strips[0].value *  current.strips[0].weight) / lastYearItem.strips[0].value
+  let height = (outerRadius - innerRadius) * lastYearItemWeight
+
+  return (
+    <LastYearMarker
+      r={props.innerRadius + height}
+      {...props}
+    />
+  )
+}
 export default translate()(withClientRect(App))

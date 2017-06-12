@@ -68,7 +68,7 @@ export class Header extends PureComponent {
   }
 
   render() {
-    let { t, period, filterBy, onFilterChange, onPeriodChange } = this.props
+    let { period, filterBy, onFilterChange, onPeriodChange } = this.props
     return (<nav id="header" className="header level">
 
       <div className="nav-left">
@@ -82,9 +82,6 @@ export class Header extends PureComponent {
             onChange={onPeriodChange}
           />
         </div>
-      </div>
-      <div className="nav-center">
-        <div className="nav-item">{t('filter_by')}</div>
         <div className="nav-item">
           { SelectHelper(filterBy['assettype'], this._filtersAssetType(), onFilterChange('assettype')) }
         </div>
