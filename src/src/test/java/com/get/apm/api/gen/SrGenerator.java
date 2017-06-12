@@ -15,6 +15,7 @@ import java.sql.Date;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
@@ -50,13 +51,13 @@ public class SrGenerator extends AbstractDbTest {
     .VALUES("nearest_sr_days", ":nearest_sr_days")
     .VALUES("nearest_sr_id", ":nearest_sr_id")
     .toString();
-  private Map<Integer, String> users;
+  private List<Tuple2<Integer, String>> users;
   private Map<Integer, String> orgs;
 
   @Before
   public void setUp() throws SQLException {
     super.setUp();
-    users = db.select("select id, login_name from user_account where site_id = :site and hospital_id = :hospital").parameter("site", 1).parameter("hospital", 1).getAs(Integer.class, String.class).toMap(Tuple2::_1, Tuple2::_2).toBlocking().single();
+    users = db.select("select id, login_name from user_account where site_id = :site and hospital_id = :hospital").parameter("site", 1).parameter("hospital", 1).getAs(Integer.class, String.class).toList().toBlocking().single();
     orgs = StreamSupport.stream(findOrgs(1).spliterator(), false).collect(Collectors.toMap(t -> t._1, t -> t._5));
     db.update("delete from v2_service_request").execute();
   }
@@ -66,7 +67,7 @@ public class SrGenerator extends AbstractDbTest {
   public void genSr() {
     db.select(new SQL().SELECT("id", "install_date").FROM("asset_info").ORDER_BY("id").toString()).getAs(Integer.class, Date.class)
       .flatMap(t -> Observable.from(javaslang.collection.List.fill(ThreadLocalRandom.current().nextInt((int) MONTHS.between(t._2().toLocalDate(), LocalDate.now()) / 2, (int) MONTHS.between(t._2().toLocalDate(), LocalDate.now())), () -> t._2().toLocalDate().plusDays(ThreadLocalRandom.current().nextInt(1, (int) DAYS.between(t._2().toLocalDate(), LocalDate.now())))).map(v -> Tuple.of(t._1(), v))))
-      .map(t -> Tuple.of(t._1, t._2, t._2.atTime(9 + ThreadLocalRandom.current().nextInt(0, 3), 0), t._2.atTime(ThreadLocalRandom.current().nextInt(12, 24), 0), ThreadLocalRandom.current().nextInt(0, 99), ThreadLocalRandom.current().nextInt(4, 9), ThreadLocalRandom.current().nextInt(4, 9)))
+      .map(t -> Tuple.of(t._1, t._2, t._2.atTime(9 + ThreadLocalRandom.current().nextInt(0, 3), 0), t._2.atTime(ThreadLocalRandom.current().nextInt(12, 24), 0), ThreadLocalRandom.current().nextInt(0, 99), ThreadLocalRandom.current().nextInt(0, users.size()), ThreadLocalRandom.current().nextInt(4, 9)))
       .sorted((l, r) -> l._3.compareTo(r._3))
       .subscribe(t ->
         db.update(sql)
@@ -79,8 +80,8 @@ public class SrGenerator extends AbstractDbTest {
           .parameter("created_date", t._3.toLocalDate())
           .parameter("case_priority", 1)
           .parameter("request_reason", "")
-          .parameter("requestor_id", t._6)
-          .parameter("requestor_name", users.getOrDefault(t._6, ""))
+          .parameter("requestor_id", users.get(t._6)._1())
+          .parameter("requestor_name", users.get(t._6)._2())
           .parameter("status", 2)
           .parameter("request_time", Timestamp.valueOf(t._3))
           .parameter("confirmed_down_time", Timestamp.valueOf(t._3))

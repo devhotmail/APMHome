@@ -17,6 +17,7 @@ import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
@@ -61,7 +62,7 @@ public class WoGenerator extends AbstractDbTest {
     .SET("current_step_name = :current_step_name")
     .WHERE("id = :id")
     .toString();
-  private Map<Integer, String> users;
+  private List<Tuple2<Integer, String>> users;
   private Map<Integer, String> woSteps;
   private Map<Integer, String> woTypes;
   private Observable<Tuple8<Integer, Integer, Integer, String, Timestamp, Timestamp, Integer, Integer>> srs;
@@ -70,12 +71,12 @@ public class WoGenerator extends AbstractDbTest {
   public void setUp() throws SQLException {
     super.setUp();
     db.update("delete from v2_work_order").execute();
-    users = db.select("select id, login_name from user_account where site_id = :site and hospital_id = :hospital").parameter("site", 1).parameter("hospital", 1).getAs(Integer.class, String.class).toMap(Tuple2::_1, Tuple2::_2).toBlocking().single();
+    users = db.select("select id, login_name from user_account where site_id = :site and hospital_id = :hospital").parameter("site", 1).parameter("hospital", 1).getAs(Integer.class, String.class).toList().toBlocking().single();
     woSteps = StreamSupport.stream(findMsgs(-1, "woSteps").spliterator(), false).collect(Collectors.toMap(t -> Ints.tryParse(t._3), t -> t._4));
     woTypes = StreamSupport.stream(findMsgs(-1, "intExtType").spliterator(), false).collect(Collectors.toMap(t -> Ints.tryParse(t._3), t -> t._4));
     srs = db.select("SELECT site_id, hospital_id, asset_id, id, confirmed_down_time, confirmed_up_time from v2_service_request")
       .getAs(Integer.class, Integer.class, Integer.class, String.class, Timestamp.class, Timestamp.class)
-      .map(t -> Tuple.of(t._1(), t._2(), t._3(), t._4(), t._5(), t._6(), ThreadLocalRandom.current().nextInt(1, 6), ThreadLocalRandom.current().nextInt(2, woSteps.size() + 1)))
+      .map(t -> Tuple.of(t._1(), t._2(), t._3(), t._4(), t._5(), t._6(), ThreadLocalRandom.current().nextInt(0, users.size()), ThreadLocalRandom.current().nextInt(2, woSteps.size() + 1)))
       .cache();
   }
 
@@ -98,8 +99,8 @@ public class WoGenerator extends AbstractDbTest {
       .parameter("asset_id", t._3)
       .parameter("sr_id", t._4)
       .parameter("int_ext_type", ThreadLocalRandom.current().nextInt(1, woTypes.size() + 1))
-      .parameter("current_person_id", t._7)
-      .parameter("current_person_name", users.get(t._7))
+      .parameter("current_person_id", users.get(t._7)._1())
+      .parameter("current_person_name", users.get(t._7)._2())
       .parameter("current_step_id", t._8)
       .parameter("current_step_name", woSteps.get(t._8))
       .parameter("status", 2)
@@ -114,7 +115,7 @@ public class WoGenerator extends AbstractDbTest {
 
     db.select(new SQL().SELECT("site_id", "id", "created_date", "close_time").FROM("v2_work_order").WHERE("site_id = :site").WHERE("hospital_id = :hospital").toString()).parameter("site", 1).parameter("hospital", 1)
       .getAs(Integer.class, Integer.class, Timestamp.class, Timestamp.class)
-      .map(t -> Tuple.of(t._1(), t._2(), t._3(), t._4(), ThreadLocalRandom.current().nextInt(1, 6), ThreadLocalRandom.current().nextInt(2, woSteps.size() + 1)))
+      .map(t -> Tuple.of(t._1(), t._2(), t._3(), t._4(), ThreadLocalRandom.current().nextInt(0, users.size()), ThreadLocalRandom.current().nextInt(2, woSteps.size() + 1)))
       .subscribe((t) -> {
         db.update(wsSql)
           .parameter("id", UUID.randomUUID().toString().replaceAll("-", ""))
@@ -122,8 +123,8 @@ public class WoGenerator extends AbstractDbTest {
           .parameter("wo_id", t._2)
           .parameter("step_id", t._6)
           .parameter("step_name", woSteps.get(t._6))
-          .parameter("owner_id", t._5)
-          .parameter("owner_name", users.get(t._5))
+          .parameter("owner_id", users.get(t._5)._1())
+          .parameter("owner_name", users.get(t._5)._2())
           .parameter("start_time", t._3)
           .parameter("end_time", t._4)
           .returnGeneratedKeys()
