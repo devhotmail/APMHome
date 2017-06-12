@@ -77,9 +77,9 @@ public class ScanService {
   @Cacheable(cacheNames = "springCache", key = "'ScanService.assetDetail.'+#site+'.'+#hospital+'.'+#from+'.'+#to+'.'+#type+'.'+#dept+'.'+#asset+'.'+#part")
   public Observable<Tuple4<Integer, Integer, Integer, Integer>> assetDetail(int site, int hospital, Date from, Date to, Integer type, Integer dept, Integer asset, Integer part) {
     QuerySelect.Builder builder = db.select(new SQL() {{
-      SELECT("l.asset_group", "l.asset_id", "l.part_id", "COALESCE(r.exam_num,0)");
+      SELECT_DISTINCT("l.asset_group", "l.asset_id", "l.part_id", "COALESCE(r.exam_num,0)");
       FROM("(".concat(new SQL() {{
-        SELECT(" ai.id as asset_id", "pm.asset_group", "ai.clinical_dept_id as dept_id", "pm.part_id");
+        SELECT(" ai.id as asset_id", "pm.asset_group", "pm.part_id");
         FROM("asset_info ai");
         JOIN("(select distinct asset_group, part_id from proc_map) as pm on ai.asset_group = pm.asset_group");
         WHERE("ai.site_id = :site");
@@ -132,11 +132,13 @@ public class ScanService {
   @Cacheable(cacheNames = "springCache", key = "'ScanService.stepDetail.'+#site+'.'+#hospital+'.'+#from+'.'+#to+'.'+#type+'.'+#dept+'.'+#asset+'.'+#part+'.'+#step")
   public Observable<Tuple4<Integer, Integer, Integer, Integer>> stepDetail(int site, int hospital, Date from, Date to, Integer type, Integer dept, Integer asset, Integer part, Integer step) {
     QuerySelect.Builder builder = db.select(new SQL() {{
-      SELECT("l.asset_group", "l.part_id", "l.step_id", "COALESCE(r.exam_num,0)");
+      SELECT_DISTINCT("l.asset_group", "l.part_id", "l.step_id", "COALESCE(r.exam_num,0)");
       FROM("(".concat(new SQL() {{
-        SELECT("ai.asset_group", "ai.clinical_dept_id as dept_id", " ai.id as asset_id", "pm.part_id", "pm.step_id");
+        SELECT("ai.asset_group", "ai.id as asset_id", "pm.part_id", "pm.step_id");
         FROM("asset_info ai");
         JOIN("(select distinct asset_group, part_id, step_id from proc_map) as pm on ai.asset_group = pm.asset_group");
+        WHERE("site_id = :site");
+        WHERE("hospital_id = :hospital");
         if (Option.of(type).filter(i -> i > 0).isDefined()) {
           WHERE("ai.asset_group = :type");
         }
