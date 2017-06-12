@@ -74,13 +74,12 @@ public class ScanService {
       .cache();
   }
 
-  //SELECT ai.id as asset_id, pm.asset_group, pm.part_id from asset_info ai join (select distinct asset_group, part_id from proc_map) as pm on ai.asset_group = pm.asset_group
   @Cacheable(cacheNames = "springCache", key = "'ScanService.assetDetail.'+#site+'.'+#hospital+'.'+#from+'.'+#to+'.'+#type+'.'+#dept+'.'+#asset+'.'+#part")
   public Observable<Tuple4<Integer, Integer, Integer, Integer>> assetDetail(int site, int hospital, Date from, Date to, Integer type, Integer dept, Integer asset, Integer part) {
     QuerySelect.Builder builder = db.select(new SQL() {{
       SELECT("l.asset_group", "l.asset_id", "l.part_id", "COALESCE(r.exam_num,0)");
       FROM("(".concat(new SQL() {{
-        SELECT(" ai.id as asset_id", "pm.asset_group", "pm.part_id");
+        SELECT(" ai.id as asset_id", "pm.asset_group", "ai.clinical_dept_id as dept_id", "pm.part_id");
         FROM("asset_info ai");
         JOIN("(select distinct asset_group, part_id from proc_map) as pm on ai.asset_group = pm.asset_group");
         WHERE("ai.site_id = :site");
@@ -135,16 +134,23 @@ public class ScanService {
     QuerySelect.Builder builder = db.select(new SQL() {{
       SELECT("l.asset_group", "l.part_id", "l.step_id", "COALESCE(r.exam_num,0)");
       FROM("(".concat(new SQL() {{
-        SELECT_DISTINCT("asset_group", "part_id", "step_id");
-        FROM("proc_map");
+        SELECT("ai.asset_group", "ai.clinical_dept_id as dept_id", " ai.id as asset_id", "pm.part_id", "pm.step_id");
+        FROM("asset_info ai");
+        JOIN("(select distinct asset_group, part_id, step_id from proc_map) as pm on ai.asset_group = pm.asset_group");
         if (Option.of(type).filter(i -> i > 0).isDefined()) {
-          WHERE("asset_group = :type");
+          WHERE("ai.asset_group = :type");
+        }
+        if (Option.of(dept).filter(i -> i > 0).isDefined()) {
+          WHERE("ai.clinical_dept_id = :dept");
+        }
+        if (Option.of(asset).filter(i -> i > 0).isDefined()) {
+          WHERE("ai.id = :asset");
         }
         if (Option.of(part).filter(i -> i > 0).isDefined()) {
-          WHERE("part_id = :part");
+          WHERE("pm.part_id = :part");
         }
         if (Option.of(step).filter(i -> i > 0).isDefined()) {
-          WHERE("step_id = :step");
+          WHERE("pm.step_id = :step");
         }
       }}.toString()).concat(") as l"));
       LEFT_OUTER_JOIN("(".concat(new SQL() {{
