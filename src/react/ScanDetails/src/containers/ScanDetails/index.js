@@ -36,7 +36,7 @@ class ScanDetails extends React.PureComponent {
         <FilterBar options={filterOptions} onChange={this.onFilterChange}/>
         <Chart />
         {
-          depts.loading || assets.loading || steps.loading
+          assets.loading || steps.loading
           ?
           <Motion
             defaultStyle={{opacity: 0}}
