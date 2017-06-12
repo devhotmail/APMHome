@@ -371,7 +371,6 @@ function renderLastYearData(lastYear) {
   }
   return props => LastYearInidicator(props, lastYear)
 }
-
 const LastYearInidicator = (props, lastYear) => {
   let { innerRadius, outerRadius } = props
   let current = props.data
@@ -385,7 +384,7 @@ const LastYearInidicator = (props, lastYear) => {
     return null
   }
   current.strips.lastYear = lastYearItem
-  let lastYearItemWeight = (current.strips[0].value *  current.strips[0].weight) / lastYearItem.strips[0].value
+  let lastYearItemWeight = (lastYearItem.strips[0].value * current.strips[0].weight) / current.strips[0].value 
   let height = (outerRadius - innerRadius) * lastYearItemWeight
 
   return (
