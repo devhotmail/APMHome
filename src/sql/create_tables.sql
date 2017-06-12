@@ -27,7 +27,7 @@ DROP TABLE IF EXISTS field_code_type CASCADE;
 DROP TABLE IF EXISTS edge_server_info;
 DROP TABLE IF EXISTS asset_contract;
 
-drop table account_application
+drop table if exists account_application;
 CREATE TABLE account_application (
 "id" serial NOT NULL,
 "apply_clinical" varchar(64) ,
@@ -134,7 +134,8 @@ CREATE TABLE "site_info" (
 "wf_auto_step3" bool,
 "wf_auto_step4" bool,
 "wf_auto_step5" bool,
-"wf_auto_step6" bool
+"wf_auto_step6" bool,
+manhour_price float
 );
 
 CREATE TABLE org_info (
@@ -158,7 +159,7 @@ CREATE TABLE "user_account" (
 site_id int4,
 hospital_id int4 not null,
 org_id int4 NOT NULL,
-"login_name" varchar(16) COLLATE "default" DEFAULT NULL::character varying NOT NULL,
+"login_name" varchar(32) COLLATE "default" DEFAULT NULL::character varying NOT NULL,
 "name" varchar(32) COLLATE "default" DEFAULT NULL::character varying NOT NULL,
 pwd_salt varchar(64) not null,
 "password" varchar(255) COLLATE "default" DEFAULT NULL::character varying NOT NULL,

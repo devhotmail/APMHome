@@ -21,7 +21,6 @@ ALTER TABLE asset_clinical_record ADD column original_procedure_name varchar(256
 ALTER TABLE asset_clinical_record ADD column original_procedure_id varchar(32);
 
 ALTER TABLE work_order_step_detail ADD column other_expense float;
-ALTER TABLE site_info ADD column manhour_price float;
 
 truncate table field_code_type;
 INSERT INTO field_code_type (id,msg_type,msg_type_name) VALUES (2,'caseSubType','故障子类别');
