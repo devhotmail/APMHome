@@ -49,6 +49,7 @@ public class HomeAssetStaffDbTest extends AbstractDbTest {
     WHERE("ai.site_id = :site_id");
     WHERE("ai.hospital_id = :hospital_id");
     WHERE("sr.requestor_id = :user_id");
+    WHERE("sr.status != 2");
   }}.toString();
 
   @Test

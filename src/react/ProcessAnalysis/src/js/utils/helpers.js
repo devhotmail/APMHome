@@ -2,7 +2,7 @@
 
 import { sum } from 'lodash-es'
 import COLORS from 'utils/colors'
-import { log } from 'utils/logger'
+import { log, warn } from 'utils/logger'
 import SID from 'shortid'
 import humanizeDuration from 'humanize-duration'
 import i18n from 'js/i18n'
@@ -109,5 +109,11 @@ export function HumanizeDurationLabel(valueInSec, unit = 'h') {
   if (valueInSec === 0) {
     return '0'
   }
-  return humanizeDuration(valueInSec * 1000, { units: [unit], language: LANG })
+  try {
+    return humanizeDuration(valueInSec * 1000, { units: [unit], language: LANG })
+  } catch(e) {
+    warn('Current language: ' + LANG)
+    warn(e)
+    return humanizeDuration(valueInSec * 1000, { units: [unit], language: 'zh_CN' })
+  }
 }

@@ -85,6 +85,7 @@ public class WoScheduleController extends SqlConfigurableChartController {
       WHERE("ai.site_id = ?");
       WHERE("ai.hospital_id = ?");
       WHERE("sr.requestor_id = ?");
+      WHERE("sr.status != 2");
     }}.toString();
     queries.put("mtNum", mtNum);
     queries.put("pmNum", "select count(*) from pm_order po join asset_info ai on po.site_id = ai.site_id and po.hospital_id = ai.hospital_id and po.asset_id = ai.id where ai.is_valid = true and ai.site_id = ? and ai.hospital_id = ? and po.owner_id = ? and po.start_time is not null and po.is_finished = false");
