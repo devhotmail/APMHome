@@ -17,7 +17,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import rx.Observable;
-import rx.math.operators.OperatorMinMax;
 import rx.math.operators.OperatorSum;
 import webapp.framework.web.service.UserContext;
 
@@ -136,7 +135,7 @@ public class StaffApi {
     if (staff_info.isEmpty().toBlocking().single())
       return 0;
     else
-      return OperatorMinMax.max(staff_info.map(staff -> staff.getElement4())).toBlocking().single();
+      return javaslang.collection.List.ofAll(staff_info.map(staff -> staff.getElement4()).toBlocking().toIterable()).max().getOrElse(0);
 
   }
 
@@ -241,7 +240,7 @@ public class StaffApi {
         return OperatorSum.sumIntegers(staff_info.map(staff -> staff.getElement2())).toBlocking().single().doubleValue();
 
       case 3:
-        return OperatorSum.sumDoubles(staff_info.map(staff -> staff.getElement3())).toBlocking().single().doubleValue();
+        return javaslang.collection.List.ofAll(staff_info.map(staff -> staff.getElement3()).toBlocking().toIterable()).average().getOrElse(0D);
 
       case 4:
         return OperatorSum.sumIntegers(staff_info.map(staff -> staff.getElement4())).toBlocking().single().doubleValue();
