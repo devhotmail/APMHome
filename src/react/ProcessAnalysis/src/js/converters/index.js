@@ -1,6 +1,7 @@
 
 import { maxBy, sortBy } from 'lodash-es'
 import colors from 'utils/colors'
+import { ellipsis } from 'utils/helpers'
 import SID from 'shortid'
 
 // TODO, move all these mappers together somewhere
@@ -47,11 +48,10 @@ function ToothAdapter(array, max, type) {
     id: SID.generate(), 
     data: a, 
     mode: 'bar', 
-    label: a.name, 
+    label: ellipsis(a.name, 8), 
     strips: [{color: color, weight: +a[type] / max, data: a}]  // TODO remove +
   }))
 }
-
 
 function getStripColor(type) {
   switch (type) {
