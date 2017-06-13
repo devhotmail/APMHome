@@ -92,8 +92,8 @@ class Steps extends React.PureComponent {
                         <g
                           key={item.data.step.id}
                           style={{cursor: 'pointer'}}
-                          onMouseEnter={e => showTooltip(e, item, this.Tooltip)}
-                          onMouseLeave={e => hideTooltip(e)}
+                          onMouseOver={e => showTooltip(e, item, this.Tooltip)}
+                          onMouseOut={e => hideTooltip(e)}
                         >
                           <AnnulusSectorStack
                             opacity={item.style.progress}
