@@ -141,7 +141,7 @@ export class App extends Component<void, Props, void> {
   isSameDevice(evt) {
     // id is not a uuid, so also compare name
     let { id, name } = evt.strips[0].data.key
-    let { selectedId, selectedName } = this.state.selectedDevice
+    let { id: selectedId, name: selectedName } = this.state.selectedDevice
     return (id === selectedId) && (name === selectedName)
   }
 
