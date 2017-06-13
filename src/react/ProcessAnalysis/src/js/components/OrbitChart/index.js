@@ -44,9 +44,13 @@ function renderLane(balls, radius, cx, cy, color) {
   }
 }
 
+const isIE = window.navigator.userAgent.indexOf('MSIE ') > -1 ||
+             window.navigator.userAgent.indexOf('Trident/') > -1
+
 function trail(cx, cy, r) {
   return (<path 
     className="orbit-trail" fill="none" stroke="gray"
+    style={isIE ? {strokeDashoffset:0} : null}
     d={`M ${cx} ${cy - r} A ${r} ${r} 0 1 1 ${cx - 0.866 * r} ${cy - r/2}`} 
   />)
 }
