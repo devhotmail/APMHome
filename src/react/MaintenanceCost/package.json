@@ -76,6 +76,7 @@
     "webpack-merge": "^4.1.0"
   },
   "dependencies": {
+    "antd": "^2.10.2",
     "react-hot-loader": "3.0.0-beta.6"
   }
 }
