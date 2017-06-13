@@ -1,0 +1,8 @@
+---
+instances: 1
+memory: 128M
+disk_quota: 128M
+buildpack: staticfile_buildpack
+
+applications:
+- name: geapmcfg

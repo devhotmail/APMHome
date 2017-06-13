@@ -1,0 +1,312 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../uri/uri.html">
+<link rel="import" href="../fastclick/fastclick.html"/>
+<link rel="import" href="../modernizr/modernizr.html"/>
+<link rel="import" href="../vh-buggyfill/vh-buggyfill.html"/>
+<link rel="import" href="../../bower_components/px-dropdown/px-dropdown.html">
+<link rel="import" href="../../bower_components/px-dropdown/px-dropdown-content.html">
+<link rel="import" href="../../bower_components/px-rangepicker/px-rangepicker.html">
+<link rel="import" href="../new-bubble-radial-chart/new-bubble-radial-chart.html">
+<link rel="import" href="../groupby-radios/groupby-radios.html">
+<link rel="import" href="../device-perf-type-toggle/device-perf-type-toggle.html">
+<link rel="import" href="../behavior/context.html">
+<link rel="import" href="./device-perf-styles.html">
+
+<style>
+  px-rangepicker .px-datetime-range-field-0 .u-mb.px-datetime-range-field, .px-datetime-range-field-0 .u-mv.px-datetime-range-field {
+    margin-bottom: 0!important;
+  }
+</style>
+
+<dom-module id="device-perf">
+  <template>
+    <style include="device-perf-styles"></style>
+    <div class="tool flex flex--row flex--justify flex--middle">
+      <div class="flex flex--row flex--middle">
+        <device-perf-type-toggle
+          class="u-mr+"
+          active-key="{{reportType}}"
+          list='[{"key": "history", "displayName": "历史"},{ "key": "future", "displayName": "预测"}]'
+        ></device-perf-type-toggle>
+        <template is="dom-if" if="[[_isHistory(reportType)]]">
+          <px-rangepicker
+            hide-time="true"
+            show-bottons="true"
+            block-future-dates="[[_isHistory(reportType)]]"
+            block-past-dates="[[!_isHistory(reportType)]]"
+            date-format="YYYY/MM/DD"
+            show-time-zone="none"
+            range={{range}}
+            preset-ranges=[[presetRanges]]
+          ></px-rangepicker>
+        </template>
+        <template is="dom-if" if="[[!_isHistory(reportType)]]">
+          <div class="date-range">
+            <px-dropdown
+              class="u-mh+"
+              display-value="[[selectedYear]]  "
+              selected-key="{{selectedYear}}">
+              <px-dropdown-content
+                class="px-dropdown-content"
+                max-cont-character-width="10"
+                extend-dropdown="true"
+                extend-dropdown-by="15"
+                items="[[forecastYearList]]">
+              </px-dropdown-content>
+            </px-dropdown>
+          </div>
+        </template>
+      </div>
+      <groupby-radios active-key="{{groupBy}}" list="[[groupByList]]"></groupby-radios>
+    </div>
+    <new-bubble-radial-chart id="chart" query-url="[[queryUrl]]"
+      on-opening-node-l1-changed="handleOpenNode" bubble-config="[[_bubbleConfig]]"></new-bubble-radial-chart>
+  </template>
+  <script>
+    define('device-perf', [
+      'behavior/context'
+    ], function(ContextBehavior) {
+      var gauge_color = d3.scaleOrdinal([
+        'rgba(117, 162, 234, 1)',
+        'rgba(140, 211, 199, 1)',
+        'rgba(204, 185, 92, 1)',
+        'rgba(187, 128, 188, 1)',
+        'rgba(128, 177, 211, 1)',
+        'rgba(184, 188, 128, 1)',
+        'rgba(157, 155, 191, 1)',
+        'rgba(152, 186, 145, 1)'
+      ]);
+      var gauge_fills = d3.scaleOrdinal([
+        'rgb(210, 219, 235)',
+        'rgb(215, 229, 227)',
+        'rgb(228, 224, 204)',
+        'rgb(224, 213, 225)',
+        'rgb(213, 222, 229)',
+        'rgb(224, 225, 213)',
+        'rgb(218, 218, 225)',
+        'rgb(217, 224, 216)'
+      ]);
+
+      // http://browserhacks.com/#hack-2f32c95ac8c021c463de0fdf685acb29
+      function isIE() {
+        return window.navigator.msPointerEnabled;
+      }
+
+      function isHead() {
+        return !!JSON.parse(document.querySelector('#user-context #isHead').value)
+      }
+
+      Polymer({
+        is: 'device-perf',
+        properties: {
+          selectedYear: {
+            type: String,
+            value: moment().year()
+          },
+          forecastYearList: {
+            type: Array,
+            value: function() {
+              var thisYear = moment().year()
+              var res = []
+              for (var i = 0; i < 3; i++) {
+                res.push({
+                  key: thisYear + i,
+                  val: thisYear + i
+                })
+              }
+              return res
+            }
+          },
+          forecastRange: {
+            type: Object,
+            computed: '_computeForecastRange(selectedYear)'
+          },
+          // forecastFrom: {
+          //   type: String,
+          //
+          // },
+          // forecastTo: {
+          //
+          // }
+          // tomorrow: {
+          //   type: String,
+          //   value: moment().add(1, 'd').format('YYYY年M月D日')
+          // },
+          // oneYearAfterTomorrow: {
+          //   type: String,
+          //   value: moment().add(366, 'd').format('YYYY年M月D日')
+          // },
+          reportType: {
+            type: String,
+            value: 'history'
+          },
+          groupByList: {
+            type: Array,
+            value: function() {
+              if (isHead()) {
+                return [
+                  {
+                    key: 'dept',
+                    displayName: '按科室'
+                  },
+                  {
+                    key: 'type',
+                    displayName: '按设备类型'
+                  },
+                  {
+                    key: 'month',
+                    displayName: '按月份'
+                  },
+                  {
+                    key: 'device',
+                    displayName: '按单台设备'
+                  }
+                ]
+              } else {
+                return [
+                  {
+                    key: 'type',
+                    displayName: '按设备类型'
+                  },
+                  {
+                    key: 'month',
+                    displayName: '按月份'
+                  },
+                  {
+                    key: 'device',
+                    displayName: '按单台设备'
+                  }
+                ]
+              }
+            }
+          },
+          // year: Number,
+          groupBy: {
+            type: String,
+            value: function() {
+              if (isHead()) return 'dept'
+              else return 'type'
+            }
+          },
+          queryUrl: {
+            type: String,
+            computed: '_computeQueryUrl(range, groupBy, reportType, forecastRange)'
+          },
+          range: {
+            type: Object,
+            value: {
+              from: moment().subtract(1, 'y'),
+              to: moment().subtract(1, 'd')
+            }
+          },
+          presetRanges: {
+            type: Array,
+            computed: "_computePresetRanges(reportType)"
+          }
+        },
+        behaviors: [
+          ContextBehavior
+        ],
+        observers: [
+          '_handleFilterChange(year, groupBy)'
+        ],
+        _isHistory: function(reportType) {
+          return reportType === 'history'
+        },
+        _computeForecastRange: function(selectedYear) {
+          return {
+            from: moment().year(selectedYear).startOf('year'),
+            to: moment().year(selectedYear).endOf('year')
+          }
+        },
+        _computePresetRanges: function(reportType) {
+          var diff = reportType === 'history' ? -1 : 1
+          var res = [
+            {
+              displayText: '一周内',
+              startDateTime: moment().add(diff, diff > 0 ? 'd' : 'w'),
+              endDateTime: moment().add(diff, diff > 0 ? 'w' : 'd')
+            },
+            {
+              displayText: '一月内',
+              startDateTime: moment().add(diff, diff > 0 ? 'd' : 'M'),
+              endDateTime: moment().add(diff, diff > 0 ? 'M' : 'd')
+            },
+            {
+              displayText: '一年内',
+              startDateTime: moment().add(diff, diff > 0 ? 'd' : 'y'),
+              endDateTime: moment().add(diff, diff > 0 ? 'y' : 'd')
+            }
+          ]
+          for (var i = 0; i < 3; i++) {
+            if (reportType === 'history' && i === 0) {
+              res.push({
+                displayText: moment().add(diff * i, 'y').format('YYYY'),
+                startDateTime: moment().add(diff * i, 'y').startOf('year'),
+                endDateTime: moment().add(diff * i, 'd')
+              });
+              continue;
+            }
+            res.push({
+              displayText: moment().add(diff * i, 'y').format('YYYY'),
+              startDateTime: moment().add(diff * i, 'y').startOf('year'),
+              endDateTime: moment().add(diff * i, 'y').endOf('year')
+            });
+          }
+          return res;
+        },
+        _computeQueryUrl: function(range, groupBy, reportType, forecastRange) {
+          var uri = URI(this.resolveApiUrl(reportType === 'history' ? '/api/profit' : '/api/profit/forecast'))
+          uri.addQuery('groupby', groupBy)
+          if (groupBy === 'device') {
+            uri.removeQuery('groupby');
+          }
+
+          if (reportType === 'history') {
+            uri
+            .addQuery('from', moment(range.from).format('YYYY-MM-DD'))
+            .addQuery('to', moment(range.to).format('YYYY-MM-DD'))
+          } else {
+            uri
+            .addQuery('from', moment(forecastRange.from).format('YYYY-MM-DD'))
+            .addQuery('to', moment(forecastRange.to).format('YYYY-MM-DD'))
+          }
+
+          if (!JSON.parse(document.querySelector('#user-context #isHead').value)) {
+            uri.addQuery('dept', JSON.parse(document.querySelector('#user-context #orgId').value))
+          }
+          return uri.toString();
+        },
+        _handleFilterChange: function(year, groupBy) {
+          this.$.chart.load();
+        },
+        ready: function() {
+          this._bubbleConfig = function(node, i, config) {
+            var level = node.orbitIndex;
+
+            // use same color as parent level for level3 and above
+            var colorId = (
+                level > 1 ? node.parent.data.id : node.data.id
+              ) - 1;
+
+            config.height = config.width = node.size * 2;
+            config.circleColor = config.waveColor = gauge_color(colorId);
+            config.fillColor = gauge_fills(colorId);
+            config.showWave = true;
+            config.waveAnimateTime = 5000;
+            config.waveHeight = 0.15;
+            config.waveOffset = 0.25;
+            config.maxValue = +node.data.revenue_label;
+            config.isRoot = node.depth;
+            config.showLabel = node.depth === 1; // only show label for depth one
+            // gauge animation is way too expensive for IE
+            config.waveRise = !isIE();
+            config.waveAnimate = !isIE();
+            config.valueCountUp = !isIE();
+            return config;
+          };
+        }
+      });
+    });
+  </script>
+</dom-module>

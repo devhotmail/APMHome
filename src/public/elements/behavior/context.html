@@ -1,0 +1,32 @@
+<link rel="import" href="../../context.html"/>
+<script>
+  /**
+   * @polymerBehavior ContextBehavior
+   */
+  Polymer.ContextBehavior = {};
+
+  define('behavior/context', ['context'], function(context) {
+    return {
+      properties: {
+        /**
+         * user context info like session
+         */
+        user: Object,
+      },
+      /**
+      * get user context before behavior's ready
+      * THIS IS QUIRKY: user object is not prepared before 'ready', therefor inaccessable 
+      * in many phases, e.g. computed props, registered hook...
+      */
+      getUser: function() {
+        return context.user()
+      },
+      resolveApiUrl: function(url) {
+        return context.resolveUrl(url);
+      },
+      ready: function() {
+        this.set('user', context.user());
+      },
+    };
+  });
+</script>

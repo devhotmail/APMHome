@@ -1,0 +1,29 @@
+{
+  "entrypoint": "public/index.html",
+  "shell": "public/loader.html",
+  "fragments": [
+    "public/pages/home-head.html",
+    "public/pages/home-dept-head.html",
+    "public/pages/asset-overview.html",
+    "public/pages/asset-procurement.html",
+    "public/pages/asset-operational-perf.html",
+    "public/pages/asset-perf-all.html"
+  ],
+  "source": [
+    "public/*.html",
+    "public/elements/**/*"
+  ],
+  "includeDependencies": [
+    "public/bower_components/font-awesome/fonts/**/*",
+    "public/bower_components/webcomponentsjs/*.js",
+    "public/css/**/*",
+    "public/icons/**/*",
+    "public/fonts/**/*",
+    "public/img/**/*",
+    "public/js/**/*",
+    "public/jquery_notification/**/*",
+    "public/ultima-layout/**/*",
+    "public/wechat/**/*",
+    "public/mock/**/*"
+  ]
+}

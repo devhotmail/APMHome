@@ -1,0 +1,28 @@
+{
+  "pages": {
+    "total": 1,
+    "limit": 50,
+    "start": 0
+  },
+  "items": [
+    {
+      "id": 32,
+      "name": "西门子核磁Avanto",
+      "date": "2016-10-15",
+      "link": {
+        "ref": "redirect",
+        "href": "https://app_url_prefix/portal/asset/info/List.xhtml?assetStatus=2"
+      }
+    }
+  ],
+  "root": {
+    "category": 5,
+    "display": "设备计量 (2个月内)",
+    "count": 1,
+    "unit": "台",
+    "link": {
+      "ref": "self",
+      "href": "https://app_url_prefix/api/health?category=1"
+    }
+  }
+}

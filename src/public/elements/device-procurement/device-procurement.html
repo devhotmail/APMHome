@@ -1,0 +1,1188 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/iron-resizable-behavior/iron-resizable-behavior.html">
+<link rel="import" href="../../bower_components/px-dropdown/px-dropdown.html">
+<link rel="stylesheet" href="../../bower_components/balloon-css/balloon.css">
+
+<link rel="import" href="../behavior/context.html">
+<link rel="import" href="../behavior/fetch-cached.html">
+<link rel="import" href="../responsive-container/responsive-container.html">
+<link rel="import" href="../zoom-pack-chart/zoom-pack-chart.html">
+<link rel="import" href="../editable-block/editable-block.html">
+<link rel="import" href="../data-statusbar/data-statusbar.html">
+<link rel="import" href="../css-spinner/css-spinner.html">
+<link rel="import" href="../web-utils/web-utils.html">
+<link rel="import" href="device-procurement-styles.html">
+<link rel="stylesheet" href="../../css/dewIcons.css">
+<link rel="import" href="../uri/uri.html">
+<link rel="import" href="../d3/d3.html">
+
+<style>
+.px-dropdown--content {
+  width: 120px !important;
+}
+</style>
+
+<dom-module id="device-procurement">
+  <template>
+    <style include="device-procurement-styles"></style>
+    <div class="chart-wrapper">
+      <template is="dom-if" if="[[showEmpty]]">
+        <data-statusbar type="empty"></data-statusbar>
+      </template>
+      <template is="dom-if" if="[[showError]]">
+        <data-statusbar type="error"></data-statusbar>
+      </template>
+      <template is="dom-if" if="[[showLoading]]">
+        <data-statusbar type="loading"></data-statusbar>
+      </template>
+      <template is="dom-if" if="[[showRetry]]">
+        <data-statusbar type="empty" desc="暂无可用数据，请稍微再试"></data-statusbar>
+      </template>
+      <responsive-container width="{{width}}" height="{{height}}">
+        <template is="dom-if" if="[[!isOr(showEmpty, showError, showLoading, showRetry)]]">
+          <template is="dom-if" if="[[isEqual(activeTab, 0)]]" restamp>
+            <!--system recommended result-->
+            <zoom-pack-chart
+              width="{{width}}"
+              height="{{height}}"
+              child-key="items"
+              focus-info="[[focusInfo]]"
+              on-focus-changed="handleFocusChange"
+              chart-data="[[systemData]]"></zoom-pack-chart>
+          </template>
+          <template is="dom-if" if="[[isEqual(activeTab, 1)]]" restamp>
+            <!--user manually configed result-->
+            <zoom-pack-chart
+              width="{{width}}"
+              height="{{height}}"
+              child-key="items"
+              focus-info="[[focusInfo]]"
+              on-focus-changed="handleFocusChange"
+              chart-data="[[manualData]]"></zoom-pack-chart>
+          </template>
+        </template>
+      </responsive-container>
+    </div>
+    <div class="sidebar">
+      <div class="year-dropdown u-mb">
+        <label for="device-filter">使用率预测年份:</label>
+        <px-dropdown
+          id="year-filter"
+          class="u-ml+"
+          display-value="{{selectedYear}}"
+          selected-key="{{selectedYear}}">
+          <px-dropdown-content
+            class="px-dropdown-content"
+            max-cont-character-width="10"
+            extend-dropdown="true"
+            extend-dropdown-by="15"
+            items="[[yearOpts]]">
+          </px-dropdown-content>
+        </px-dropdown>
+      </div>
+      <template is="dom-if" if="[[isHead]]">
+        <div class="type-select btn-group">
+          <template is="dom-repeat" items="[[typeOpts]]">
+            <div class$="[[calcTabCls(item.val, selectedType)]]"
+              on-click="handleSelect">
+              [[item.key]]
+            </div>
+          </template>
+        </div>
+      </template>
+      <template is="dom-if" if="[[!showLoading]]">
+        <div class="tabs">
+          <div style="text-align: center;">
+            <div class="tabs-header">
+              <div class="sliding" style$="left: [[slidingLeft]]"></div>
+              <ul>
+                <template is="dom-repeat" items="[[tabList]]">
+                  <li
+                    class$="[[calcTypeCls(item.val, activeTab)]]"
+                    on-tap="handleTabTap">
+                    [[item.key]]
+                  </li>
+                </template>
+              </ul>
+            </div>
+          </div>
+          <div class="tabs-content">
+            <template is="dom-if" if="[[isEqual(activeTab, 0)]]">
+              <div class="related-info">
+                <div class="kpis">
+                  <template is="dom-if" if="[[focus.data.name]]">
+                    <div class="title u-mt u-mb">当前位置: [[focus.data.name]]</div>
+                  </template>
+                  <template is="dom-if" if="[[isNotEmptyArr(focus.data.historical_data)]]">
+                    <template is="dom-repeat" items="[[focus.data.historical_data]]">
+                      <div class="flex flex--middle revenue-tip muted">
+                        <div class="revenue-label">[[getYearText(item.year)]]</div>
+                        <div class="flex__item u-ml-- u-mr--">
+                          <div
+                            class="progress-bar"
+                            style$="[[calcProgress(item.usage)]]">
+                          </div>
+                        </div>
+                        <div class="revenue-num">[[decimal2Percent(item.usage)]]</div>
+                      </div>
+                    </template>
+                  </template>                   
+                  <template is="dom-if" if="[[focus.data.usage_predict]]">
+                    <div class="flex flex--middle revenue-tip">
+                      <div class="revenue-label">[[selectedYear]]预测</div>
+                      <div class="flex__item u-ml-- u-mr--">
+                        <div
+                          class="progress-bar"
+                          style$="[[calcProgress(focus.data.usage_predict)]]">
+                        </div>
+                      </div>
+                      <div class="revenue-num">
+                        [[decimal2Percent(focus.data.usage_predict)]]
+                        [[decimal2Percent(focus.data.usage_predict_increase, 1)]]
+                      </div>
+                    </div>
+                  </template>
+                  <div class="u-mt-">
+                    <template is="dom-if" if="[[currentKPIs.high]]">
+                      <div class$="kpi kpi-[[index]]">
+                        <i class="dewicon-circle-full" style="color:#e26d26"></i>
+                        <span class="kpi-tip">[[currentKPIs.high.desc]]</span>
+                      </div>
+                      <div class="kpi-detail">
+                        <div class="title u-mv--">[[currentKPIs.high.num]]台设备</div>
+                      </div>
+                    </template>
+                    <template is="dom-if" if="[[currentKPIs.low]]">
+                      <div class$="kpi kpi-[[index]]">
+                        <i class="dewicon-circle-low" style="color:#ebda51"></i>
+                        <span class="kpi-tip">[[currentKPIs.low.desc]]</span>
+                      </div>
+                      <div class="kpi-detail">
+                        <div class="title u-mv--">[[currentKPIs.low.num]]台设备</div>
+                      </div>
+                    </template>
+                  </div>
+                  <template is="dom-if" if="[[isNotEmptyArr(focus.data.suggestions)]]">
+                    <div class="divider"></div>
+                    <div class="title u-mb">建议</div>
+                    <template is="dom-repeat" items="[[focus.data.suggestions]]">
+                      <template is="dom-if" if="[[item.title]]">
+                        <div>[[item.title]]</div>
+                      </template>
+                      <template is="dom-if" if="[[item.addition]]">
+                        <div class="title u-mt- u-mb-">[[item.addition]]</div>
+                      </template>
+                    </template>
+                  </template>
+                  <template is="dom-if" if="[[isNotEmptyArr(focus.data.suggestions)]]">
+                    <div class="u-mb--">采纳建议后的使用率预测</div>
+                    <div class="flex flex--middle revenue-tip">
+                      <div class="revenue-label">采取建议</div>
+                      <div class="flex__item u-ml-- u-mr--">
+                        <div
+                          class="progress-bar"
+                          style$="[[calcProgress(focus.data.usage_sug)]]">
+                        </div>                     
+                      </div>
+                      <div class="revenue-num">
+                        [[decimal2Percent(focus.data.usage_sug)]]
+                        [[decimal2Percent(focus.data.usage_sug_increase, 1)]]
+                      </div>
+                    </div>
+                  </template>
+                  <div class="divider"></div>
+                  <div class="legends">
+                    <div class="title u-mt- u-mb-">使用率负荷说明</div>
+                    <div class="legend">
+                      <i class="dewicon-circle-high" style="color:#b3b3b3"></i>
+                      <span class="legend-tip">平均使用率预测</span>
+                    </div>
+                    <div
+                      class="legend"
+                      data-balloon-length="medium"
+                      data-balloon="您可以自定义使用率大于多少为满负荷"
+                      data-balloon-pos="up">
+                      <i class="dewicon-circle-full" style="color:#e26d26"></i>
+                      <span class="legend-tip">满负荷使用率</span>
+                      <template is="dom-if" if="[[focus.data.usage_threshold.1]]">
+                        <span>定义: &gt;</span>
+                        <span>[[decimal2Percent(focus.data.usage_threshold.1)]]</span>
+                      </template>
+                    </div>
+                    <div
+                      class="legend"
+                      data-balloon-length="medium"
+                      data-balloon="您可以自定义使用率小于多少为低负荷"
+                      data-balloon-pos="up">
+                      <i class="dewicon-circle-low" style="color:#ebda51"></i>
+                      <span class="legend-tip">低负荷使用率</span>
+                      <template is="dom-if" if="[[focus.data.usage_threshold.0]]">
+                        <span>定义: &lt;</span>
+                        <span>[[decimal2Percent(focus.data.usage_threshold.0)]]</span>
+                      </template>
+                    </div>
+                    <div class="legend">球大小与设备利润预测相关</div>
+                    <div class="legend">左侧的图形显示的是您选择的预测年份的数据</div>
+                  </div>                  
+                </div>
+              </div>
+            </template>
+            <template is="dom-if" if="[[isEqual(activeTab, 1)]]">
+              <div class="title u-mt u-mb">使用率预测</div>
+              <div class="text-muted u-mb-">基于系统自动预测的增长进行手工调节</div>
+              <div class$="[[calcConfigListWrapperCls(configLoading)]]">
+                <template is="dom-if" if="[[configListTwo.length]]">
+                  <div class="config-head">
+                    <div>科室名称</div>
+                    <div>2017年预期增长</div>
+                  </div>
+                </template>
+                <template is="dom-if" if="[[!configListTwo.length]]">
+                  <div class="config-head">
+                    <div>设备类型</div>
+                    <div>预期增长</div>
+                    <div
+                      class="flex flex-middle"
+                      data-balloon-length="medium"
+                      data-balloon="您可以自定义使用率大于多少为满负荷"
+                      data-balloon-pos="down">
+                      <i class="dewicon-circle-full" style="color:#e26d26"></i>
+                      <span>满负荷</span>
+                    </div>
+                    <div
+                      class="flex flex-middle"
+                      data-balloon-length="medium"
+                      data-balloon="您可以自定义使用率小于多少为低负荷"
+                      data-balloon-pos="left">
+                      <i class="dewicon-circle-low" style="color:#ebda51"></i>
+                      <span>低负荷</span>
+                    </div>
+                  </div>
+                </template>
+                <div
+                  class="config-list"
+                  style$="[[calcConfigHeight(configListOne.length)]]">
+                  <template
+                    id="configList"
+                    is="dom-repeat"
+                    items="[[configListOne]]">
+                    <div
+                      class$="[[calcConfigItemCls(selectedConfigIndex, index)]]"
+                      on-tap="handleConfigTap">
+                      <div class="item-name">
+                        <div class="ellipsis">[[item.name]]</div>
+                      </div>
+                      <template is="dom-if" if="[[configListTwo.length]]">
+                        <template is="dom-if" if="[[!item.isUnknown]]">
+                          <span>[[float2Percent(item.increase, 1)]]</span>
+                        </template>
+                        <template is="dom-if" if="[[item.isUnknown]]">
+                          <div style="white-space:nowrap;">待计算</div>
+                        </template>
+                      </template>
+                      <template is="dom-if" if="[[!configListTwo.length]]">
+                        <div class="u-mr- flex flex--middle">
+                          <editable-block
+                            data-index$="[[index]]"
+                            value="[[item.increase]]"
+                            on-changed="handleConfigChange"></editable-block>
+                          <span>%</span>
+                        </div>                        
+                        <div class="flex flex--middle">
+                          <editable-block
+                            data-index$="[[index]]"
+                            value="[[item.usage_max]]"
+                            on-changed="handleUsageMaxChange"></editable-block>
+                          <span>%</span>
+                        </div>
+                        <div class="flex flex--middle">
+                          <editable-block
+                            data-index$="[[index]]"
+                            value="[[item.usage_min]]"
+                            on-changed="handleUsageMinChange"></editable-block>
+                          <span>%</span>
+                        </div>
+                      </template>
+                    </div>
+                  </template>
+                  <array-selector
+                    id="configSelector"
+                    items="[[configListOne]]"
+                    selected="{{selectedConfigIndex}}"></array-selector>
+                </div>
+              </div>
+              <template is="dom-if" if="[[configListTwo.length]]" restamp>
+                <div style="text-align:center">
+                  <div class="active-arrow"></div>
+                </div>
+                <div class$="[[calcConfigListWrapperCls(configLoading)]]">
+                  <div class="config-head">
+                    <div>设备类型</div>
+                    <div>预期增长</div>
+                    <div
+                      class="flex flex-middle"
+                      data-balloon-length="medium"
+                      data-balloon="您可以自定义使用率大于多少为满负荷"
+                      data-balloon-pos="top">
+                      <i class="dewicon-circle-full" style="color:#e26d26"></i>
+                      <span>满负荷</span>
+                    </div>
+                    <div
+                      class="flex flex-middle"
+                      data-balloon-length="medium"
+                      data-balloon="您可以自定义使用率小于多少为低负荷"
+                      data-balloon-pos="left">
+                      <i class="dewicon-circle-low" style="color:#ebda51"></i>
+                      <span>低负荷</span>
+                    </div>
+                  </div>                 
+                  <div class="config-list" style$="[[calcConfigHeight(configListTwo.length)]]">
+                    <template
+                      id="subConfigList"
+                      is="dom-repeat"
+                      items="[[configListTwo]]">
+                      <div
+                        class$="[[calcConfigItemCls(selectedSubConfigIndex, index)]]"
+                        on-tap="handleSubConfigTap">
+                        <div class="item-name">
+                          <div class="ellipsis">[[item.name]]</div>
+                        </div>
+                        <div class="u-mr- flex flex--middle">
+                          <editable-block
+                            data-index$="[[index]]"
+                            value="[[item.increase]]"
+                            on-changed="handleSubConfigChange"></editable-block>
+                          <span>%</span>
+                        </div>                        
+                        <div class="u-mr- flex flex--middle">
+                          <editable-block
+                            data-index$="[[index]]"
+                            value="[[item.usage_max]]"
+                            on-changed="handleSubUsageMaxChange"></editable-block>
+                          <span>%</span>
+                        </div>
+                        <div class="flex flex--middle">
+                          <editable-block
+                            data-index$="[[index]]"
+                            value="[[item.usage_min]]"
+                            on-changed="handleSubUsageMinChange"></editable-block>
+                          <span>%</span>
+                        </div>
+                      </div>
+                    </template>
+                    <array-selector
+                      id="subConfigSelector"
+                      items="[[configListTwo]]"
+                      selected="{{selectedSubConfigIndex}}"></array-selector>
+                  </div>
+                </div>
+              </template>         
+              <div class="u-mt-">
+                <div class$="[[calcConfigBtnCls(configLoading)]]" on-tap="handleSubmit">
+                  <template is="dom-if" if="[[!configLoading]]">
+                    <span>确认预期</span>
+                  </template>
+                  <template is="dom-if" if="[[configLoading]]">
+                    <css-spinner></css-spinner>
+                  </template>
+                </div>
+              </div>
+              <template is="dom-if" if="[[showMaunalAdvice]]">
+                <div class="divider"></div>   
+                <div class="title u-mt u-mb">当前位置: [[focus.data.name]]</div>
+                <div class="u-mb--">根据预期增长产生的使用率预测</div>
+                <div class="flex flex--middle revenue-tip">
+                  <div class="revenue-label">预测</div>
+                  <div class="flex__item u-ml-- u-mr--">
+                    <div
+                      class="progress-bar"
+                      style$="[[calcProgress(focus.data.usage_predict)]]">
+                    </div>
+                  </div>
+                  <div class="revenue-num">
+                    [[decimal2Percent(focus.data.usage_predict)]]
+                    [[decimal2Percent(focus.data.usage_predict_increase, 1)]]
+                  </div>
+                </div>
+                <template is="dom-if" if="[[isNotEmptyArr(focus.data.suggestions)]]">
+                  <div class="title u-mv">建议</div>
+                  <template is="dom-repeat" items="[[focus.data.suggestions]]">
+                    <template is="dom-if" if="[[item.title]]">
+                      <div>[[item.title]]</div>
+                    </template>
+                    <template is="dom-if" if="[[item.addition]]">
+                      <div class="title u-mt- u-mb-">[[item.addition]]</div>
+                    </template>
+                  </template>
+                </template>
+                <template is="dom-if" if="[[showAfterSug(focus.data)]]">
+                  <template is="dom-if" if="[[focus.data.usage_sug]]">
+                    <div class="u-mb--">采取建议后的使用率预测</div>
+                    <div class="flex flex--middle revenue-tip">
+                      <div class="revenue-label">采取建议</div>
+                      <div class="flex__item u-ml-- u-mr--">
+                        <div
+                          class="progress-bar"
+                          style$="[[calcProgress(focus.data.usage_sug)]]">
+                        </div>
+                      </div>
+                      <div class="revenue-num">
+                        [[decimal2Percent(focus.data.usage_sug)]]
+                        [[decimal2Percent(focus.data.usage_sug_increase, 1)]]
+                      </div>
+                    </div>
+                  </template>
+                </template>
+              </template>
+            </template>
+          </div>
+        </div>
+      </template>
+    </div>
+  </template>
+  <script>
+    function uniqueId() {
+      return Math.random().toString(36).substr(2, 9);
+    }
+
+    var sectionalizer = [
+      {
+        key: 'orange',
+        status: 'high',
+        desc: '使用率预测>100%',
+        filter: function(n) {
+          return n >= 1;
+        }
+      },
+      {
+        key: 'yellow',
+        status: 'low',
+        desc: '使用率预测<30%',
+        filter: function(n) {
+          return n <= 0.3;
+        }
+      }
+    ];
+
+    var now = new Date()
+    var currentYear = now.getFullYear()
+
+    define('device-procurement', [
+      'behavior/context',
+      'behavior/fetch-cached',
+      'web-utils'
+    ], function(ContextBehavior, FetchCachedBehavior, WebUtils) {
+      Polymer({
+        is: 'device-procurement',
+        properties: {
+          yearOpts: {
+            type: Array,
+            value: function() {
+              return [
+                currentYear,
+                currentYear + 1
+              ].map(function(n) {
+                return {
+                  key: n,
+                  val: n
+                }
+              })
+            }
+          },
+          selectedYear: {
+            type: String,
+            value: function() {
+              return currentYear
+            }
+          },
+          max: {
+            type: Number,
+            value: 100
+          },
+          min: {
+            type: Number,
+            value: 30
+          },
+          isHead: {
+            type: Boolean,
+            value: false
+          },
+          orgId: String,
+          selectedType: {
+            type: String
+          },
+          activeTab: {
+            type: Number,
+            value: 0
+          },              
+          systemData: Object,
+          manualData: Object,
+          focus: Object,
+          focusInfo: Object,
+          selectedConfigIndex: {
+            type: Number,
+            value: 0
+          },
+          selectedSubConfigIndex: {
+            type: Number,
+            value: 0
+          },
+          showMaunalAdvice: {
+            type: Boolean,
+            value: false
+          },
+          showEmpty: {
+            type: Boolean,
+            value: false
+          },
+          showError: {
+            type: Boolean,
+            value: false
+          },
+          showLoading: {
+            type: Boolean,
+            value: false
+          },
+          showRetry: {
+            type: Boolean,
+            value: false
+          },
+          configLoading: {
+            type: Boolean,
+            value: false
+          },
+          configList: Array,             
+          selectedConfigItem: {
+            type: Object,
+            computed: 'getSelectedConfigItem(configListOne, selectedConfigIndex)'
+          },
+          configListOne: {
+            type: Array,
+            computed: 'getConfigListOne(configList)'
+          },
+          configListTwo: {
+            type: Array,
+            computed: 'getConfigListTwo(configList, selectedConfigItem)'
+          },
+          currentKPIs: {
+            type: Object,
+            computed: 'getCurrentKPIs(focus)'
+          },
+          slidingLeft: {
+            type: String,
+            computed: 'calcSlidingLeft(activeTab)'
+          },
+          tabList: {
+            type: Array,
+            readOnly: true,
+            value: [
+              {
+                key: '系统自动',
+                val: 0
+              },
+              {
+                key: '手动调节',
+                val: 1
+              }
+            ]
+          },          
+          typeOpts: {
+            type: Array,
+            readOnly: true,
+            value: [
+              {
+                key: '按设备类型',
+                val: 'type',
+                zh: '类型'
+              },
+              {
+                key: '按科室',
+                val: 'dept',
+                zh: '科室'
+              }
+            ]
+          }
+        },
+        behaviors: [
+          ContextBehavior,
+          FetchCachedBehavior
+        ],
+        observers: [
+          'changeQuery(isHead, selectedType)',
+          'loadData(isHead, selectedYear, selectedType, orgId)',
+          'resetStatus(selectedYear, selectedType)',
+          'changeSelectedConfig(focusInfo, configList)',
+          'resetSubSelectedConfigIndex(selectedConfigIndex)'
+        ],
+        changeFocusInfo: function(index, configList, depth) {
+          if (index && Array.isArray(configList)) {
+            var target = configList[index]
+            this.focusInfo = {
+              id: target.id,
+              depth: depth
+            }
+          }
+        },
+        getConfigListOne: function(configList) {
+          return configList.filter(function(n) {
+            return n.depth === 1;
+          });
+        },
+        getConfigListTwo: function(configList, selectedConfigItem) {
+          // dont show items which in the last layer
+          var root = this.configList[0];
+          if (root.depth !== 0 || root.height === 2) return [];
+          return configList.filter(function(n) {
+            return n.depth === 2 && n.parent.uid === selectedConfigItem.uid;
+          });
+        },
+        resetStatus: function() {
+          // reset activeTab when selectedYear/selectedType changed
+          this.activeTab = 0;
+          // reset config loading when selectedYear/selectedType changed 
+          this.configLoading = false;
+        },
+        resetSubSelectedConfigIndex: function(selectedConfigIndex) {
+          // reset subSelectedConfig index when selectedConfigIndex changes
+          this.selectedSubConfigIndex = 0;
+        },
+        getSelectedConfigItem: function(array, index) {
+          if (Array.isArray(array) && Number.isFinite(index)) {
+            return array[index];
+          }
+        },
+        changeSelectedConfig: function(focusInfo, configList) {
+          var target = configList.filter(function(n) {
+            return n.depth === focusInfo.depth && n.id === focusInfo.id;
+          })[0];
+
+          if (target) {
+            var id = target.id;
+            var depth = target.depth;
+
+            function getCursors(node) {
+              var cursors = [];
+              getParent(node);
+              return cursors.reverse();
+
+              function getParent(node) {
+                var parent = node.parent;
+                if (!parent) return;
+                var parentNode = WebUtils.find(configList, function(n) {
+                  return n.id === parent.id;
+                });
+                if (parentNode && parentNode.children && parentNode.children.length) {
+                  var index = WebUtils.findIndex(parentNode.children, function(n) {
+                    return n.id === node.id;
+                  });
+
+                  cursors.push(index);
+                  getParent(parentNode);
+                }
+              };
+            }
+
+            var cursors = getCursors(target);
+
+            this.selectedConfigIndex = cursors[0] > -1 ? cursors[0] : 0;
+            this.selectedSubConfigIndex = cursors[1] > -1 ? cursors[1] : 0;
+          } else {
+            this.selectedConfigIndex = 0;
+            this.selectedSubConfigIndex = 0; 
+          }
+        },
+        /**
+         * callback for dom interactive events
+        */
+        handleFocusChange: function(e) {
+          var focus = e.detail.value;
+          var oldFocus = e.detail.oldValue;
+          if (focus !== oldFocus) {
+            this.focus = focus;
+            this.focusInfo = {
+              id: focus.data.id,
+              depth: focus.depth
+            };
+          }
+        },
+        handleTabTap: function(e) {
+          // disable tab click when empty/error/loading
+          if (this.showEmpty || this.showError || this.showLoading) return;
+          this.activeTab = e.model.item.val;
+        },
+        handleSelect: function(e) {
+          this.selectedType = e.model.item.val;
+          // hide advice after selectedType changed
+          this.showMaunalAdvice = false;
+        },
+        // trigger `selected` in array-selector
+        handleConfigTap: function(e) {
+          var root = Polymer.dom(this.root);
+          var index = root.querySelector('#configList').indexForElement(e.target);
+          root.querySelector('#configSelector').select(index);
+          // set child config index as zero
+          this.selectedSubConfigIndex = 0;
+        },
+        handleSubConfigTap: function(e) {
+          var root = Polymer.dom(this.root);
+          var index = root.querySelector('#subConfigList').indexForElement(e.target);
+          root.querySelector('#subConfigSelector').select(index);
+        },
+        updateItem: function(field, value, index) {
+          var _this = this;
+          if (index > -1) {
+            // update value for current target
+            var cursor = this.configListOne[index].uid;
+            var target = this.configList.filter(function(n) {
+              return n.uid === cursor;
+            })[0];
+            target[field] = value;
+
+            // update children
+            var children = target.children;
+            if (children && children.length) {
+              var childUidList = children.map(function(n) {
+                return n.uid;
+              });
+              var configList = this.configList.map(function(config) {
+                if (~childUidList.indexOf(config.uid)) {
+                  config[field] = value;
+                  if (Array.isArray(config.children) && config.children.length) {
+                    // update children's increase in configList
+                    config.children.map(function(n) {
+                      var result = WebUtils.find(_this.configList, function(m) {
+                        return m.id === n.id;
+                      });
+                      if (result) result[field] = value;
+                    });
+                  }
+                }
+                return config;
+              });
+            }
+            // force dirty check and keep selected index
+            var _tmp = this.selectedConfigIndex;
+            this.configList = this.deepClone(configList);
+            this.selectedConfigIndex = _tmp;
+          }
+        }, 
+        handleConfigChange: function(e) {
+          // get value and index
+          var value = e.detail.value;
+          var index = e.target.getAttribute('data-index'); // this.selectedConfigIndex
+
+          this.updateItem('increase', value, index)
+        },
+        handleUsageMaxChange: function(e) {
+          // get value and index
+          var value = e.detail.value;
+          var index = e.target.getAttribute('data-index'); // this.selectedConfigIndex
+
+          this.updateItem('usage_max', value, index)
+        },
+        handleUsageMinChange: function(e) {
+          // get value and index
+          var value = e.detail.value;
+          var index = e.target.getAttribute('data-index'); // this.selectedConfigIndex
+
+          this.updateItem('usage_min', value, index)
+        },        
+        updateSubItem: function(field, value, index) {
+          var _this = this;
+          if (index > -1) {
+            // update value for current target
+            var cursor = this.configListTwo[index].uid;
+            var target = this.configList.filter(function(n) {
+              return n.uid === cursor;
+            })[0];
+            target[field] = value;
+
+            if (Array.isArray(target.children) && target.children.length) {
+              // update children's `field` in configList
+              target.children.map(function(n) {
+                var result = WebUtils.find(_this.configList, function(m) {
+                  return m.id === n.id;
+                });
+                if (result) result[field] = value;
+              });
+            }
+
+            // update parent
+            var parentUid = target.parent.uid;
+            var parent = this.configList.filter(function(n) {
+              return n.uid === parentUid;
+            })[0];
+            if (parent) parent.isUnknown = true;
+
+            // force dirty check and keep selected index
+            var _tmp1 = this.selectedConfigIndex;
+            var _tmp2 = this.selectedSubConfigIndex;
+            this.configList = this.deepClone(this.configList);
+            this.selectedConfigIndex = _tmp1;
+            this.selectedSubConfigIndex = _tmp2;
+          }
+        },
+        handleSubUsageMaxChange: function(e) {
+          // get value and index
+          var value = e.detail.value;
+          var index = e.target.getAttribute('data-index'); // this.selectedConfigIndex
+
+          this.updateSubItem('usage_max', value, index);
+        },
+        handleSubUsageMinChange: function(e) {
+          // get value and index
+          var value = e.detail.value;
+          var index = e.target.getAttribute('data-index'); // this.selectedConfigIndex
+
+          this.updateSubItem('usage_min', value, index);
+        },        
+        handleSubConfigChange: function(e) {
+          // get value and index
+          var value = e.detail.value;
+          var index = e.target.getAttribute('data-index'); // this.selectedConfigIndex
+
+          this.updateSubItem('increase', value, index);
+        },
+        handleSubmit: function(e) {
+          var root = this.configList[0];
+
+          if (root.depth === 0) {
+            // diff with systemData and get all changed items
+            var defaultConfigList = this.getInitConfig(this.systemData)
+            .filter(function(n) {
+              return n.depth === root.height;
+            });
+
+            var tmp = this.configList.filter(function(n) {
+              return n.depth === root.height;
+            })
+            .filter(function(config) {
+              if (!config) return false;
+              // figure out target config is changed or not
+              return WebUtils.find(defaultConfigList, function(defaultConfig) {
+                return defaultConfig.id === config.id
+                  && (
+                    defaultConfig.increase !== config.increase
+                    || defaultConfig.usage_max !== config.usage_max
+                    || defaultConfig.usage_min !== config.usage_min
+                  );
+              });
+            })
+            .map(function(config) {
+              // figure out which fields changed in target config
+              var target = WebUtils.find(defaultConfigList, function(defaultConfig) {
+                return defaultConfig.id === config.id;
+              });
+
+              var result = { id: config.id };
+
+              if (target.increase !== config.increase) {
+                result.change = config.increase / 100; // for the display usage # 1
+              }
+
+              if (target.usage_min !== config.usage_min || target.usage_max !== config.usage_max) {
+                result.threshold = [ // usage_threshold
+                  config.usage_min / 100,
+                  config.usage_max / 100
+                ];
+              }
+
+              return result;
+            })
+            .filter(function(n) {
+              return n;
+            });        
+
+            var payload = {
+              config: [].concat.apply([], tmp).sort(function(a, b) {
+                return a.id - b.id;
+              })
+            }
+
+            var url = this.getApiUrl(this.isHead, this.selectedYear, this.selectedType, this.orgId);
+            // url = 'mock/asset-procurement-' + this.selectedType  +'.json'
+
+            this.configLoading = true;
+
+            this.showLoading = true;
+            this.showEmpty = false;
+            this.showError = false;
+
+            return fetch(url, {
+              method: 'PUT',
+              accept: 'application/json',
+              credentials: 'same-origin',
+              body: JSON.stringify(payload)
+            })
+            .then(function(res) {
+              return res.json();
+            })
+            .then((function(response) {
+              this.showLoading = false;
+              this.configLoading = false;
+
+              if (!response) return this.showRetry = true;
+              if (!response.items) return this.showRetry = true;
+              if (!response.items.length) return this.showRetry = true;
+
+              var data = this.dataConverter(response);
+              // set manual data
+              this.manualData = this.deepClone(data);
+              this.manualData.isManual = true;
+              // set config list
+              this.configList = this.getInitConfig(data);
+              // show advice after manually configed
+              this.showMaunalAdvice = true;
+
+            }).bind(this)).catch((function(err) {
+              this.showLoading = false;
+              this.showError = true;
+            }).bind(this));
+          }
+        },
+        // helpers
+        //  deep clone for plain object
+        deepClone: function(plainObj) {
+          return JSON.parse(JSON.stringify(plainObj));
+        },
+        /**
+         * functions which calculate className for dom styles usage
+        */
+        calcConfigBtnCls: function(configLoading) {
+          return configLoading ? 'config-btn loading' : 'config-btn';
+        },
+        calcConfigHeight: function(length) {
+          return length < 10 ? 'height: auto' : '';
+        },
+        calcConfigItemCls: function(a, b) {
+          var clsBase = 'config-item';
+          return a === b ? clsBase + ' ' + 'active' : clsBase;
+        },
+        calcTypeCls: function(val, activeTab){
+          return val === activeTab ? 'active' : ''
+        },
+        calcSlidingLeft: function(activeTab) {
+          return activeTab * 90 + 'px';
+        },
+        calcTabCls: function(val, selectedType) {
+          return val === selectedType ? 'active btn' : 'btn';
+        },
+        calcProgress: function(percent) {
+          return 'width:' + (percent > 1 ? 1 : percent) * 100 + '%';
+        },
+        calcConfigListWrapperCls: function(configLoading) {
+          return configLoading ? 'config-list-wrapper disabled' : 'config-list-wrapper';
+        },
+        /**
+         * functions which convert string for dom text display
+        */
+        showAfterSug: function(data) {
+          var bool = data.usage_predict === data.usage_sug && data.usage_predict_increase === data.usage_sug_increase
+          return !bool
+        },
+        isNotEmptyArr: function(array) {
+          if (!Array.isArray(array)) return false;
+          return Boolean(array.length);
+        },     
+        getYearText: function(year) {
+          if (!year) return;
+          var currentYear = (new Date()).getFullYear();
+          if (currentYear === year) return year + '至今';
+          return year + '年';
+        },
+        float2Percent: function(val, withSign) {
+          var sign = (withSign && val > 0) ? '+' : '';
+          // keep one decimal
+          return sign + val + '%';
+        },
+        decimal2Percent: function(val, withSign) {
+          // keep one decimal
+          var value = parseFloat(val * 100).toFixed(1);
+          return this.float2Percent(value, withSign);
+        },
+        parseInt: parseInt,
+        keepOneDecimal: function(val) {
+          return parseFloat(val).toFixed(1);
+        },
+        isArray: Array.isArray,
+        isEqual: function(a, b) {
+          return a === b;
+        },
+        isOr: function() {
+          var args = Array.prototype.slice.call(arguments);
+          return args.filter(function(n) {
+            return Boolean(n);
+          }).length;
+        },
+        round: function(value, precision) {
+          var multiplier = Math.pow(10, precision || 0);
+          return Math.round(value * multiplier) / multiplier;
+        },
+        /**
+         * functions which do data convert jobs
+        */
+        getCurrentKPIs: function(focus) {
+          var decimal2Percent = this.decimal2Percent
+          var result = {}
+
+          var descList = [
+            '使用率预测低负荷台数',
+            '使用率预测超负荷台数'
+          ];
+
+          var usageSum = focus.data.usage_sum;
+          var usageThreshold = focus.data.usage_threshold;
+          if (usageSum && usageSum.length) {
+            usageSum.map(function(n, i) {
+              ['low', 'high'].forEach(function(key, i) {
+                result[key] = {
+                  desc: descList[i].replace('usage'),
+                  num: usageSum[i]
+                }
+              })
+            });
+          }
+          return result
+        },
+        dataConverter: function(data) {
+          function patchUid(obj) {
+            obj.uid = uniqueId();
+            if (obj.items && Array.isArray(obj.items)) {
+              obj.items = obj.items.map(function(n) {
+                patchUid(n);
+                return n;
+              });
+            }
+            return obj;
+          }
+
+          data = patchUid(data);
+
+          return data;
+        },
+        getInitConfig: function(data) {
+          var root = d3.hierarchy(data, function(d) {
+            return d.items
+          });
+
+          var tree = d3.tree();
+
+          var nodes = tree(root).descendants();
+
+          return nodes.map((function(n) {
+            return {
+              parent: n.parent ? {
+                id: n.parent.data.id,
+                uid: n.parent.data.uid
+              }: null,
+              children: n.children ? n.children.map(function(child) {
+                return {
+                  uid: child.data.uid,
+                  id: child.data.id
+                };
+              }) : null,
+              depth: n.depth,
+              height: n.height,
+              id: n.data.id,
+              uid: n.data.uid,
+              name: n.data.name,
+              // for the display usage # 1
+              increase: this.round(n.data.usage_predict_increase * 100, 1),
+              usage_min: n.data.usage_threshold ? n.data.usage_threshold[0] * 100 : '',
+              usage_max: n.data.usage_threshold ? n.data.usage_threshold[1] * 100 : ''
+            }
+          }).bind(this));
+        },
+        /**
+         * functions which deal with url hash
+        */
+        changeQuery: function(isHead, selectedType) {
+          if (isHead) {
+            var uri = URI('').addQuery('groupby', selectedType);
+            var new_hash = uri.query();
+            location.hash = '#' + new_hash;
+          }
+        },
+        getFragObj: function(url) {
+          var fragment = new URI(window.location.href).fragment();
+          if (!fragment) return {};
+          return fragment.split('&').reduce(function(prev, next) {
+            var result = next.split('=');
+            prev[result[0]] = result[1];
+            return prev;
+          }, {});
+        },
+        /**
+         * load data from restful api
+        */
+        getApiUrl: function(isHead, year, groupby, orgId) {
+          var query = {
+            year: year
+          };
+          if (isHead) query.groupby = groupby;
+          else query.dept = orgId;
+
+          return URI(this.resolveApiUrl('/api/dmv2')).query(query).toString();
+        },
+        loadData: function(isHead, year, groupby, orgId) {
+          this.showLoading = true;
+          this.showEmpty = false;
+          this.showError = false;
+
+          var url = this.getApiUrl(isHead, year, groupby, orgId);
+          // url = 'mock/asset-procurement-' + groupby  +'.json'
+
+          return fetch(url, {
+            accept: 'application/json',
+            credentials: 'same-origin'
+          })
+          .then(res => res.json())
+          .then((function(response) {
+            this.showLoading = false;
+            if (!response) return this.showEmpty = true;
+            if (!response.items) return this.showEmpty = true;
+            if (!response.items.length) return this.showEmpty = true;
+
+            var data = this.dataConverter(response);
+            // set system data
+            this.systemData = this.deepClone(data);
+            this.systemData.isSystem = true;
+            // set manual data
+            this.manualData = this.deepClone(data);
+            this.manualData.isManual = true;
+
+            var configList = this.getInitConfig(data);
+            // set config list
+            this.configList = configList;
+            /**
+             * set focusInfo
+             * @param {Object} focusInfo
+             * - {String} id
+             * - {Number} depth
+            */
+            this.focusInfo = {
+              id: configList[0].id,
+              depth: configList[0].depth
+            };
+          
+          }).bind(this)).catch((function(err) {
+            console.log(err)
+            this.showLoading = false;
+            this.showError = true;
+          }).bind(this));
+        },
+        ready: function() {
+          var isHead = document.querySelector('input#isHead').value;
+          var orgId = document.querySelector('input#orgId').value;
+          this.isHead = isHead === 'true';
+          this.orgId = orgId;
+          if (isHead) {
+            var hashObj = this.getFragObj(window.location.href);
+            var groupby = hashObj.groupby ? hashObj.groupby : this.typeOpts[0].val;
+            this.selectedType = groupby;
+          }
+        }
+      })
+    })
+  </script>
+</dom-module>

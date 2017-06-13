@@ -1,0 +1,191 @@
+// Settings
+@import "_theme.scss";
+
+$dv-basic-purple: rgba(164, 91, 164, 1);
+$label-text-color: $text-color-default;
+$series-line-color: rgba($dv-light-gray, .1);
+$block-blue: rgba(145, 176, 226, 1);
+
+:host {
+  height: calc(100vh - 80px);
+  content: 'viewport-units-buggyfill; height: calc(100vh - 80px);';
+  padding-top: 40px;
+  position: relative;
+  min-width: 800px;
+  display: block;
+  align-items: center;
+  justify-content: center;
+  --px-btn-disabled-background: transparent;
+  --device-pagination-color: #848484;
+}
+
+.chart-bg {
+  fill: transparent;
+}
+
+#svg,
+#chartBg {
+  height: 100%;
+  min-height: 100%;
+}
+
+#pagination {
+  width: auto;
+}
+
+.dimension-title.name {
+  display: none;
+}
+
+.sorting-dropdown {
+  position: absolute;
+  min-width: 125px;
+  top: -10px;
+  /* use percentage better coordinate with other scales on smaller screen size */
+  left: 6.5%;
+}
+
+device-pagination {
+  margin-left: 5%;
+}
+
+.canvas {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.background path {
+  fill: none;
+  stroke: none;
+  stroke-width: 20px;
+  pointer-events: stroke;
+}
+
+.foreground path {
+  fill: none;
+  stroke: $series-line-color;
+  stroke-width: 1.5px;
+}
+
+.benchmark path {
+  fill: none;
+  stroke: none;
+}
+
+.chart-body text {
+  fill: $label-text-color;
+}
+
+.axis text {
+  text-anchor: middle;
+
+  &.label {
+    cursor: default;
+    font-size: 1rem;
+    text-transform: uppercase;
+    text-anchor: end;
+  }
+
+  &.title {
+    font-weight: bold;
+  }
+
+  tspan.fullname {
+    display: none;
+  }
+}
+
+.axis line,
+.axis path {
+  fill: none;
+  stroke: $label-text-color;
+  shape-rendering: crispEdges;
+}
+
+.sector {
+  rect {
+    fill: $block-blue;
+  }
+
+  .label {
+    fill: $gray1;
+    writing-mode: tb;
+    font-size: .8rem;
+    cursor: default;
+  }
+}
+
+.label {
+  transition: fill 125ms linear;
+}
+
+.value-group {
+  .value {
+    opacity: 0;
+    transition: opacity linear .15s;
+
+    &.active {
+      opacity: 1;
+    }
+  }
+
+  .actual-val {
+    fill: $dv-basic-blue;
+  }
+
+  .benchmark-val {
+    fill: $dv-basic-purple;
+  }
+}
+
+.chart-body.active {
+  .total-value {
+    opacity: 0;
+  }
+
+  .sector {
+    &:not(.active) {
+      rect {
+        fill: lighten($dv-basic-blue, 20%);
+      }
+    }
+
+    &.active {
+      .label {
+        fill: $white;
+      }
+    }
+  }
+
+  .dimension-title.active {
+    font-weight: bold;
+  }
+
+  .axis text.active {
+    font-weight: bold;
+
+    tspan.fullname {
+      display: block;
+    }
+
+    tspan.shortname {
+      display: none;
+    }
+  }
+  .foreground path.active {
+    stroke: $dv-basic-blue;
+    stroke-width: 3px;
+  }
+  .benchmark path.active {
+    stroke: $dv-basic-purple;
+    stroke-width: 3px;
+  }
+}
+
+.pager {
+  position: absolute;
+  right: 2%;
+  top: 50%;
+  transform: translateY(-50%);
+}

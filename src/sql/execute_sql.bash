@@ -4,11 +4,14 @@ set -e
 set -u
 
 # geapm-st-psql
-#export PGHOST="localhost"
-#export PGDATABASE="ddf7cc4c6ad0a4f1384eea37fab819440"
-#export PGUSER="udf7cc4c6ad0a4f1384eea37fab819440"
-#export PGPASSWORD="781178f115d442b794bc5b23b3ca844a"
-#export PGPORT="7999"
+export PGHOST="10.120.8.137"
+export PGDATABASE="dc1042391d5334b90b09234bc5daa11d4"
+export PGUSER="uc1042391d5334b90b09234bc5daa11d4"
+export PGPASSWORD="1e35fb586d044d3794980dbe20c96f54"
+export PGPORT="5432"
+
+#psql -X -f drop.sql --echo-all --set ON_ERROR_STOP=off
+#psql -X -f dump.sql --echo-all --set ON_ERROR_STOP=off
 
 # local pgdb
 export PGHOST="localhost"
@@ -17,10 +20,7 @@ export PGUSER="postgres"
 export PGPASSWORD="root"
 export PGPORT="5432"
 
-psql -X -f create_tables.sql --echo-all --set ON_ERROR_STOP=on
-psql -X -f init_data.sql --echo-all --set ON_ERROR_STOP=on
-psql -X -f i18n_message.sql --echo-all --set ON_ERROR_STOP=on
-# psql -X -f demo_data.sql --echo-all --set ON_ERROR_STOP=on
-# psql -X -f test_data.sql --echo-all --set ON_ERROR_STOP=on
-psql -X -f test_data.sql --echo-all --set ON_ERROR_STOP=on
-psql -X -f alter_database.sql --echo-all --set ON_ERROR_STOP=off
+
+psql -X -f drop.sql --echo-all --set ON_ERROR_STOP=off
+psql -X -f dump.sql --echo-all --set ON_ERROR_STOP=off
+#pg_restore --clean dump.sql

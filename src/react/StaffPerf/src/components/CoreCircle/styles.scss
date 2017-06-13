@@ -1,0 +1,28 @@
+@import "../../styles/variables.scss";
+
+.coreCircle {
+  width: 400px;
+  height: 400px;
+  background-color: $inner-circle-bg;
+  border-radius: 50%;
+  padding-top: 60px;
+  text-align: center;
+
+  @media (max-width: 768px) {
+    width: 360px;
+    height: 360px;
+  }
+}
+
+.info {
+  display: inline-block;
+  text-align: left;
+}
+
+.rect {
+  border-radius: 2px;
+  margin-right: 8px;
+  width: 15px;
+  height: 15px;
+  background-color: currentColor;
+}

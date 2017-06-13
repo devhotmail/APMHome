@@ -542,7 +542,11 @@ INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id)
 INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (1616,'inspectionPeriod','6', '每半年',null,null,-1);
 INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (1617,'inspectionPeriod','7', '每年',null,null,-1);
 
+<<<<<<< HEAD
 INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (1621,'depreciationMethodList','1', '平均年限',null,null,-1);
+=======
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (1621,'depreciationMethodList','1', '平均',null,null,-1);
+>>>>>>> b7c5bc653988fcb1e4ceb016c0481340bd11cfaa
 INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (1622,'depreciationMethodList','2', '加速双倍余额',null,null,-1);
 INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (1623,'depreciationMethodList','3', '加速年限',null,null,-1);
 
@@ -560,11 +564,16 @@ INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id)
 INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (1702,'qrCodeLibStatus','3', '已建档','Documented ',null,-1);
 INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (1699,'qrCodeLibStatus','4', '已作废','Discard ',null,-1);
 
+<<<<<<< HEAD
 --work_order status 
+=======
+--work_order status
+>>>>>>> b7c5bc653988fcb1e4ceb016c0481340bd11cfaa
 INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (1703,'status','1', '在修','Fixing',null,-1);
 INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (1704,'status','2', '完成','Closed',null,-1);
 INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (1705,'status','3', '取消','Cancel',null,-1);
 
+<<<<<<< HEAD
 --work_order intExtType 
 INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (1706,'intExtType','1', '内部','Internal',null,-1);
 INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (1707,'intExtType','2', '外部','External',null,-1);
@@ -573,6 +582,12 @@ INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id)
 --work_order repairType
 INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (1709,'repairType','1', '上门维修','OnSiteRepair',null,-1);
 INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (1710,'repairType','2', '送到维修中心','ToTheServiceCenter',null,-1);
+=======
+--work_order intExtType
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (1706,'intExtType','1', '内部','Internal',null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (1707,'intExtType','2', '外部','External',null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (1708,'intExtType','3', '混合','Mixed',null,-1);
+>>>>>>> b7c5bc653988fcb1e4ceb016c0481340bd11cfaa
 
 -- module's messages  (id from 3000)
 INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (3000,'message','DeleteConformation', '删除确认','Delete Confirmation',null,-1);
@@ -693,6 +708,7 @@ INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id)
 INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (5071,'label','unbundWX','是否解除微信绑定？','unbundWX?',null,-1);
 INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (5072,'label','maxMessageCount','最大消息提醒次数','max message count',null,-1);
 
+<<<<<<< HEAD
 INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (5073,'label','Import','导入','Import',null,-1);
 INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (5074,'label','choseFileToUpload','选择文件上传','select one file to upload',null,-1);
 INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (5075,'label','downloadTemplateFile','下载模版文件','Download Template File',null,-1);
@@ -704,6 +720,8 @@ INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id)
 INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (5081,'importStatus','Failure','添加失败','Fail to add',null,-1);
 INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (5082,'label','InvalidParameter','错误的参数','Fail to add',null,-1);
 INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (5083,'label','ParsingImportFileError','文件不能解析,请检查模版/数据后重新上传','Fail to parse file,please check the tamplate or data!',null,-1);
+=======
+>>>>>>> b7c5bc653988fcb1e4ceb016c0481340bd11cfaa
 
 -- asset head
 
@@ -842,4 +860,8 @@ INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id)
 
 INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (9100,'focusOption','0',  '所有工单流程消息','all workorder msg',null,-1);
 INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (9101,'focusOption','1',  '仅工单创建和关单消息','only create and shutdown msg',null,-1);
+<<<<<<< HEAD
 INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (9102,'focusOption','2',  '不推送工单消息','no need push workorder msg',null,-1);
+=======
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (9102,'focusOption','2',  '不推送工单消息','no need push workorder msg',null,-1);
+>>>>>>> b7c5bc653988fcb1e4ceb016c0481340bd11cfaa

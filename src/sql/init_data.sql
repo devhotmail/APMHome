@@ -64,3 +64,81 @@ SELECT setval('"data_table_config_id_seq"', 4, false);
 SELECT setval('"field_code_type_id_seq"', 5, false);
 
 
+--create index ix_exam_summit_site_id on exam_summit(site_id);
+--create index ix_exam_summit_hospital_id on exam_summit(hospital_id);
+--create index ix_exam_summit_asset_id on exam_summit(asset_id);
+--create index ix_exam_summit_asset_group on exam_summit(asset_group);
+--create index ix_exam_summit_dept_id on exam_summit(dept_id);
+--create index ix_exam_summit_part_id on exam_summit(part_id);
+--create index ix_exam_summit_subpart_id on exam_summit(subpart_id);
+--create index ix_exam_summit_step_id on exam_summit(step_id);
+
+insert into supplier(site_id,name) values (1, '通用电气');
+insert into supplier(site_id,name) values (1, '西门子');
+insert into supplier(site_id,name) values (1, '飞利浦');
+insert into supplier(site_id,name) values (1, '霍尼韦尔');
+
+insert into proc_part(name) values ('头部');
+insert into proc_part(name) values ('颈部');
+insert into proc_part(name) values ('胸部');
+insert into proc_part(name) values ('腹部');
+insert into proc_part(name) values ('盆部');
+insert into proc_part(name) values ('脊柱');
+insert into proc_part(name) values ('上肢');
+insert into proc_part(name) values ('下肢');
+insert into proc_part(name) values ('其它');
+
+insert into proc_step(part_id, name) values (1,'head_step1');
+insert into proc_step(part_id, name) values (1,'head_step2');
+insert into proc_step(part_id, name) values (1,'head_step3');
+insert into proc_step(part_id, name) values (1,'head_step4');
+insert into proc_step(part_id, name) values (1,'head_step5');
+
+insert into proc_step(part_id, name) values (2,'neck_step1');
+insert into proc_step(part_id, name) values (2,'neck_step2');
+insert into proc_step(part_id, name) values (2,'neck_step3');
+insert into proc_step(part_id, name) values (2,'neck_step4');
+insert into proc_step(part_id, name) values (2,'neck_step5');
+
+insert into proc_step(part_id, name) values (3,'chest_step1');
+insert into proc_step(part_id, name) values (3,'chest_step2');
+insert into proc_step(part_id, name) values (3,'chest_step3');
+insert into proc_step(part_id, name) values (3,'chest_step4');
+insert into proc_step(part_id, name) values (3,'chest_step5');
+
+insert into proc_step(part_id, name) values (4,'abdomen_step1');
+insert into proc_step(part_id, name) values (4,'abdomen_step2');
+insert into proc_step(part_id, name) values (4,'abdomen_step3');
+insert into proc_step(part_id, name) values (4,'abdomen_step4');
+insert into proc_step(part_id, name) values (4,'abdomen_step5');
+
+insert into proc_step(part_id, name) values (5,'pelvic_step1');
+insert into proc_step(part_id, name) values (5,'pelvic_step2');
+insert into proc_step(part_id, name) values (5,'pelvic_step3');
+insert into proc_step(part_id, name) values (5,'pelvic_step4');
+insert into proc_step(part_id, name) values (5,'pelvic_step5');
+
+insert into proc_step(part_id, name) values (6,'spine_step1');
+insert into proc_step(part_id, name) values (6,'spine_step2');
+insert into proc_step(part_id, name) values (6,'spine_step3');
+insert into proc_step(part_id, name) values (6,'spine_step4');
+insert into proc_step(part_id, name) values (6,'spine_step5');
+
+insert into proc_step(part_id, name) values (7,'upper_limbs_step1');
+insert into proc_step(part_id, name) values (7,'upper_limbs_step2');
+insert into proc_step(part_id, name) values (7,'upper_limbs_step3');
+insert into proc_step(part_id, name) values (7,'upper_limbs_step4');
+insert into proc_step(part_id, name) values (7,'upper_limbs_step5');
+
+insert into proc_step(part_id, name) values (8,'lower_limbs_step1');
+insert into proc_step(part_id, name) values (8,'lower_limbs_step2');
+insert into proc_step(part_id, name) values (8,'lower_limbs_step3');
+insert into proc_step(part_id, name) values (8,'lower_limbs_step4');
+insert into proc_step(part_id, name) values (8,'lower_limbs_step5');
+
+insert into proc_step(part_id, name) values (9,'else_step1');
+insert into proc_step(part_id, name) values (9,'else_step2');
+insert into proc_step(part_id, name) values (9,'else_step3');
+insert into proc_step(part_id, name) values (9,'else_step4');
+insert into proc_step(part_id, name) values (9,'else_step5');
+

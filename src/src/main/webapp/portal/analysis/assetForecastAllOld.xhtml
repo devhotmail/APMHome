@@ -1,0 +1,64 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/WEB-INF/template-polymer.xhtml">
+
+    <ui:define name="title">Charts</ui:define>
+
+    <ui:define name="head">
+        <h:outputStylesheet name="css/homeHead.css"/>
+        <h:outputScript name="js/homeHead.js"/>
+    </ui:define>
+
+    <ui:define name="content">
+        <h:form id="Forecast">
+            <header>
+                <div class="card--title text--center">
+                    <div class="ui-g">
+                        <div class="ui-g-1 text--left">
+                            <p:menuButton id="selAsset" placeholder="#{msg.preventiveMaintenanceAnalysis_allDevices}" value="#{assetForecastController.assetName}">
+                                <p:menuitem value="选择单台设备... "
+                                            actionListener="#{selectAssetController.prepareDialogCallback(assetForecastController,
+                                            ':Forecast:selAsset :Forecast:value_expo :Forecast:barForecast')}"
+                                            process="@this"
+                                            update=":selectAssetDlg"
+                                            oncomplete="PF('varSelectAssetDlg').show()"/>
+                                <p:separator/>
+                                <p:menuitem value="#{msg.preventiveMaintenanceAnalysis_allDevices}" actionListener="#{assetForecastController.onAssetsChange}"
+                                            update="selAsset value_expo barForecast"/>
+                            </p:menuButton>
+                        </div>
+                        <div class="ui-g-10">
+                            <span class="epsilon">#{msg.DeviceKPIForecast}</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="card--summary">
+                    <div class="ui-g-12 ui-md-6">
+                        <div class="epsilon u-mv-">#{msg.assetTotalProfitForecast}</div>
+                        <p:outputPanel id="value_expo" header="Device Exposure (Hours)">
+                            <div class="text--banner delta">
+                                <h:outputText value="#{assetForecastController.profitForecast}"/>
+                                <span class="text--unit text--secondary epsilon">#{msg.CNYlb}</span>
+                            </div>
+                        </p:outputPanel>
+                    </div>
+                </div>
+            </header>
+            <div class="ui-g">
+                <div class="ui-g-12">
+                    <div class="block">
+                        <h3 class="block-title">#{msg.assetAnnualForecast}</h3>
+                        <p:chart id="barForecast" type="bar" model="#{assetForecastController.barMonthlyForecast}"
+                                 style="height:300px" responsive="true"/>
+                    </div>
+                </div>
+            </div>
+        </h:form>
+
+        <ui:include src="/portal/asset/selectAssetDialog.xhtml"/>
+    </ui:define>
+
+</ui:composition>

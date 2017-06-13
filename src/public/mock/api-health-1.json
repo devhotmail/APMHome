@@ -1,0 +1,77 @@
+{
+    "pages": {
+        "total": 2,
+        "limit": 50,
+        "start": 0
+    },
+    "items": [
+        {
+            "id": 10,
+            "name": "西门子核磁Avanto",
+            "owner": "张小小",
+            "stage": 1,
+            "link": {
+                "ref": "redirect",
+                "href": "https://app_url_prefix/portal/wo/woList.xhtml?isClosed=false"
+            }
+        },
+        {
+            "id": 11,
+            "name": "通用电气彩超LOGIQ",
+            "owner": "王村",
+            "stage": 4,
+            "link": {
+                "ref": "redirect",
+                "href": "https://app_url_prefix/portal/wo/woList.xhtml?isClosed=false"
+            }
+        }
+    ],
+    "root": {
+        "category": 1,
+        "display": "维修中",
+        "count": 2,
+        "stages": [
+            {
+                "id": 1,
+                "display": "申请",
+                "count": 3,
+                "unit": "台"
+            },
+            {
+                "id": 2,
+                "display": "审核",
+                "count": 3,
+                "unit": "台"
+            },
+            {
+                "id": 3,
+                "display": "派工",
+                "count": 1,
+                "unit": "台"
+            },
+            {
+                "id": 4,
+                "display": "领工",
+                "count": 2,
+                "unit": "台"
+            },
+            {
+                "id": 5,
+                "display": "维修",
+                "count": 2,
+                "unit": "台"
+            },
+            {
+                "id": 6,
+                "display": "关单",
+                "count": 1,
+                "unit": "台"
+            }
+        ],
+        "unit": "台",
+        "link": {
+            "ref": "self",
+            "href": "https://app_url_prefix/api/health?category=1"
+        }
+    }
+}

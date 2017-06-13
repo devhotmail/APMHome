@@ -105,8 +105,8 @@ public final class AssetMaintenanceController implements ServerEventInterface {
     }
 
     private static final boolean validateDate(Date startDate, Date endDate) {
-        return new DateTime(startDate).plusMonths(1).isBefore(new DateTime(endDate)) &&
-          new DateTime(startDate).plusYears(3).plusDays(1).isAfter(new DateTime(endDate));
+      return new DateTime(startDate).plusMonths(1).isBefore(new DateTime(endDate)) &&
+        new DateTime(startDate).plusYears(3).plusDays(1).isAfter(new DateTime(endDate));
     }
 
     private int assetId;
@@ -603,7 +603,7 @@ public final class AssetMaintenanceController implements ServerEventInterface {
             "          AND step.step_id > 0 AND step.step_id <= :#knownWorkOrderSteps" +
             "          AND step.start_time IS NOT NULL " +
             "          AND step.end_time IS NOT NULL " +
-//            "          AND work.status = 2 " +
+//            "          AND work.is_closed = true " +
             "          AND work.hospital_id = :#hospital_id " +
             "          AND work.request_time BETWEEN :#startDate AND :#endDate " +
             "        :#andDeviceFilterForWorkOrder " +  // AND work.asset_id = :#assetId
@@ -693,7 +693,7 @@ public final class AssetMaintenanceController implements ServerEventInterface {
             "          AND step.step_id > 0 AND step.step_id <= :#knownWorkOrderSteps" +
             "          AND step.start_time IS NOT NULL " +
             "          AND step.end_time IS NOT NULL " +
- //           "          AND work.status = 2 " +
+ //           "          AND work.is_closed = true " +
             "          AND work.hospital_id = :#hospital_id " +
             "          AND work.request_time BETWEEN :#startDate AND :#endDate " +
             "        :#andDeviceFilterForWorkOrder " +  // AND work.asset_id = :#assetId
@@ -717,7 +717,7 @@ public final class AssetMaintenanceController implements ServerEventInterface {
             "          AND step.step_id > 0 AND step.step_id <= :#knownWorkOrderSteps" +
             "          AND step.start_time IS NOT NULL " +
             "          AND step.end_time IS NOT NULL " +
- //           "          AND work.status = 2 " +
+ //           "          AND work.is_closed = true " +
             "          AND work.hospital_id = :#hospital_id " +
             "          AND work.request_time BETWEEN :#startDate AND :#endDate " +
             "        :#andDeviceFilterForWorkOrder " +  // AND work.asset_id = :#assetId
@@ -938,7 +938,7 @@ public final class AssetMaintenanceController implements ServerEventInterface {
     @SuppressWarnings("unchecked")
 	private final static <T> T convertToScalar(List<Map<String, Object>> list, T fallback) {
         FluentIterable<Map<String, Object>> iterable = FluentIterable.from(list);
-        return (T) iterable.first().or(ImmutableMap.of("scalar", fallback)).get("scalar");
+      return (T) iterable.first().or(ImmutableMap.of("scalar", fallback)).get("scalar");
     }
 
     private final static BarChartModel convertToBarChartModel(List<Map<String, Object>> list, String xLabel, String yLabel) {

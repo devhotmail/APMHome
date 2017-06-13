@@ -1,0 +1,13 @@
+:host {
+  .tool {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-right: 200px;
+    .date-range {
+      font-size: 1rem;
+      color: #595959;
+      white-space: nowrap;
+    }
+  }
+}

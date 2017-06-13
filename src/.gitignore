@@ -1,0 +1,19 @@
+.svn/
+bower_components/
+node_modules/
+target/
+src/main/webapp/resources/elements/**/*-styles.html
+src/main/webapp/resources/css
+.idea/
+*.iml
+sql/
+about.html
+dist/
+src/main/webapp/react
+
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*

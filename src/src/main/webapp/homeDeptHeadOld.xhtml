@@ -1,0 +1,104 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" template="/WEB-INF/template-polymer.xhtml">
+
+	<ui:define name="title">Charts</ui:define>
+
+	<ui:define name="head">
+		<h:outputStylesheet name="css/homeDeptHead.css"/>
+		<h:outputScript name="js/homeDeptHead.js"/>
+	</ui:define>
+
+	<ui:define name="content">
+		<header>
+			<div class="card--title text--center">
+				<span class="epsilon">#{msg.HomePage}</span>
+			</div>
+			<div class="card--summary">
+				<div class="ui-g">
+					<div class="ui-md-4">
+						<div class="epsilon u-mv-">#{msg.deviceValueScanhd}</div>
+						<p:outputPanel id="value_scan">
+							<div class="text--banner delta">
+								<h:outputText value="#{homeDeptHeadController.valueScan}"/>
+								<span class="text--unit epsilon text--secondary">#{msg.countlb}</span>
+							</div>
+						</p:outputPanel>
+					</div>
+					<div class="ui-md-4">
+						<div class="epsilon u-mv-">#{msg.deviceValueExpohd}</div>
+						<p:outputPanel id="value_expo">
+							<div class="text--banner delta">
+								<h:outputText value="#{homeDeptHeadController.valueExpo}"/>
+								<span class="text--unit epsilon text--secondary">#{msg.countlb}</span>
+							</div>
+						</p:outputPanel>
+					</div>
+					<div class="ui-md-4">
+						<div class="epsilon u-mv-">#{msg.deviceValueProfithd}</div>
+						<p:outputPanel id="value_profit">
+							<div class="text--banner delta">
+								<h:outputText value="#{homeDeptHeadController.valueProfit}"/>
+								<span class="text--unit epsilon text--secondary">#{msg.CNYlb}</span>
+							</div>
+						</p:outputPanel>
+					</div>
+				</div>
+			</div>
+		</header>
+
+		<div class="ui-g">
+
+			<!-- Range picker -->
+			<div class="ui-g-12">
+				<div class="block">
+					<h:form id="form2">
+						<p:growl id="calendar_submit" showDetail="true"/>
+						<div class="calendar-range-picker flex flex--row flex--center flex--justify">
+							<p:calendar timeZone="GMT+8"  id="start_date_button" value="#{homeDeptHeadController.startDate}"
+										showOn="button"/>
+							<label>#{msg.selectSearchInterval_1}</label>
+							<p:calendar timeZone="GMT+8"  id="end_date_button" value="#{homeDeptHeadController.endDate}"
+										showOn="button"/>
+							<label> </label>
+							<p:commandButton id="submit_date" class="btn btn--large" value="#{msg.selectSearchInterval_2}"
+											 update="calendar_submit value_scan value_expo value_profit scan_bar exposure_bar profit_bar"
+											 actionListener="#{homeDeptHeadController.submit}"/>
+						</div>
+					</h:form>
+				</div>
+			</div>
+
+			<!-- Chart 1: Device Scan -->
+			<div class="ui-g-12">
+				<div class="block">
+					<h3 class="block-title">#{msg.deviceScanhd}</h3>
+					<p:chart id="scan_bar" type="bar"
+						model="#{homeDeptHeadController.deviceScan}" responsive="true" />
+				</div>
+			</div>
+
+			<!-- Chart 2: Device Exposure -->
+			<div class="ui-g-12">
+				<div class="block">
+					<h3 class="block-title">#{msg.deviceExpohd}</h3>
+					<p:chart id="exposure_bar" type="bar"
+						model="#{homeDeptHeadController.deviceExpo}" responsive="true" />
+				</div>
+			</div>
+
+			<!-- Chart 3: Device ROI -->
+			<div class="ui-g-12">
+				<div class="block">
+					<h3 class="block-title">#{msg.deviceROIhd}</h3>
+					<p:chart id="profit_bar" type="bar"
+						model="#{homeDeptHeadController.deviceProfit}" responsive="true" />
+				</div>
+			</div>
+		</div>
+
+	</ui:define>
+
+</ui:composition>

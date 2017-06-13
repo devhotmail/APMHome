@@ -1,0 +1,150 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/px-dropdown/px-dropdown.html">
+<link rel="import" href="../../elements/date-time-picker/date-time-picker.html">
+<link rel="import" href="../behavior/context.html">
+<link rel="import" href="../behavior/fetch-cached.html">
+<link rel="import" href="device-data-filter-bar-styles.html">
+
+<dom-module id="device-data-filter-bar">
+  <template>
+    <style include="device-data-filter-bar-styles"></style>
+    <div class="toolbar flex flex--row flex--left">
+      <div class="flex--item text--center">
+        <px-rangepicker
+          id="rangepicker"
+          range="{{range}}"
+          hide-time="true"
+          date-format="YYYY/MM/DD"
+          time-format="hh:mm:ss A"
+          preset-ranges="[[rangePresets]]"
+          show-buttons="true">
+        </px-rangepicker>
+      </div>
+      <div class="u-mh+ u-mb flex--item flex flex--row flex--middle">
+        <label class="flex--item" for="device-filter">筛选条件</label>
+        <px-dropdown id="device-filter" class="flex--item u-mh+" display-value="[[_displayValue]]" selected-key="{{filterBy}}">
+          <px-dropdown-content class="px-dropdown-content"
+                               max-cont-character-width="10"
+                               extend-dropdown="true"
+                               extend-dropdown-by="15"
+                               items="[[selectOptions]]">
+          </px-dropdown-content>
+        </px-dropdown>
+      </div>
+    </div>
+  </template>
+  <script>
+    define('device-data-filter-bar', [
+      'behavior/context',
+      'behavior/fetch-cached',
+      'behavior/date-time-behavior'
+    ], function(ContextBehavior, FetchCachedBehavior, DateTimeBehavior) {
+
+      var DATE_FORMAT = 'YYYY-MM-DD';
+
+      Polymer({
+        is: 'device-data-filter-bar',
+        properties: {
+          selectOptions: Array,
+          filterBy: {
+            type: String,
+            notify: true,
+            value: 0,
+          },
+          from: {
+            type: String,
+            notify: true
+          },
+          to: {
+            type: String,
+            notify: true
+          },
+          _displayValue: {
+            computed: '_getDisplayValue(filterBy, selectOptions)'
+          },
+          _queryUrl: {
+            type: String,
+            computed: '_getQueryUrl()'
+          }
+        },
+        observers: [
+          'setToSimpleDate(range)',
+          'fromSimpleDate(from, to)',
+          'saveOptionsInHistory("filter", filterBy)',
+          'saveOptionsInHistory("from", from)',
+          'saveOptionsInHistory("to", to)',
+        ],
+        behaviors: [
+          ContextBehavior,
+          FetchCachedBehavior,
+          DateTimeBehavior,
+        ],
+        ready: function() {
+          var _this = this;
+
+          // setup data from location hash
+          this.restoreOptionsFromHistory({
+            'filter': 'filterBy',
+            'from': 'from',
+            'to': 'to'
+          });
+
+          this.fetchPage(this._getQueryUrl()).then(function(res) {
+            var list = Object.keys(res).map(function(i) { return {val: res[+i], key: i}; });
+            list = [{"val": "全部设备", "key": 0}].concat(list);
+            _this.set('selectOptions', list);
+          });
+
+          // init default time range
+          if (!this.from) {
+            this.set('from', moment().subtract(1, 'y').format(DATE_FORMAT));
+            this.set('to', moment().format(DATE_FORMAT));
+          }
+        },
+        _getQueryUrl: function() {
+          return URI(this.resolveApiUrl('/api/msg')).query({
+            'type': 'assetGroup',
+          }).toString();
+        },
+        _getDisplayValue: function(key, options) {
+          return options.find(function(item) {
+            return item.key == key;
+          }).val;
+        },
+        setToSimpleDate: function(range) {
+          if (!this.from) {
+            return;
+          }
+          this.set('from', moment(range.from).format(DATE_FORMAT));
+          this.set('to', moment(range.to).format(DATE_FORMAT));
+        },
+        fromSimpleDate: function(from, to) {
+          this.set('range', {
+            from: moment(from).toISOString(),
+            to: moment(to).toISOString(),
+          });
+        },
+        restoreOptionsFromHistory: function(props) {
+          var options = URI().query(URI().fragment()).query(true);
+          var _this = this;
+          Object.keys(props).forEach(function(key) {
+            var path;
+            if (key in options) {
+              path = props[key];
+              _this.set(path, options[key]);
+            }
+          });
+        },
+        saveOptionsInHistory: function(name, val) {
+          if (!val) {
+            return;
+          }
+          var options = URI().query(URI().fragment()).query(true);
+          options[name] = val;
+          location.hash = '#' + URI().query(options).query();
+        }
+      });
+
+    });
+  </script>
+</dom-module>

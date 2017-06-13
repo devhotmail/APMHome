@@ -1,0 +1,10 @@
+<link rel="import" href="context.html">
+<script src="bower_components/lscache/lscache.js"></script>
+<script>
+  define('lscache', ['context'], function(context) {
+    var user = context.user();
+    // open user specific cache bucket
+    lscache.setBucket(user.id);
+    return lscache;
+  });
+</script>

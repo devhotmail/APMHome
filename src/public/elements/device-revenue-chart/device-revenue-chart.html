@@ -1,0 +1,97 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/px-dropdown/px-dropdown.html">
+<link rel="import" href="../bubble-radial-chart/bubble-radial-chart.html">
+<link rel="import" href="../behavior/context.html">
+
+
+<dom-module id="device-revenue-chart">
+  <template>
+    <bubble-radial-chart id="chart" query-url="[[queryUrl]]"
+      on-opening-node-l1-changed="handleOpenNode" bubble-config="[[_bubbleConfig]]"></bubble-radial-chart>
+  </template>
+  <script>
+    define('device-revenue-chart', [
+      'behavior/context',
+    ], function(ContextBehavior) {
+      var gauge_color = d3.scaleOrdinal([
+        'rgba(117, 162, 234, 1)',
+        'rgba(140, 211, 199, 1)',
+        'rgba(204, 185, 92, 1)',
+        'rgba(187, 128, 188, 1)',
+        'rgba(128, 177, 211, 1)',
+        'rgba(184, 188, 128, 1)',
+        'rgba(157, 155, 191, 1)',
+        'rgba(152, 186, 145, 1)'
+      ]);
+      var gauge_fills = d3.scaleOrdinal([
+        'rgb(210, 219, 235)',
+        'rgb(215, 229, 227)',
+        'rgb(228, 224, 204)',
+        'rgb(224, 213, 225)',
+        'rgb(213, 222, 229)',
+        'rgb(224, 225, 213)',
+        'rgb(218, 218, 225)',
+        'rgb(217, 224, 216)'
+      ]);
+
+      // http://browserhacks.com/#hack-2f32c95ac8c021c463de0fdf685acb29
+      function isIE() {
+        return window.navigator.msPointerEnabled;
+      }
+
+      Polymer({
+        is: 'device-revenue-chart',
+        properties: {
+          year: Number,
+          groupBy: String,
+          queryUrl: {
+            type: String,
+            computed: '_computeQueryUrl(year, groupBy)'
+          },
+        },
+        behaviors: [
+          ContextBehavior
+        ],
+        observers: [
+          '_handleFilterChange(year, groupBy)'
+        ],
+        _computeQueryUrl: function(year, groupBy) {
+          var uri = URI(this.resolveApiUrl('/api/profit')).addQuery('year', year).addQuery('groupby', groupBy);
+          if (groupBy === 'device') {
+            uri.removeQuery('groupby');
+          }
+          return uri.toString();
+        },
+        _handleFilterChange: function(year, groupBy) {
+          this.$.chart.load();
+        },
+        ready: function() {
+          this._bubbleConfig = function(node, i, config) {
+            var level = node.orbitIndex;
+
+            // use same color as parent level for level3 and above
+            var colorId = (
+                level > 1 ? node.parent.data.id : node.data.id
+              ) - 1;
+
+            config.height = config.width = node.size * 2;
+            config.circleColor = config.waveColor = gauge_color(colorId);
+            config.fillColor = gauge_fills(colorId);
+            config.showWave = true;
+            config.waveAnimateTime = 5000;
+            config.waveHeight = 0.15;
+            config.waveOffset = 0.25;
+            config.maxValue = +node.data.revenue_label;
+            config.isRoot = node.depth;
+            config.showLabel = node.depth === 1; // only show label for depth one
+            // gauge animation is way too expensive for IE
+            config.waveRise = !isIE();
+            config.waveAnimate = !isIE();
+            config.valueCountUp = !isIE();
+            return config;
+          };
+        }
+      });
+    });
+  </script>
+</dom-module>

@@ -1,0 +1,19 @@
+{
+  "parameters": "Parameters",
+  "chosen_period": "Period",
+  "operation_rate": "Operation Rate",
+  "ftfr": "FTFR",
+  "same_period_last_year": "Same Period Last Year",
+  "incident_count": "Incident Count",
+  "primary_failure": "Primary Failure",
+  "secondary_failure": "Secondary Failure",
+  "all_asset_type": "All Type",
+  "all_dept": "All Department",
+  "display_asset_type": "By Type",
+  "display_brand": "By Suppiler",
+  "display_dept": "By Department",
+  "no_more_data": "No more data",
+  "failure_cause": "Failure Casue",
+  "group_info": "Group Info",
+  "asset_info": "Assets Info"
+}
