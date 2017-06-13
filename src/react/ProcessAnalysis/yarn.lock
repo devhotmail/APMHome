@@ -2377,9 +2377,9 @@ detective@^4.3.1:
     acorn "^4.0.3"
     defined "^1.0.0"
 
-"dew-tooltip@git+https://github.build.ge.com/foundry-sh/dew-tooltip.git#v0.0.1":
-  version "0.0.1"
-  resolved "git+https://github.build.ge.com/foundry-sh/dew-tooltip.git#612952a314a083f93570b0587c6c7443b769fd59"
+"dew-tooltip@git+https://github.build.ge.com/foundry-sh/dew-tooltip.git":
+  version "0.0.3"
+  resolved "git+https://github.build.ge.com/foundry-sh/dew-tooltip.git#66f3b7357841c009398bc0ecfc425d19fd60aad4"
   dependencies:
     jiugongge "^0.0.5"
     lodash.memoize "^4.1.2"
