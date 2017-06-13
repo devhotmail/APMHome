@@ -32,7 +32,8 @@
 
 :global {
   .ant-table-fixed-header .ant-table-scroll .ant-table-header {
-    overflow: hidden;
+    overflow-x: hidden;
+    overflow-y: hidden;
   }
 
   .ant-table-wrapper:after,
