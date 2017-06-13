@@ -21,6 +21,8 @@
     <h:outputScript name="js/ripple.js" library="ultima-layout"/>
     <h:outputScript name="js/swipe.js" library="ultima-layout"/>
     <h:outputScript name="js/primefaces-locale_zh.js"/>
+    <h:outputStylesheet name="css/main.css"/>
+    <h:outputScript name="js/main.js"/>
 
     <ui:insert name="head"/>
 </h:head>
@@ -48,13 +50,7 @@
         </div>
         <div class="layout-profile">
             <div class="profile-name">
-                #{userContextService.loginUserSiteName}
-            </div>
-            <div class="profile-name">
-              #{userContextService.hasRole('HospitalHead') or userContextService.hasRole('AssetHead') ? '' : userContextService.loginUserOrgInfo.name}
-            </div>
-            <div class="profile-name">
-              #{userContextService.userName}
+                #{userContextService.userName}，#{userContextService.loginUserSiteName} #{userContextService.hasRole('HospitalHead') or userContextService.hasRole('AssetHead') ? '' : userContextService.loginUserOrgInfo.name}
             </div>
         </div>
     </div>
