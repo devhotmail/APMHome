@@ -3,11 +3,13 @@ const merge = require('webpack-merge')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const FriendlyErrorsPlugin = require('friendly-errors-webpack-plugin')
 const baseWebpackConfig = require('./webpack.base.conf')
+const config = require('../config')
 
 module.exports = merge(baseWebpackConfig, {
-  devtool: '#inline-cheap-module-source-map',
+  devtool: '#cheap-module-eval-source-map',
   entry: {
     app: [
+      'babel-polyfill',
       'react-hot-loader/patch',
       'webpack-hot-middleware/client?path=/__webpack_hmr&timeout=20000',
       './src/index.js'
@@ -28,26 +30,42 @@ module.exports = merge(baseWebpackConfig, {
         exclude: /node_modules/,
         use: [
           'style-loader',
-          'css-loader'
+          'css-loader',
+          'postcss-loader'
         ]
       },
       {
         test: /\.s[ca]ss$/,
-        exclude: /src\/styles/,
-        use: [
-          'style-loader',
-          {
-            loader: 'css-loader',
-            options: {
-              module: true,
-              importLoaders: 1,
-              localIdentName: '[local]__[hash:base64:5]'
-            }
-          },
-          'sass-loader',
-          'postcss-loader'
-        ]
-      },
+        exclude: [/src\/styles/, /node_modules/],
+         use: [
+           'style-loader',
+           {
+             loader: 'css-loader',
+             options: {
+               module: true,
+               importLoaders: 2,
+               localIdentName: '[local]__[hash:base64:5]'
+             }
+           },
+           'postcss-loader',
+           'sass-loader',
+         ]
+       },
+       {
+         test: /\.s[ca]ss$/,
+         include: [/src\/styles/, /node_modules/],
+         use: [
+           'style-loader',
+           {
+             loader: 'css-loader',
+             options: {
+               importLoaders: 2
+             }
+           },
+           'postcss-loader',
+           'sass-loader'
+         ]
+       },
       {
         test: /\.less$/,
         use: [
@@ -61,7 +79,7 @@ module.exports = merge(baseWebpackConfig, {
           {
             loader: 'less-loader',
             options: {
-              modifyVars: require('./theme')
+              modifyVars: require('./theme.js')
             }
           }
         ],
@@ -80,7 +98,7 @@ module.exports = merge(baseWebpackConfig, {
   plugins: [
     new webpack.NamedModulesPlugin(),
     new webpack.DefinePlugin({
-      'process.env': {'NODE_ENV': '"development"'}
+      'process.env': config.development.env
     }),
     new webpack.optimize.OccurrenceOrderPlugin(),
     new webpack.HotModuleReplacementPlugin(),
@@ -88,8 +106,17 @@ module.exports = merge(baseWebpackConfig, {
     new HtmlWebpackPlugin({
       template: './public/index.html',
       filename: 'index.html',
-      inject: true
+      inject: true,
+      chunksSortMode: (c1, c2) => {
+        const orders = ['common', 'vendor', 'app']
+        const o1 = orders.indexOf(c1.names[0])
+        const o2 = orders.indexOf(c2.names[0])
+        return o1 - o2
+      }
     }),
+    new webpack.WatchIgnorePlugin([
+      /node_modules/
+    ]),
     new FriendlyErrorsPlugin()
   ]
 })

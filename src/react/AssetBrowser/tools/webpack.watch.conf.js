@@ -5,7 +5,6 @@ const HtmlWebpackPlugin = require('html-webpack-plugin')
 const ExtractTextPlugin = require('extract-text-webpack-plugin')
 const FriendlyErrorsPlugin = require('friendly-errors-webpack-plugin')
 const baseWebpackConfig = require('./webpack.base.conf')
-
 const utils = require('./utils')
 const config = require('../config')
 
@@ -13,6 +12,12 @@ const publicPath = utils.getProdPublicPath(config.watch.commonPrefix)
 
 module.exports = merge(baseWebpackConfig, {
   devtool: '#inline-cheap-module-source-map',
+  entry: {
+    vendor: [
+      'babel-polyfill'
+    ],
+    app: './src/index.js'
+  },
   output: {
     filename: '[name].js',
     publicPath,
@@ -32,12 +37,15 @@ module.exports = merge(baseWebpackConfig, {
         exclude: /node_modules/,
         loader: ExtractTextPlugin.extract({
           fallback: 'style-loader',
-          use: 'css-loader',
+          use:[
+            'css-loader',
+            'postcss-loader'
+          ]
         }),
       },
       {
         test: /\.s[ca]ss$/,
-        exclude: /src\/styles/,
+        exclude: [/src\/styles/, /node_modules/],
         loader: ExtractTextPlugin.extract({
           fallback: 'style-loader',
           use: [
@@ -45,12 +53,29 @@ module.exports = merge(baseWebpackConfig, {
               loader: 'css-loader',
               options: {
                 module: true,
-                importLoaders: 1,
+                importLoaders: 2,
                 localIdentName: '[local]__[hash:base64:5]'
               }
             },
-            'sass-loader',
-            'postcss-loader'
+            'postcss-loader',
+            'sass-loader'
+          ]
+        })
+      },
+      {
+        test: /\.s[ca]ss$/,
+        include: [/src\/styles/, /node_modules/],
+        loader: ExtractTextPlugin.extract({
+          fallback: 'style-loader',
+          use: [
+            {
+              loader: 'css-loader',
+              options: {
+                importLoaders: 2
+              }
+            },
+            'postcss-loader',
+            'sass-loader'
           ]
         })
       },
@@ -71,7 +96,7 @@ module.exports = merge(baseWebpackConfig, {
                 modifyVars: require('./theme.js')
               }
             }
-          ],
+          ]
         }),
         include: /node_modules/
       },
@@ -82,7 +107,7 @@ module.exports = merge(baseWebpackConfig, {
             loader:'url-loader',
             options: {
               limit: 10000,
-              name: 'assets/[name].[ext]'
+              name: '/assets/[name].[ext]'
             }
           }
         ]
@@ -96,15 +121,23 @@ module.exports = merge(baseWebpackConfig, {
       debug: false
     }),
     new webpack.DefinePlugin({
-      'process.env': {'NODE_ENV': '"development"'}
+      'process.env': config.development.env
     }),
-    new webpack.NamedModulesPlugin(),
     new HtmlWebpackPlugin({
       template: './public/index.xhtml',
       filename: 'index.xhtml',
       appMountId: 'root',
-      inject: false
+      inject: false,
+      chunksSortMode: (c1, c2) => {
+        const orders = ['common', 'vendor', 'app']
+        const o1 = orders.indexOf(c1.names[0])
+        const o2 = orders.indexOf(c2.names[0])
+        return o1 - o2
+      }
     }),
+    new webpack.WatchIgnorePlugin([
+      /node_modules/
+    ]),
     // Put all css code in this file
     new ExtractTextPlugin('[name].css'),
     new FriendlyErrorsPlugin()
