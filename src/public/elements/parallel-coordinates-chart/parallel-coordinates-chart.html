@@ -18,9 +18,9 @@
         <template is="dom-if" if="[[!data.length]]">
           <placeholder-empty></placeholder-empty>
         </template>
-        <div id="chart" class="flex__item" height$=[[height]]>
-          <svg id="svg" width$="[[width]]" touch-action="none">
-            <rect id="chartBg" class="chart-bg" width$="[[width]]"></rect>
+        <div id="chart" class="flex__item">
+          <svg id="svg" width$="[[width]]" height$=[[height]] touch-action="none">
+            <rect id="chartBg" class="chart-bg"></rect>
             <g id="chartBody" class="chart-body"></g>
           </svg>
         </div>

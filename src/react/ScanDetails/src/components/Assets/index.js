@@ -109,8 +109,8 @@ class Assets extends React.PureComponent {
                           {
                             style => (
                               <g
-                                onMouseEnter={e => showTooltip(e, item, this.Tooltip)}
-                                onMouseLeave={e => hideTooltip(e)}
+                                onMouseOver={e => showTooltip(e, item, this.Tooltip)}
+                                onMouseOut={e => hideTooltip(e)}
                                 opacity={style.opacity}
                                 style={{cursor: 'pointer'}}
                                 onClick={this.onClick(item.data.asset.id)}

@@ -74,8 +74,8 @@ class Parts extends React.PureComponent {
                         opacity={style.opacity}
                         style={{cursor: 'pointer'}}
                         onClick={this.onClick(item.data.id)}
-                        onMouseEnter={e => showTooltip(e, item, this.Tooltip)}
-                        onMouseLeave={e => hideTooltip(e)}
+                        onMouseOver={e => showTooltip(e, item, this.Tooltip)}
+                        onMouseOut={e => hideTooltip(e)}
                       >
                         <AnnulusSectorStack
                           opacity={item.style.progress}
@@ -83,15 +83,15 @@ class Parts extends React.PureComponent {
                           startAngle={startAngle}
                           endAngle={endAngle}
                           text={{
-                            content: parts[item.data.id].name,
+                            content: parts[item.data.id] ? parts[item.data.id].name : '',
                             offset: (outerRadius - innerRadius) / 10,
                             fontSize: (outerRadius - innerRadius) / 5,
                             fill: '#8c8c8c'
                           }}
                           sectors={[{
                             id: item.data.id,
-                            width: item.data.count / maxCount * (outerRadius - innerRadius),
-                            fill: parts[item.data.id].color
+                            width: Math.min(item.data.count / maxCount, 1) * (outerRadius - innerRadius),
+                            fill: parts[item.data.id] ? parts[item.data.id].color : 'transparent'
                           }]}
                         />
                       </g>
