@@ -13,7 +13,7 @@ body, html, #root, #root>div {
     position: absolute;
     top: 0;
     left: 0;
-    z-index: 100;
+    z-index: 10;
     ul, li {
       margin: 0;
     }
@@ -32,6 +32,7 @@ body, html, #root, #root>div {
   bottom: 0;
   left: 0;
   right: 0;
+  z-index: 100;
   .loading {
     position: absolute;
     top: 50%;
