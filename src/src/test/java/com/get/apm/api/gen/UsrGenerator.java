@@ -114,7 +114,7 @@ public class UsrGenerator extends AbstractDbTest {
         .parameter("password", r._7)
         .parameter("is_super_admin", false)
         .parameter("is_site_admin", false)
-        .parameter("is_local_admin", Match(r._8).of(Case($(a -> a <= 5), true), Case($(), false)))
+        .parameter("is_local_admin", false)
         .parameter("is_active", true)
         .parameter("is_online", false)
         .parameter("email", "")
