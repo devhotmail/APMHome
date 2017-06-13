@@ -73,7 +73,7 @@ class Briefs extends React.PureComponent {
                           sectors={item.data.items.data.map(datum => ({
                             id: datum.id,
                             width: datum.count / maxCount * (outerRadius - innerRadius),
-                            fill: briefs.parts[datum.id].color
+                            fill: briefs.parts[datum.id] ? briefs.parts[datum.id].color : 'transparent'
                           }))}
                         />
                       </g>

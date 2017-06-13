@@ -83,7 +83,7 @@ class Parts extends React.PureComponent {
                           startAngle={startAngle}
                           endAngle={endAngle}
                           text={{
-                            content: parts[item.data.id].name,
+                            content: parts[item.data.id] ? parts[item.data.id].name : '',
                             offset: (outerRadius - innerRadius) / 10,
                             fontSize: (outerRadius - innerRadius) / 5,
                             fill: '#8c8c8c'
@@ -91,7 +91,7 @@ class Parts extends React.PureComponent {
                           sectors={[{
                             id: item.data.id,
                             width: Math.min(item.data.count / maxCount, 1) * (outerRadius - innerRadius),
-                            fill: parts[item.data.id].color
+                            fill: parts[item.data.id] ? parts[item.data.id].color : 'transparent'
                           }]}
                         />
                       </g>
