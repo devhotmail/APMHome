@@ -90,7 +90,7 @@ class Parts extends React.PureComponent {
                           }}
                           sectors={[{
                             id: item.data.id,
-                            width: item.data.count / maxCount * (outerRadius - innerRadius),
+                            width: Math.min(item.data.count / maxCount, 1) * (outerRadius - innerRadius),
                             fill: parts[item.data.id].color
                           }]}
                         />
