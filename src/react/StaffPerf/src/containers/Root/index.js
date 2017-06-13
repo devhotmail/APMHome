@@ -6,7 +6,6 @@ import Pager from 'dew-pager'
 import FilterBar from 'dew-filterbar'
 
 import SizeProvider from '#/components/SizeProvider'
-// import FilterBar from '#/components/FilterBar'
 import StackChart from '#/components/StackChart'
 import CoreCircle from '#/components/CoreCircle'
 
