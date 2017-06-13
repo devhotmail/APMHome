@@ -56,8 +56,8 @@ class Briefs extends React.PureComponent {
                         opacity={style.opacity}
                         style={{cursor: 'pointer'}}
                         onClick={this.onClick(item.data.type.id)}
-                        onMouseEnter={e => showTooltip(e, item, this.Tooltip)}
-                        onMouseLeave={e => hideTooltip(e)}
+                        onMouseOver={e => showTooltip(e, item, this.Tooltip)}
+                        onMouseOut={e => hideTooltip(e)}
                       >
                         <AnnulusSectorStack
                           opacity={item.style.progress}
