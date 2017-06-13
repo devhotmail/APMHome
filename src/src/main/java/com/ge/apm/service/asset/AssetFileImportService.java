@@ -7,11 +7,13 @@ package com.ge.apm.service.asset;
 
 import com.ge.apm.dao.AssetInfoRepository;
 import com.ge.apm.dao.OrgInfoRepository;
+import com.ge.apm.dao.QrCodeLibRepository;
 import com.ge.apm.dao.SupplierRepository;
 import com.ge.apm.dao.UserAccountRepository;
 import com.ge.apm.domain.AssetInfo;
 import com.ge.apm.domain.I18nMessage;
 import com.ge.apm.domain.OrgInfo;
+import com.ge.apm.domain.QrCodeLib;
 import com.ge.apm.domain.Supplier;
 import com.ge.apm.domain.UserAccount;
 import com.ge.apm.service.utils.ExcelDocument;
@@ -57,6 +59,8 @@ public class AssetFileImportService {
     private UserAccountRepository userDao;
     @Autowired
     private SupplierRepository supplierDao;
+    @Autowired
+    private QrCodeLibRepository qrcodeDao;
     @Autowired
     private AssetDepreciationService assetDepreciationService;
 
@@ -145,15 +149,15 @@ public class AssetFileImportService {
             asset.setFunctionGroup(getI18nMsgKey(assetFunctionTypes, functionGroup));
             String assetGroupName = (String) rowMap.get("设备类型");
             asset.setAssetGroup(getI18nMsgKey(assetGroup, assetGroupName));
-            asset.setFunctionGrade(Integer.parseInt((String) rowMap.get("功能等级")));
+            asset.setFunctionGrade(ExcelDocument.getCellIntegerValue(rowMap.get("功能等级")));
             asset.setSerialNum((String) rowMap.get("制造商序列号"));
             asset.setSystemId((String) rowMap.get("SystemID/厂商报修ID"));
             asset.setBarcode((String) rowMap.get("条码"));
             asset.setFinancingNum((String) rowMap.get("资产编号"));
             asset.setModalityId((String) rowMap.get("IT系统编号"));
-            asset.setPurchasePrice((Double) rowMap.get("采购价格"));
-            asset.setSalvageValue((Double) rowMap.get("最终残值"));
-            asset.setLifecycleInYear((Double) rowMap.get("使用年限"));
+            asset.setPurchasePrice(ExcelDocument.getCellDoubleValue(rowMap.get("采购价格")));
+            asset.setSalvageValue(ExcelDocument.getCellDoubleValue(rowMap.get("最终残值")));
+            asset.setLifecycleInYear(ExcelDocument.getCellDoubleValue(rowMap.get("使用年限")));
             String depreciationMethodNmae = (String) rowMap.get("折旧算法");
             asset.setDepreciationMethod(getI18nMsgKey(depreciationMethod, depreciationMethodNmae));
             asset.setManufactDate((Date) rowMap.get("生产日期"));
@@ -166,7 +170,8 @@ public class AssetFileImportService {
             asset.setLastMeteringDate((Date) rowMap.get("上次计量日期"));
             asset.setLastQaDate((Date) rowMap.get("上次质检日期"));
             asset.setMaitanance((String) rowMap.get("维护商"));
-            asset.setMaitananceTel(String.valueOf(((Double) rowMap.get("维护商电话")).longValue()));
+            asset.setMaitananceTel(String.valueOf((ExcelDocument.getCellDoubleValue(rowMap.get("维护商电话"))).longValue()));
+            asset.setQrCode((String) rowMap.get("二维码"));
 
             Map<String, Object> map = new HashMap();
             map.put("asset", asset);
@@ -247,12 +252,18 @@ public class AssetFileImportService {
 
             List<AssetInfo> assetList = getAssetInfos(newAsset);
             if (null == assetList || assetList.isEmpty()) {
-                createAsset(newAsset);
+                String qrCode = newAsset.getQrCode();
+                if (isAvailableQrcode(qrCode, item)) {
+                    createAsset(newAsset);
+                    item.put("status", ImportStatus.Created);
+                } else {
+                    item.put("status", ImportStatus.Failure);
+                    addErrMessage(item, WebUtil.getMessage("InvalidParameter") + "QRCode:" + qrCode);
+                }
 
-                item.put("status", ImportStatus.Created);
             } else if (assetList.size() > 1) {
                 item.put("status", ImportStatus.Failure);
-                addErrMessage(item, WebUtil.getMessage("InvalidParameter") + (String) item.get("superlierName"));
+                addErrMessage(item, WebUtil.getMessage("InvalidParameter") + newAsset.getName() + "/" + newAsset.getDepartNum());
             } else {
                 item.put("asset", assetList.get(0));
                 item.put("status", ImportStatus.Exist);
@@ -262,11 +273,33 @@ public class AssetFileImportService {
 
     }
 
+    private Boolean isAvailableQrcode(String qrcode, Map<String, Object> item) {
+        if (null == qrcode || qrcode.isEmpty()) {
+            return true;
+        }
+
+        QrCodeLib qrCodeLib = qrcodeDao.findByQrCode(qrcode);
+        if (qrCodeLib == null) {
+            addErrMessage(item, WebUtil.getMessage("InvalidQRCode") + qrcode);
+            return false;
+        }
+        if (qrCodeLib.getSiteId() != siteId || qrCodeLib.getHospitalId() != hospitalId) {
+            addErrMessage(item, WebUtil.getMessage("WrongHospitalQRCode"));
+            return false;
+        }
+        if (qrCodeLib.getStatus() != 1) {
+            addErrMessage(item, WebUtil.getMessage("AlreadyUsingQrCode"));
+            return false;
+        }
+
+        return true;
+    }
+
     public Boolean exportFailData(ExcelDocument doc, Map<String, Map<String, Object>> importOrgMap, Map<String, Map<String, Object>> importAssetMap) {
         Integer keyRowOrg = 4;
         Integer dataRowOrg = 5;
         Boolean hasFailData = false;
-        doc.clearRowsData(SHEET_ORG, 5, 9);
+        doc.clearRowsData(SHEET_ORG, 5, 4+importOrgMap.values().size());
         for (Map<String, Object> item : importOrgMap.values()) {
             if (item.get("status").equals(ImportStatus.Failure)) {
                 doc.writeRowData(SHEET_ORG, keyRowOrg, dataRowOrg++, (Map<String, Object>) item.get("rowData"));
@@ -276,21 +309,27 @@ public class AssetFileImportService {
 
         Integer keyRowAsset = 6;
         Integer dataRowAsset = 7;
-        doc.clearRowsData(SHEET_ASSET, 7, 8);
+        doc.clearRowsData(SHEET_ASSET, 7, 6+importAssetMap.values().size());
         for (Map<String, Object> item : importAssetMap.values()) {
             if (item.get("status").equals(ImportStatus.Failure)) {
                 doc.writeRowData(SHEET_ASSET, keyRowAsset, dataRowAsset++, (Map<String, Object>) item.get("rowData"));
                 hasFailData = true;
             }
         }
+//        doc.clearRowsData(SHEET_ASSET, dataRowAsset, 6+importAssetMap.values().size());
 
-        doc.clearRowsData(SHEET_USER, 5, 6);
+//        doc.clearRowsData(SHEET_USER, 5, 6);
 
         return hasFailData;
     }
 
     @Transactional
     private void createAsset(AssetInfo asset) {
+        if (null != asset.getQrCode() || !asset.getQrCode().isEmpty()) {
+            QrCodeLib qrCodeLib = qrcodeDao.findByQrCode(asset.getQrCode());
+            qrCodeLib.setStatus(3);
+            qrcodeDao.save(qrCodeLib);
+        }
         assetDao.save(asset);
         assetDepreciationService.saveAssetDerpeciation(asset);
     }

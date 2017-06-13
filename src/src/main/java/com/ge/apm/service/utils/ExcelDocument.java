@@ -127,6 +127,38 @@ public class ExcelDocument {
         }
     }
 
+    static public Integer getCellIntegerValue(Object value) {
+        if (value == null) {
+            return null;
+        }
+        if (value instanceof String) {
+            return ((String) value).isEmpty() ? null : Integer.parseInt((String) value);
+        }
+        if (value instanceof Integer) {
+            return (Integer) value;
+        }
+        if (value instanceof Double) {
+            return ((Double) value).intValue();
+        }
+        return null;
+    }
+
+    static public Double getCellDoubleValue(Object value) {
+        if (value == null) {
+            return null;
+        }
+        if (value instanceof String) {
+            return ((String) value).isEmpty() ? null : Double.parseDouble((String) value);
+        }
+        if (value instanceof Double) {
+            return (Double) value;
+        }
+        if (value instanceof Integer) {
+            return Double.valueOf((Integer) value);
+        }
+        return null;
+    }
+
     public void writeRowData(String sheetName, String[] rowKey, Integer dataRowNum, Map<String, Object> data) {
         Sheet sheet = workBook.getSheet(sheetName);
         Row dataRow = sheet.getRow(dataRowNum - 1);
@@ -137,6 +169,9 @@ public class ExcelDocument {
                 continue;
             }
             Object value = data.get(key);
+            if (null == dataRow.getCell(index)) {
+                dataRow.createCell(index);
+            }
             writeCellData(dataRow.getCell(index), value);
         }
     }
@@ -176,9 +211,10 @@ public class ExcelDocument {
         for (int cellIndex = dataRow.getFirstCellNum(); cellIndex < dataRow.getLastCellNum(); cellIndex++) {
             Cell cell = dataRow.getCell(cellIndex);
             if (!cell.getCellTypeEnum().equals(CellType.FORMULA)) {
-                cell.setCellType(CellType.BLANK);
-                cell.setCellValue((String) null);
+
             }
+            cell.setCellType(CellType.BLANK);
+            cell.setCellValue((String) null);
         }
     }
 
