@@ -8,9 +8,15 @@ $filtersHeight: 50px;
   line-height: 1.5 !important;
   font-family: Roboto, "Helvetica Neue", sans-serif !important;
   color: '#6b6b6b';
+  position: relative;
+  height: 100vh;
 }
 
 .filters {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
   height: $filtersHeight;
   padding: 10px;
 }
@@ -19,8 +25,9 @@ $filtersHeight: 50px;
   display: flex;
   justify-content: center;
   align-items: center;
-  height: calc(100vh - #{$filtersHeight});
+  height: 100%;
   position: relative;
+  padding-top: $filtersHeight;
 }
 
 .core {
