@@ -103,6 +103,26 @@
     <filter-name>fixResourcesExpirationFilter</filter-name>
     <filter-class>webapp.framework.web.filter.FixResourcesExpirationFilter</filter-class>
   </filter>
+  
+	<filter-mapping>
+		<filter-name>springSecurityFilterChain</filter-name>
+		<url-pattern>/*</url-pattern>
+		<dispatcher>FORWARD</dispatcher>
+		<dispatcher>REQUEST</dispatcher>
+	</filter-mapping>
+	<filter>
+		<filter-name>WechatUserLoginFilter</filter-name>
+		<filter-class>com.ge.apm.web.wechat.WechatUserLoginFilter</filter-class>
+	</filter>
+	<filter-mapping>
+		<filter-name>WechatUserLoginFilter</filter-name>
+		<url-pattern>/wechat/*</url-pattern>
+	</filter-mapping>
+	<filter-mapping>
+		<filter-name>WechatUserLoginFilter</filter-name>
+		<url-pattern>/web/*</url-pattern>
+	</filter-mapping> 
+  
   <filter-mapping>
     <filter-name>fixResourcesExpirationFilter</filter-name>
     <url-pattern>/javax.faces.resource/*</url-pattern>

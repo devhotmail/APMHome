@@ -19,6 +19,13 @@
                 <p:menuitem value="#{msg.AssetBrowser}" outcome="/portal/asset/assetBrowser.xhtml"/>
                 <p:menuitem id="um07" value="#{msg.AssetContractMgmt}" outcome="/portal/asset/contract/List"/>
                 <p:menuitem id="um08" value="#{msg.SupplierMgmt}" outcome="/portal/supplier/List.xhtml"/>
+				
+                <p:menuitem id="um081" value="#{msg.TerminatedAsset}" outcome="/portal/asset/info/List.xhtml?terminate=true"/>
+                <p:menuitem id="um083" value="#{msg.Create}#{msg.BuildAsset}" outcome="/portal/asset/createAsset/RequestsList.xhtml"/>
+                <p:menuitem id="um085" value="#{msg.AssetTagMsgSubscriber}" outcome="/portal/asset/assetTag/TagSubscribeList.xhtml"/>
+
+                <p:menuitem id="um086" value="采购申请" outcome="/portal/asset/assetTag/ApplicationList.xhtml"/>
+                <p:menuitem id="um087" value="#{msg.ImportAssetDataFile}" outcome="/portal/asset/assetImport/assetImport.xhtml"/>
             </p:submenu>
             <p:submenu id="um09" label="#{msg.WorkOrderMgmt}" icon="fa fa-wrench"
                        rendered="#{userContextService.hasRole('SuperAdmin') or userContextService.hasRole('HospitalHead') or userContextService.hasRole('AssetHead') or userContextService.hasRole('AssetStaff')}">
@@ -49,58 +56,43 @@
                        rendered="#{userContextService.hasRole('SuperAdmin') or userContextService.hasRole('HospitalHead') or userContextService.hasRole('AssetHead') or userContextService.hasRole('AssetStaff')}">
                 <p:menuitem id="um25" value="#{msg.Inspection}" outcome="/portal/insp/InspOrderList.xhtml"/>
                 <p:menuitem id="um26" value="#{msg.PmRecord}" outcome="/portal/pm/List"/>
-                <p:menuitem id="um261" value="#{msg.PreventiveMaintaincePlanning}"
-                            outcome="/portal/analysis/assetProactiveMaintenanceAll"/>
-                <p:menuitem id="um27" value="#{msg.DeviceMetrologyMgmt}"
-                            outcome="/portal/insp/MetrologyOrderList.xhtml"/>
-                <p:menuitem id="um28" value="#{msg.DeviceQualityControl}"
-                            outcome="/portal/insp/QualityCtrlOrderList.xhtml"/>
-                <p:menuitem id="um29" value="#{msg.DeviceAdverseEventMgmt}" outcome="/empty"/>
-                <p:menuitem id="um30" value="#{msg.DeviceMedicalAccidentMgmt}" rendered="false"
-                            style="color: orange;" outcome="/empty"/>
+                <p:menuitem id="um261" value="#{msg.PreventiveMaintaincePlanning}" outcome="/portal/analysis/assetProactiveMaintenanceAll"/>
+                <p:menuitem id="um27" value="#{msg.DeviceMetrologyMgmt}" outcome="/portal/insp/MetrologyOrderList.xhtml"/>
+                <p:menuitem id="um28" value="#{msg.DeviceQualityControl}" rendered="false" outcome="/portal/insp/QualityCtrlOrderList.xhtml"/>
+                <p:menuitem id="um29" value="#{msg.DeviceAdverseEventMgmt}" rendered="false" outcome="/empty"/>
+                <p:menuitem id="um30" value="#{msg.DeviceMedicalAccidentMgmt}" rendered="false" style="color: orange;" outcome="/empty"/>
                 <p:menuitem id="um301" value="#{msg.ChecklistAdmin}" outcome="/portal/insp/checkListList.xhtml"/>
             </p:submenu>
             <p:submenu id="um31" label="#{msg.AssetKnowledgeBaseMgmt}" icon="fa fa-book"
                        rendered="#{userContextService.hasRole('SuperAdmin') or userContextService.hasRole('HospitalHead') or userContextService.hasRole('AssetHead') or userContextService.hasRole('AssetStaff')}">
                 <p:menuitem id="um32" value="#{msg.AssetDocMgmt}"
                             outcome="/portal/asset/fileAttachment/List.xhtml"/>
-                <p:menuitem id="um33" value="#{msg.AssetKMMgmt}" rendered="false" style="color: orange;"
-                            outcome="/empty"/>
-                <p:menuitem id="um34" value="#{msg.DeviceMgmtForum}" rendered="false" style="color: orange;"
-                            outcome="/empty"/>
-                <p:menuitem id="um35" value="#{msg.DeviceApplication}" rendered="false" style="color: orange;"
-                            outcome="/empty"/>
-                <p:menuitem id="um36" value="#{msg.DeviceUpgradMgmt}" rendered="false" style="color: orange;"
-                            outcome="/empty"/>
-                <p:menuitem id="um37" value="#{msg.AdvancedDeviceInfoTracking}" rendered="false"
-                            style="color: orange;" outcome="/empty"/>
+                <p:menuitem id="um33" value="#{msg.AssetKMMgmt}" rendered="false" style="color: orange;" outcome="/empty"/>
+                <p:menuitem id="um34" value="#{msg.DeviceMgmtForum}" rendered="false" style="color: orange;" outcome="/empty"/>
+                <p:menuitem id="um35" value="#{msg.DeviceApplication}" rendered="false" style="color: orange;" outcome="/empty"/>
+                <p:menuitem id="um36" value="#{msg.DeviceUpgradMgmt}" rendered="false" style="color: orange;" outcome="/empty"/>
+                <p:menuitem id="um37" value="#{msg.AdvancedDeviceInfoTracking}" rendered="false" style="color: orange;" outcome="/empty"/>
             </p:submenu>
-            <p:submenu id="um38" label="#{msg.DeviceOperationKPIAnalysis}" icon="fa fa-bar-chart"
-                       rendered="#{userContextService.hasRole('SuperAdmin') or userContextService.hasRole('HospitalHead') or userContextService.hasRole('AssetHead')}">
+            <p:submenu id="um38" label="#{msg.DeviceOperationKPIAnalysis}" icon="fa fa-bar-chart" rendered="#{userContextService.hasRole('SuperAdmin') or userContextService.hasRole('HospitalHead') or userContextService.hasRole('AssetHead')}">
                 <p:menuitem id="um39" value="#{msg.DeviceROIAnalysis}" rendered="false" outcome="/empty"/>
                 <p:menuitem id="um40" value="#{msg.FinancialPerformanceAndForecast}" outcome="/portal/analysis/assetPerfAll"/>
                 <p:menuitem id="um41" value="#{msg.UsageAndClinicalPerformance}" outcome="/portal/analysis/assetOperationalPerf"/>
                 <p:menuitem id="um42" value="#{msg.DeviceCostAnalysis}" rendered="false" outcome="/empty"/>
-                <p:menuitem id="um43" value="#{msg.DevicePurchaseDecisionSupport}"
-                            outcome="/portal/analysis/decisionMaking"/>
+                <p:menuitem id="um43" value="#{msg.DevicePurchaseDecisionSupport}" outcome="/portal/analysis/decisionMaking"/>
             </p:submenu>
-            <p:submenu id="um44" label="#{msg.SysAdmin}" icon="settings"
-                       rendered="#{userContextService.hasRole('SuperAdmin') or userContextService.hasRole('ITAdmin')}">
-                <p:menuitem id="um45" value="#{msg.SiteAdmin}" outcome="/admin/uaa/siteInfo/List.xhtml"
-                            rendered="#{userContextService.hasRole('SuperAdmin')}"/>
-                <p:menuitem id="um46" value="#{msg.OrgAdmin}" outcome="/admin/uaa/orgInfo/List.xhtml"
-                            rendered="#{userContextService.hasRole('SuperAdmin')}"/>
-                <p:menuitem id="um47" value="#{msg.UserAdmin}" outcome="/admin/uaa/userAccount/List.xhtml"
-                            rendered="#{userContextService.hasRole('SuperAdmin')}"/>
-                <p:menuitem id="um48" value="#{msg.OrgAdmin}" outcome="/portal/uaa/orgInfo/List.xhtml"
-                            rendered="#{userContextService.hasRole('SuperAdmin') eq false}"/>
-                <p:menuitem id="um49" value="#{msg.UserAdmin}" outcome="/portal/uaa/userAccount/List.xhtml"
-                            rendered="#{userContextService.hasRole('SuperAdmin') eq false}"/>
-                <p:menuitem id="um491" value="#{msg.SupplierMgmt}" outcome="/portal/supplier/List.xhtml"/>
-                <p:menuitem id="um492" value="#{msg.ChecklistAdmin}" rendered="false"
-                            outcome="/portal/insp/checkListList.xhtml"/>
-                <p:menuitem id="um493" value="#{msg.SysCodeConfig}"
-                            outcome="/portal/config/FieldCodeTypeConfig.xhtml"/>
+            <p:submenu id="um44" label="#{msg.SysAdmin}" icon="settings" rendered="#{userContextService.hasRole('SuperAdmin') or userContextService.hasRole('ITAdmin')}">
+                <p:menuitem id="um45" value="#{msg.SiteAdmin}" outcome="/admin/uaa/siteInfo/List.xhtml" rendered="#{userContextService.hasRole('SuperAdmin')}"/>
+                <p:menuitem id="um46" value="#{msg.OrgAdmin}" outcome="/admin/uaa/orgInfo/List.xhtml" rendered="#{userContextService.hasRole('SuperAdmin')}"/>
+                <p:menuitem id="um47" value="#{msg.UserAdmin}" outcome="/admin/uaa/userAccount/List.xhtml" rendered="#{userContextService.hasRole('SuperAdmin')}"/>
+                <p:menuitem id="um48" value="#{msg.OrgAdmin}" outcome="/portal/uaa/orgInfo/List.xhtml" rendered="#{userContextService.hasRole('SuperAdmin') eq false}"/>
+                <p:menuitem id="um49" value="#{msg.UserAdmin}" outcome="/portal/uaa/userAccount/List.xhtml" rendered="#{userContextService.hasRole('SuperAdmin') eq false}"/>
+                <p:menuitem id="um491" value="#{msg.SupplierMgmt}"  rendered="false" outcome="/portal/supplier/List.xhtml"/>
+                <p:menuitem id="um493" value="#{msg.SysCodeConfig}" rendered="false" outcome="/portal/config/FieldCodeTypeConfig.xhtml"/>
+                <p:menuitem id="um494" value="#{msg.WorkFlowConfig}" outcome="/portal/config/workFlowConfig/Edit.xhtml"/>
+                <p:menuitem id="um495" value="#{msg.QRCodeMgmt}" outcome="/portal/asset/qrCode/qrCodeLibList.xhtml" rendered="#{userContextService.hasRole('SuperAdmin')}"/>
+                <p:menuitem id="um496" value="#{msg.AssetOwnerSetting}" outcome="/portal/asset/ownerSetting/SetOwners.xhtml"/>
+                <p:menuitem id="um497" value="#{msg.AssetTag}" outcome="/portal/asset/tag/List.xhtml"/>
+                <p:menuitem id="um498" value="#{msg.BiomedGroup}" outcome="/portal/uaa/biomedGroup/List.xhtml"/>
             </p:submenu>
 
             <p:menuitem id="um53" value="#{msg.profile}" icon="person" outcome="/portal/profile.xhtml"/>

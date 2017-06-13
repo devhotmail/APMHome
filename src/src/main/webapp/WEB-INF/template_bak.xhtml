@@ -17,14 +17,13 @@
     <ui:include src="../commonHead.xhtml"/>
     <meta name="theme-color" content="#{guestPreferences.themeColors[guestPreferences.theme]}"/>
     <title>GE APM</title>
-    <link rel="stylesheet" type="text/css" href="#{request.contextPath}/resources/css/shell.css" />
-    <link rel="stylesheet" type="text/css" href="#{request.contextPath}/resources/css/dewIcons.css" />
+    <h:outputScript name="js/nanoscroller.js" library="ultima-layout"/>
     <h:outputScript name="js/layout.js" library="ultima-layout"/>
     <h:outputScript name="js/ripple.js" library="ultima-layout"/>
     <h:outputScript name="js/swipe.js" library="ultima-layout"/>
-    <h:outputScript name="js/primefaces-locale_zh.js"/>
     <h:outputStylesheet name="css/main.css"/>
     <h:outputScript name="js/main.js"/>
+    <h:outputScript name="js/primefaces-locale_zh.js"/>
     <ui:insert name="head"/>
 </h:head>
 
@@ -32,17 +31,12 @@
     <ui:include src="./google-analytics.xhtml"/>
     <p:growl id="growl" autoUpdate="true" showDetail="false" showSummary="true"/>
     <div class="layout-wrapper #{guestPreferences.menuLayout}">
+        <ui:include src="./topbar.xhtml"/>
         <ui:include src="./menu.xhtml"/>
         <div class="layout-main">
-            <ui:insert name="elements"/>
             <ui:insert name="content"/>
+            <ui:include src="./footer.xhtml"/>
         </div>
-        <div class="layout-profile">
-            <div class="profile-name">
-                #{userContextService.userName}，#{userContextService.loginUserSiteName} #{userContextService.hasRole('HospitalHead') or userContextService.hasRole('AssetHead') ? '' : userContextService.loginUserOrgInfo.name}
-            </div>
-        </div>
-        
     </div>
 
     <p:dialog widgetVar="statusDialog" modal="false" class="ajaxStatusDialog" draggable="false" closable="false" resizable="false" showHeader="false">
