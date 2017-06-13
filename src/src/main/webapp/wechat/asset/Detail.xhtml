@@ -648,7 +648,7 @@ and open the template in the editor.
                                         </div>
                                         <c:forEach  items="#{wxAssetInfoController.getWorkOrderList(srItem.id)}" var="woItem" >
                                         
-                                            <a class="weui-cell weui-cell_access" href="/wx/workorder/#{woItem.id}/viewWo?openid=#{wxAssetInfoController.getUserOpenId()}">
+                                            <a class="weui-cell weui-cell_access" href="/wx/workorder/#{woItem.id}?openid=#{wxAssetInfoController.getUserOpenId()}">
                                                 <div class="show-data weui-cell__bd">
                                                     <h4>当前步骤：</h4>
                                                 </div>
