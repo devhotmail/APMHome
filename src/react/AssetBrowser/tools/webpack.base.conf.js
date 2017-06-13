@@ -6,9 +6,6 @@ const config = require('../config')
 
 module.exports = {
   devtool: 'source-map',
-  entry: {
-    app: './src/index.js'
-  },
   output: {
     filename: '[name].js',
     path: config.distDir,
