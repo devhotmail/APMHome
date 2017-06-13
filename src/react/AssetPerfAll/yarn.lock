@@ -126,7 +126,7 @@ ansi-styles@^2.2.1:
   version "2.2.1"
   resolved "https://registry.npmjs.org/ansi-styles/-/ansi-styles-2.2.1.tgz#b432dd3358b634cf75e1e4664368240533c1ddbe"
 
-antd:
+antd@^2.9.3:
   version "2.9.3"
   resolved "https://registry.yarnpkg.com/antd/-/antd-2.9.3.tgz#5b40349827fab882d73bd97707d614709a620863"
   dependencies:
@@ -1791,8 +1791,8 @@ detect-indent@^4.0.0:
   resolved "git+https://github.build.ge.com/foundry-sh/dew-editblock.git#884660fce4716c7af3ef30711be71e0ccfb0de6b"
 
 "dew-filterbar@git+https://github.build.ge.com/foundry-sh/dew-filterbar.git":
-  version "2.1.4"
-  resolved "git+https://github.build.ge.com/foundry-sh/dew-filterbar.git#51697ac20703c1fc8c0dd7c6eebaaba6b3976d22"
+  version "2.2.2"
+  resolved "git+https://github.build.ge.com/foundry-sh/dew-filterbar.git#615102b9a514ced8a87bfb1df6123c9692117b4c"
   dependencies:
     dew-styles "git+https://github.build.ge.com/foundry-sh/dew-styles.git"
 
