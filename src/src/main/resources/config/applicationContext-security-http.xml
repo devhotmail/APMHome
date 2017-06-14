@@ -40,7 +40,9 @@
     <!-- 首页 -->
     <intercept-url pattern="/homeHead**" access="hasAnyRole('SuperAdmin','HospitalHead')"/>
     <intercept-url pattern="/homeAssetHead**" access="hasAnyRole('SuperAdmin','AssetHead')"/>
+    <intercept-url pattern="/homeAssetStaff**" access="hasAnyRole('SuperAdmin','AssetStaff')"/>
     <intercept-url pattern="/homeDeptHead**" access="hasAnyRole('SuperAdmin','DeptHead')"/>
+
 
     <!-- 系统管理 -->
     <intercept-url pattern="/portal/uaa/**" access="hasRole('ITAdmin')"/>
@@ -58,6 +60,7 @@
     <intercept-url pattern="/portal/analysis/assetMaintenance**" access="hasAnyRole('SuperAdmin','HospitalHead','AssetHead','AssetStaff')"/>   <!-- 维修事件统计 -->
     <intercept-url pattern="/portal/analysis/assetUsage**" access="hasAnyRole('SuperAdmin','HospitalHead','AssetHead','AssetStaff','DeptHead')"/> <!-- 使用情况统计 -->
     <intercept-url pattern="/portal/analysis/assetScan**" access="hasAnyRole('SuperAdmin','HospitalHead','AssetHead','DeptHead')"/> <!-- 扫描详情统计 -->
+    <intercept-url pattern="/portal/analysis/staffPerf**" access="hasAnyRole('SuperAdmin','HospitalHead','AssetHead')"/>
 
     <!-- 预防维护 -->
     <intercept-url pattern="/portal/insp/**" access="hasAnyRole('SuperAdmin','AssetHead','AssetStaff')"/> <!-- 巡检管理 -->
