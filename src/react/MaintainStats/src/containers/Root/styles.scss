@@ -23,7 +23,6 @@ $filtersHeight: 50px;
   align-items: center;
   height: calc(100% - #{$filtersHeight});
   position: relative;
-  padding-top: $filtersHeight;
 }
 
 .core {
