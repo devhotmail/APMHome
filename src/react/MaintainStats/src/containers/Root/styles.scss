@@ -13,10 +13,6 @@ $filtersHeight: 50px;
 }
 
 .filters {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
   height: $filtersHeight;
   padding: 10px;
 }
@@ -25,9 +21,8 @@ $filtersHeight: 50px;
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100%;
+  height: calc(100% - #{$filtersHeight});
   position: relative;
-  padding-top: $filtersHeight;
 }
 
 .core {
