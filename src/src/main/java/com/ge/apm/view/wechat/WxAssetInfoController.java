@@ -99,6 +99,13 @@ public class WxAssetInfoController extends JpaCRUDController<AssetInfo> {
             }
         }
 
+        String status = WebUtil.getRequestParameter("status");
+        if (status != null && !status.isEmpty()) {
+            searchStatRun = status.equals("1");
+            searchStatStop = status.equals("2");
+            searchStatPartial = status.equals("3");
+        }
+
         qrCode = WebUtil.getRequestParameter("qrCode");
         String assetId = WebUtil.getRequestParameter("assetId");
         if (null != assetId && assetId.length() > 0) {

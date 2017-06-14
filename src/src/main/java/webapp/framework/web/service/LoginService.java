@@ -202,7 +202,11 @@ public class LoginService implements Serializable, ApplicationEventPublisherAwar
 				messageUtil.error("security_error");
 				return;
 			}
-			sessionAuthenticationStrategy.onAuthentication(authResult, request, response);
+                        try{
+                            sessionAuthenticationStrategy.onAuthentication(authResult, request, response);
+                        }
+                        catch(Exception ex){
+                        }
 			// below : do the same thing as in
 			// AbstractAuthenticationProcessingFilter.successfulAuthentication(),
 			// except for the redirection to the login success URL that is

@@ -98,7 +98,7 @@ public class LoginController extends LoginService {
             Logger.getLogger(LoginController.class.getName()).log(Level.SEVERE, null, ex);
         }
         if (user.getPassword().equals(saltedPassword)) {
-            //WebUtil.redirectTo("/resetPassword2.xhtml");
+            WebUtil.redirectTo("/resetPassword2.xhtml");
         } else {
             WebUtil.redirectTo(userContextService.getUserDefaultHomePage());
         }

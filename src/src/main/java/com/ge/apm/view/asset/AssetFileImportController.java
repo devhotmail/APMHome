@@ -71,8 +71,9 @@ public class AssetFileImportController {
             aiService.importData(importOrgMap, importAssetMap);
             isImported = true;
 
-            InputStream stream = FacesContext.getCurrentInstance().getExternalContext().getResourceAsStream("/portal/asset/assetImport/APM_Asset_Template.xlsx");
+//            InputStream stream = FacesContext.getCurrentInstance().getExternalContext().getResourceAsStream("/portal/asset/assetImport/APM_Asset_Template.xlsx");
             try {
+                InputStream stream = this.file.getInputstream();
                 ExcelDocument doc = new ExcelDocument(stream, ExcelDocument.ExcelType.XLSX);
                 hasExportData = aiService.exportFailData(doc, importOrgMap, importAssetMap);
                 exportFile = new DefaultStreamedContent(doc.getStream(), "application/vnd.ms-excel", "failedData.xlsx");
