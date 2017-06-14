@@ -21,6 +21,7 @@ export default {
   },
   effects: {
     *['field/set'](_, { select, put }) {
+      yield put({type: 'briefs/data/get'})
       yield put({type: 'assets/page/reset'})
       yield put({type: 'assets/data/get'})
       yield put({type: 'steps/page/reset'})

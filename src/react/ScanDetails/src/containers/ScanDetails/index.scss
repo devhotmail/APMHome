@@ -8,6 +8,16 @@ body, html, #root, #root>div {
   height: 100%;
   display: flex;
   flex-direction: column;
+  position: relative;
+  :global .dew-filterbar {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 10;
+    ul, li {
+      margin: 0;
+    }
+  }
   .body-chart {
     flex: 1;
   }
@@ -22,6 +32,7 @@ body, html, #root, #root>div {
   bottom: 0;
   left: 0;
   right: 0;
+  z-index: 100;
   .loading {
     position: absolute;
     top: 50%;

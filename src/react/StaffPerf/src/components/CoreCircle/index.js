@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react'
 import StarRate from '../StarRate'
 
-import StatusBar from '../StatusBar'
+import StatusBar from 'dew-statusbar'
 
 import { round } from '#/utils'
 import { ORDER, HOUR, RATE } from '#/constants'

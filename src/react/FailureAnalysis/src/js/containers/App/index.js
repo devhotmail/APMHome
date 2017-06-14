@@ -4,7 +4,7 @@ import React, { Component } from 'react'
 import { translate } from 'react-i18next'
 import { connect } from 'react-redux'
 import autobind from 'autobind-decorator'
-import { cloneDeep, memoize, clamp, range, get } from 'lodash-es'
+import { memoize, clamp, range, get } from 'lodash-es'
 import { message } from 'antd'
 import EventBus from 'eventbusjs'
 import GearListChart from 'react-gear-list-chart'
@@ -141,7 +141,7 @@ export class App extends Component<void, Props, void> {
   isSameDevice(evt) {
     // id is not a uuid, so also compare name
     let { id, name } = evt.strips[0].data.key
-    let { selectedId, selectedName } = this.state.selectedDevice
+    let { id: selectedId, name: selectedName } = this.state.selectedDevice
     return (id === selectedId) && (name === selectedName)
   }
 

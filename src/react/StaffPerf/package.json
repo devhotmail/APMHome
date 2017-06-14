@@ -65,12 +65,13 @@
     "webpack-merge": "^4.1.0"
   },
   "dependencies": {
-    "antd": "^2.10.0",
+    "antd": "^2.11.0",
     "axios": "^0.16.0",
     "d3-scale": "^1.0.5",
     "d3-shape": "^1.0.6",
     "dew-filterbar": "git+https://github.build.ge.com/foundry-sh/dew-filterbar.git",
     "dew-pager": "git+https://github.build.ge.com/foundry-sh/dew-pager.git",
+    "dew-statusbar": "git+https://github.build.ge.com/foundry-sh/dew-statusbar.git",
     "dew-styles": "git+https://github.build.ge.com/foundry-sh/dew-styles.git",
     "dva": "^1.2.1",
     "react": "^15.5.4",
