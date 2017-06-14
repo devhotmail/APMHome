@@ -7,7 +7,7 @@ import SID from 'shortid'
 import humanizeDuration from 'humanize-duration'
 import i18n from 'js/i18n'
 
-const LANG = i18n.services.languageDetector.detect().replace('-', '_')
+let LANG = i18n.services.languageDetector.detect().replace('-', '_')
 
 export function TODO() { throw Error('TODO') }
 
@@ -118,6 +118,7 @@ export function HumanizeDurationLabel(valueInSec, unit = 'h') {
   } catch(e) {
     warn('Current language: ' + LANG)
     warn(e)
-    return humanizeDuration(valueInSec * 1000, { units: [unit], language: 'zh_CN' })
+    LANG = 'zh_CN'
+    return humanizeDuration(valueInSec * 1000, { units: [unit], language: LANG })
   }
 }
