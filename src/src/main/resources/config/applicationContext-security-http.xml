@@ -28,7 +28,6 @@
         <intercept-url pattern="/web/**" access="permitAll"/>
 
         <intercept-url pattern="/**/wechat/asset/createInfoDetail.xhtml**" access="permitAll"/>
-        <intercept-url pattern="/**/wechat/asset/**" access="isAuthenticated()"/>
         <intercept-url pattern="/**/wechat/**" access="permitAll"/>
 
         <intercept-url pattern="/home.xhtml" access="isAuthenticated()"/>
