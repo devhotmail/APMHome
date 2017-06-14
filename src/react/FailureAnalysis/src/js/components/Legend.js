@@ -1,7 +1,5 @@
 import React, { Component } from 'react'
 import { translate } from 'react-i18next'
-import Radium from 'radium'
-import autobind from 'autobind-decorator'
 
 type LegendItem = {
   color: string,
@@ -18,9 +16,8 @@ let styles = {
   }
 }
 
-@autobind
-@Radium
-export class Legend extends Component<void, Props, void> {
+@translate()
+export default class Legend extends Component<void, Props, void> {
 
   render() {
     const { t, items } = this.props
@@ -38,5 +35,3 @@ export class Legend extends Component<void, Props, void> {
     )
   }
 }
-
-export default translate()(Legend)
