@@ -102,13 +102,21 @@ public class WechatUserLoginFilter extends OncePerRequestFilter {
         }
 
         // for already logined users
-/*
         UserAccount currentUser = UserContext.getCurrentLoginUser(request);
         if (null != currentUser) {
+            openId = request.getParameter("openid");
+            if(openId!=null ){
+                if(!openId.equals(currentUser.getWeChatId())){
+                    // user switched in WeChat
+                    ExternalLoginHandler loginHandler = WebUtil.getServiceBean(ExternalLoginHandler.class);
+                    loginHandler.doLoginByWeChatOpenId(openId, request, response);
+                }                    
+            }
+            
             fc.doFilter(request, response);
             return;
         }
-*/        
+
         if (null == code || code.isEmpty()) {
         	if (request.getParameter("openid")!=null){
         		openId=request.getParameter("openid");
