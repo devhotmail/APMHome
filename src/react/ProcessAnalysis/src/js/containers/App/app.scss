@@ -29,6 +29,7 @@
   .pager {
     position: absolute;
     transform: translateY(-54%);
+    -webkit-transform: translateY(-54%);
     top: 50%;
     z-index: 99;
   }
@@ -44,6 +45,7 @@
     position: absolute;
     top: 50%;
     transform: translateY(-54%);
+    -webkit-transform: translateY(-54%);
     left: 4%;
   }
 
@@ -52,6 +54,7 @@
     top: 50%;
     left: 45%;
     transform: translate(-50%, -54%);
+    -webkit-transform: translate(-50%, -54%);
     z-index: 98;
     user-select: none;
     pointer-events: none;
@@ -64,6 +67,7 @@
     position: absolute;
     top: 50%;
     transform: translateY(-54%);
+    -webkit-transform: translateY(-54%);
     right: 15%;
   }
 
@@ -72,6 +76,7 @@
     top: 50%;
     left: 45%;
     transform: translate(-50%, -57%);
+    -webkit-transform: translate(-50%, -57%);
     z-index: 99;
     width: 300px;
     height: 300px;
@@ -81,6 +86,7 @@
       display: inline-block;
       position: relative;
       transform: translateX(-50%);
+      -webkit-transform: translateX(-50%);
       font-size: 1.3em;
       font-weight: bold;
     }
@@ -92,6 +98,7 @@
     &:hover {
       cursor: pointer;
       transform: scale(1.02);
+      -webkit-transform: scale(1.02);
     }
     &:not(.active) {
       opacity: .5

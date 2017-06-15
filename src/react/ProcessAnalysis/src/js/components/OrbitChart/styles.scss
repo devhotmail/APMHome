@@ -3,6 +3,7 @@
   stroke-dasharray: 1500px;
   stroke-dashoffset: 1500px;
   animation: dash 1s linear forwards;
+  -webkit-animation: dash 1s linear forwards;
 }
 
 @keyframes dash {
