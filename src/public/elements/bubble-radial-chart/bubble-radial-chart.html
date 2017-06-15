@@ -488,7 +488,7 @@
               if (startDeg > delta) {
                 startDeg -= delta;
               } else {
-                startDeg += (delta - startDeg) / 2;
+                startDeg -= (delta - startDeg);
                 max--;
               }
             }
