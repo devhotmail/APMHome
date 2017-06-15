@@ -16,3 +16,7 @@
     }
   }
 }
+// let postcss to polyfill `flex-wrap` for IE 10
+.ui-g {
+  flex-wrap: wrap;
+}
