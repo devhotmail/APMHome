@@ -35,7 +35,9 @@ gulp.task('sass:compile:css', function() {
   })
   .on('error', sass.logError))
   .pipe(postcss([
-    require('autoprefixer')(),
+    require('autoprefixer')({
+      browsers: 'last 50 versions'
+    }),
     require('postcss-viewport-units')()
   ]))
   .pipe(cssmin({
