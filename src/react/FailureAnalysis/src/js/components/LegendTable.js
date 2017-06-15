@@ -48,13 +48,6 @@ let styles = {
   },
   active: {
     opacity: 1,
-  },
-  symbol: {
-    width: '1.1em',
-    height: '1.1em', 
-    fontSize: '1em',
-    display: 'inline-block',
-    textAlign: 'center'
   }
 }
 
@@ -79,9 +72,9 @@ function mapDispatch2Props(dispatch) {
 export default class LegendTable extends Component<void, Props, void> {
 
   _getSymbol(item: LegendItem) {
-    return (<span style={{ color: item.color, ...styles.symbol}}>
-              { item.key !== 'same_period_last_year' ? '◼' : this.props.showLastYear ? '▣' : '⛶' }
-            </span>)
+    let lastYearUnchecked = !this.props.showLastYear && item.key === 'same_period_last_year'
+    let style  = lastYearUnchecked ? { border: '2px solid ' + item.color } : { background : item.color }
+    return <span style={{...style, ...styles.symbol}} className='legend-symbol'/>
   }
 
   _getTitle() {

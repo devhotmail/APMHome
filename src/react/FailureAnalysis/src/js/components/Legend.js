@@ -27,7 +27,7 @@ export default class Legend extends Component<void, Props, void> {
         { 
           items.map(_ => 
           <div key={_.key} className="legend-item">
-            <span className="legend-symbol" style={{ color: _.color }}>◼</span>
+            <span className="legend-symbol" style={{ background: _.color }}></span>
             <span className="legend-label">{t(_.key)}</span>
           </div>) 
         }
