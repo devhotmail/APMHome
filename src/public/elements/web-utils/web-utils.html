@@ -21,7 +21,11 @@
       },
       constants: {
         DATE_FORMAT: 'YYYY-MM-DD'
-      }
+      },
+      // http://browserhacks.com/#hack-2f32c95ac8c021c463de0fdf685acb29
+      isIE: function() {
+        return window.navigator.msPointerEnabled;
+      }      
     }
   });
 </script>
