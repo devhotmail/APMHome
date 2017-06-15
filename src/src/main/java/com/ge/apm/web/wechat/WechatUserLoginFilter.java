@@ -59,6 +59,7 @@ public class WechatUserLoginFilter extends OncePerRequestFilter {
         URLS.add("/web/qrCreateAsset");             //11
         URLS.add("/wechat/asset/QRQuery.xhtml");    //12
         URLS.add("/wechat/asset/List.xhtml");       //13
+        URLS.add("/wechat/asset/Detail.xhtml"); 
         URLS.add("/web/authurl");                   //33
 
         URLS.add("/web/scanwodetail");     //msg entry
