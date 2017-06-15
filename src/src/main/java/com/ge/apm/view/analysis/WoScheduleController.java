@@ -65,15 +65,15 @@ public class WoScheduleController extends SqlConfigurableChartController {
     queries = Maps.newLinkedHashMap();
     queries.put("inspection", "select distinct io.order_type, io.name, io.start_time, io.end_time, io.create_time, io.creator_name, ai.location_name, io.is_finished from inspection_order_detail iod join inspection_order io on iod.site_id = io.site_id and iod.order_id = io.id join asset_info ai on iod.site_id = ai.site_id and iod.asset_id = ai.id where io.start_time between ? and ? and ai.is_valid = true and ai.site_id = ? and ai.hospital_id = ? and io.owner_id = ? and io.start_time is not null order by io.start_time");
     String mtSql = new SQL() {{
-      SELECT("sr.from_dept_name || '设备维修' as name", "sr.created_date as start_time", "sr.close_time as end_time", "sr.requestor_name as creator_name", "ai.location_name", "CASE WHEN sr.status=2 THEN 1 ELSE 0 END as is_closed");
+      SELECT("sr.from_dept_name || '设备维修' as name", "sr.request_time as start_time", "sr.close_time as end_time", "sr.requestor_name as creator_name", "ai.location_name", "CASE WHEN sr.status=2 THEN 1 ELSE 0 END as is_closed");
       FROM("v2_service_request sr join asset_info ai on sr.asset_id = ai.id");
-      WHERE("sr.created_date between ? and ?");
+      WHERE("sr.request_time between ? and ?");
       WHERE("ai.is_valid = true");
       WHERE("ai.site_id = ?");
       WHERE("ai.hospital_id = ?");
       WHERE("sr.requestor_id= ?");
-      WHERE("sr.created_date is not null");
-      ORDER_BY("sr.created_date");
+      WHERE("sr.request_time is not null");
+      ORDER_BY("sr.request_time");
     }}.toString();
     queries.put("maintenance", mtSql);
     queries.put("preventiveMaintenance", "select po.name, po.start_time, po.end_time, po.create_time, po.creator_name, ai.location_name, po.is_finished from pm_order po join asset_info ai on po.site_id = ai.site_id and po.hospital_id = ai.hospital_id and po.asset_id = ai.id where po.start_time between ? and ? and ai.is_valid = true and ai.site_id = ? and ai.hospital_id = ? and po.owner_id = ? and po.start_time is not null order by po.start_time");

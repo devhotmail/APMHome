@@ -178,7 +178,7 @@ public class ProfitService {
     String name();
 
     @Column
-    Timestamp created_date();
+    Timestamp created_day();
 
     @Column
     int type();
@@ -197,7 +197,7 @@ public class ProfitService {
   public Observable<Tuple7<Integer, String, LocalDate, Integer, Integer, Double, Double>> findRvnCstForForecast(Integer siteId, Integer hospitalId, LocalDate startDate, LocalDate endDate) {
     log.info("siteId:{}, hospitalId:{}, startDate:{}, endDate:{}", siteId, hospitalId, startDate, endDate);
     return db.select(new SQL() {{
-      SELECT("ai.id", "ai.name", "date_trunc(:time_unit,asu.created) as created_date", "ai.asset_group as type", "ai.clinical_dept_id as dept", "COALESCE(sum(asu.revenue), 0) as revenue",
+      SELECT("ai.id", "ai.name", "date_trunc(:time_unit,asu.created) as created_day", "ai.asset_group as type", "ai.clinical_dept_id as dept", "COALESCE(sum(asu.revenue), 0) as revenue",
         "COALESCE(sum(asu.mt_manpower), 0) + COALESCE(sum(asu.mt_accessory), 0) + COALESCE(sum(asu.pm_manpower), 0) + COALESCE(sum(asu.pm_accessory), 0) as costs");
       FROM("asset_info as ai");
       LEFT_OUTER_JOIN("asset_summit as asu on ai.id = asu.asset_id");
@@ -207,9 +207,9 @@ public class ProfitService {
       WHERE("asu.created <= :end_day");
       WHERE("ai.is_valid = true");
       GROUP_BY("ai.id");
-      GROUP_BY("created_date");
+      GROUP_BY("created_day");
       ORDER_BY("ai.id");
-      ORDER_BY("created_date");
+      ORDER_BY("created_day");
     }}.toString())
       .parameter("start_day", Date.valueOf(startDate))
       .parameter("end_day", Date.valueOf(endDate))
@@ -217,7 +217,7 @@ public class ProfitService {
       .parameter("hospital_id", hospitalId)
       .parameter("time_unit", "month")
       .autoMap(Asset.class)
-      .map(v -> Tuple.of(v.id(), v.name(), v.created_date().toLocalDateTime().toLocalDate(), v.type(), v.dept(), v.revenue(), v.costs()))
+      .map(v -> Tuple.of(v.id(), v.name(), v.created_day().toLocalDateTime().toLocalDate(), v.type(), v.dept(), v.revenue(), v.costs()))
       .cache();
   }
 
