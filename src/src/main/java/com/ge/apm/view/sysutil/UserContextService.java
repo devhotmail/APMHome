@@ -17,6 +17,7 @@ import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 import java.io.Serializable;
 import java.util.List;
+import javax.servlet.http.HttpServletRequest;
 
 @ManagedBean(name = "userContextService")
 @SessionScoped
@@ -93,6 +94,15 @@ public class UserContextService implements Serializable {
 
       UserAccountRepository dao = WebUtil.getBean(UserAccountRepository.class);
       userAccount = dao.getByLoginName(getUserLoginName());
+    }
+    else{
+        // check if user has switch account by WeChat Client
+        HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
+        String userName = UserContext.getUsername(request);
+        
+        if(!userAccount.getLoginName().equals(userName)){
+            userAccount = WebUtil.getUserAccountFromRequest();
+        }
     }
 
     return userAccount;

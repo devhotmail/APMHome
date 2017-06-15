@@ -19,6 +19,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.ge.apm.service.utils.HttpClientUtil;
+import com.ge.apm.view.sysutil.UserContextService;
 import me.chanjar.weixin.common.bean.WxJsapiSignature;
 import me.chanjar.weixin.common.exception.WxErrorException;
 import me.chanjar.weixin.mp.api.WxMpService;
@@ -78,6 +79,11 @@ public class WechatUserLoginFilter extends OncePerRequestFilter {
             fc.doFilter(request, response);
             return;
         }
+
+        String accessToken = request.getParameter("accessToken");
+        if(null!=accessToken && !accessToken.isEmpty()){
+            wxMpService.getWxMpConfigStorage().updateAccessToken(accessToken, 7200);
+        }
         
         if(path.equals("/web/qrCreateAsset")){
             if(null!=code && !code.isEmpty()){
@@ -96,12 +102,13 @@ public class WechatUserLoginFilter extends OncePerRequestFilter {
         }
 
         // for already logined users
+/*
         UserAccount currentUser = UserContext.getCurrentLoginUser(request);
         if (null != currentUser) {
             fc.doFilter(request, response);
             return;
         }
-        
+*/        
         if (null == code || code.isEmpty()) {
         	if (request.getParameter("openid")!=null){
         		openId=request.getParameter("openid");

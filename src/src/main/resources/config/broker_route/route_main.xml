@@ -112,12 +112,12 @@
             <to uri="direct:initAssetAggregationData"/>
             <bean ref="assetExamDataAggregator" method="aggregateExamData"/>
         </route>
-
-		<route>
+<!--
+	<route>
             <from uri="quartz://quartzWorkflowService?cron=20+*+*+*+*+?"/>
             <bean ref="workflowService"  method="execute"/>
         </route>
-
+-->
         <route>
             <from uri="quartz://quartzAssetCostDataAggregation?cron=0+0+*/3+*+*+?"/>
             <to uri="direct:aggregateAssetCostData"/>
