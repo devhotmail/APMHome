@@ -12,6 +12,17 @@
         <h:form id="BatchCreateForm">
             <p:panelGrid columns="4" layout="grid" styleClass="ui-panelgrid-blank form-group">
             <h:panelGroup>
+                <label class="label">#{msg.ownerId}*</label>
+                <p:selectOneMenu id="assetOwnerName" value="#{pmOrderController.owner}" converter="userAccountConverter"  var="t"  filter="true"
+                                 filterMatchMode="startsWith" required="true" requiredMessage="#{msg.ownerId} #{msg.ValidationRequire}">
+                    <f:selectItem itemLabel="" />
+                    <f:selectItems value="#{pmOrderController.ownerList}" var="item" itemLabel="#{item.name}" itemValue="#{item}"/>
+                    <p:column>
+                        <h:outputText value="#{t.name}"/>
+                    </p:column>
+                </p:selectOneMenu>
+            </h:panelGroup>
+            <h:panelGroup>
                 <label class="label" >计划开始时间*</label>
                 <p:calendar timeZone="GMT+8"  id="startTime" pattern="yyyy/MM/dd" value="#{pmOrderController.startPlanTime}" required="true" requiredMessage="计划开始时间 #{msg.ValidationRequire}" showOn="button" showButtonPanel="true" navigator="true" mask="true"/>
             </h:panelGroup>

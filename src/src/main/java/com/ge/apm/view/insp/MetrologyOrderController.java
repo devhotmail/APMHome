@@ -281,7 +281,7 @@ public class MetrologyOrderController extends JpaCRUDController<InspectionOrder>
 
     public boolean isExcuteable() {
         //return selected != null && !selected.getIsFinished() && (selected.getStartTime().before(new Date()));
-        return selected != null && !selected.getIsFinished() && (selected.getPlanTime().before(new Date()));
+        return selected != null && !selected.getIsFinished();
     }
 
     public void onHospitalChange() {
