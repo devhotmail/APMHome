@@ -127,6 +127,12 @@ public class V2_ServiceRequest implements Serializable {
     @Column(name = "equipment_taker")
     private String equipmentTaker;
 
+    @Column(name = "nearest_sr_days")
+    private Integer nearestSrDays;
+
+    @Column(name = "nearest_sr_id") 
+    private String nearestSrId;//上次报修的id 
+
     @Column(name = "take_time")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     @Temporal(TemporalType.TIMESTAMP)
@@ -333,6 +339,22 @@ public class V2_ServiceRequest implements Serializable {
 
     public void setTakeTime(Date takeTime) {
         this.takeTime = takeTime;
+    }
+
+    public Integer getNearestSrDays() {
+        return nearestSrDays;
+    }
+
+    public void setNearestSrDays(Integer nearestSrDays) {
+        this.nearestSrDays = nearestSrDays;
+    }
+
+    public String getNearestSrId() {
+        return nearestSrId;
+    }
+
+    public void setNearestSrId(String nearestSrId) {
+        this.nearestSrId = nearestSrId;
     }
 
     @Override
