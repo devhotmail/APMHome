@@ -5,7 +5,6 @@ import bowser from 'bowser'
 import withClientRect from '#/HOC/withClientRect'
 import Ring from '#/components/Ring'
 import Gauge from '#/components/Gauge'
-import ImmutableComponent from '#/components/ImmutableComponent'
 import { COLORS, BACKGROUND_COLORS, ROOT_COLOR, ROOT_BACKGROUND_COLOR, PAGE_SIZE } from '#/constants'
 
 type Props = {
@@ -22,7 +21,9 @@ class BubbleChart extends React.PureComponent<*, Props, *> {
 
   valueToRadius(value, minRadius, maxRadius, range) {
     if (range[0] === range[1]) return maxRadius
-    return (value - range[0]) / (range[1] - range[0]) * (maxRadius - minRadius) + minRadius
+    const res = (value - range[0]) / (range[1] - range[0]) * (maxRadius - minRadius) + minRadius
+    if (res < 0) return minRadius
+    return res
   }
 
   renderItem = (data, minRadius, maxRadius, range, cursor, enteringFlag) => {
