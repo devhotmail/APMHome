@@ -128,7 +128,7 @@ public class AssetContractController extends JpaCRUDController<AssetContract> {
             super.save();
             saveDepreciation();
             if(this.selected.getContractType() == 5){
-                pmOrderService.savePmOrder(selectedAsset, this.selected.getStartDate(), this.selected.getEndDate(), pmCount);
+                pmOrderService.savePmOrder(selectedAsset, this.selected.getStartDate(), this.selected.getEndDate(), pmCount, null);
             }
             cancel();
         }

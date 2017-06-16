@@ -87,7 +87,8 @@ public class PmOrderController extends JpaCRUDController<PmOrder> {
 		fileUploadedRepository = WebUtil.getBean(FileUploadedRepository.class);
 		uuaService = (UaaService) WebUtil.getBean(UaaService.class);
 		attachements = new ArrayList<FileUploaded>();
-        ownerList =uuaService.getUsersWithAssetHeadOrStaffRole(currentUser.getHospitalId());
+        //ownerList =uuaService.getUsersWithAssetHeadOrStaffRole(currentUser.getHospitalId());
+        ownerList = userDao.getUsersWithAssetStaffRoleBySiteId(currentUser.getSiteId());
         assetInfoOperateService = WebUtil.getBean(AssetInfoOperateService.class);
         acService = WebUtil.getBean(AssetCreateService.class);
         pmOrderService = WebUtil.getBean(PmOrderService.class);
@@ -196,13 +197,16 @@ public class PmOrderController extends JpaCRUDController<PmOrder> {
         this.selected.setHospitalId(asset.getHospitalId());
         this.selected.setSiteId(asset.getSiteId());
         this.selected.setAssetName(asset.getName());
-        this.selected.setOwnerId(asset.getAssetOwnerId());
-        this.selected.setOwnerName(asset.getAssetOwnerName());
-    	this.selected.setOwnerOrgId(asset.getAssetOwnerId());
-        OrgInfoRepository orgInfoRepository = WebUtil.getBean(OrgInfoRepository.class);
-        OrgInfo orgInfo = orgInfoRepository.findById(asset.getAssetOwnerId());
-        if(orgInfo != null){
-        	this.selected.setOwnerOrgName(orgInfo.getName());
+        if(asset.getAssetOwnerId() != null){
+            UserAccount tempOwner = userDao.findById(asset.getAssetOwnerId());
+            this.selected.setOwnerId(asset.getAssetOwnerId());
+            this.selected.setOwnerName(asset.getAssetOwnerName());
+            this.selected.setOwnerOrgId(tempOwner.getOrgInfoId());
+            OrgInfoRepository orgInfoRepository = WebUtil.getBean(OrgInfoRepository.class);
+            OrgInfo orgInfo = orgInfoRepository.findById(tempOwner.getOrgInfoId());
+            if(orgInfo != null){
+                this.selected.setOwnerOrgName(orgInfo.getName());
+            }
         }
     }
 
@@ -446,7 +450,7 @@ public class PmOrderController extends JpaCRUDController<PmOrder> {
     }
 
     public void saveBatchPmOrder(){
-        pmOrderService.saveBatchPmOrder(targetAssets, startPlanTime, endPlanTime, pmCount);
+        pmOrderService.saveBatchPmOrder(targetAssets, startPlanTime, endPlanTime, pmCount, owner);
     }
 
     public void prepareBatchCreate(){

@@ -1,8 +1,11 @@
 package com.ge.apm.service.pm;
 
 import com.ge.apm.dao.AssetInfoRepository;
+import com.ge.apm.dao.OrgInfoRepository;
 import com.ge.apm.dao.PmOrderRepository;
+import com.ge.apm.dao.UserAccountRepository;
 import com.ge.apm.domain.AssetInfo;
+import com.ge.apm.domain.OrgInfo;
 import com.ge.apm.domain.PmOrder;
 import com.ge.apm.domain.UserAccount;
 import com.ge.apm.view.sysutil.UserContextService;
@@ -31,8 +34,12 @@ public class PmOrderService {
     PmOrderRepository pmOrderDao;
     @Autowired
     private AssetInfoRepository assetDao;
+    @Autowired
+    private OrgInfoRepository orgInfoDao;
+    @Autowired
+    private UserAccountRepository userAccountDao;
 
-    public void savePmOrder(AssetInfo assetInfo, Date startDate, Date endDate, Integer pmCount){
+    public void savePmOrder(AssetInfo assetInfo, Date startDate, Date endDate, Integer pmCount, UserAccount owner){
 
         UserAccount userAccount = UserContextService.getCurrentUserAccount();
 
@@ -59,6 +66,14 @@ public class PmOrderService {
             pmOrder.setCreateTime(new Date());
             pmOrder.setSiteId(userAccount.getSiteId());
             pmOrder.setHospitalId(userAccount.getHospitalId());
+
+            if(owner != null){
+                pmOrder.setOwnerId(owner.getId());
+                pmOrder.setOwnerName(owner.getName());
+                OrgInfo orgInfo = orgInfoDao.findById(owner.getOrgInfoId());
+                pmOrder.setOwnerOrgId(orgInfo.getId());
+                pmOrder.setOwnerOrgName(orgInfo.getName());
+            }
 
             Instant plantimeInstant = null;
             if(pmCount == 1){
@@ -95,9 +110,14 @@ public class PmOrderService {
 
     }
 
-    public void saveBatchPmOrder(List<AssetInfo> assetInfoList, Date startDate, Date endDate, Integer pmCount){
+    public void saveBatchPmOrder(List<AssetInfo> assetInfoList, Date startDate, Date endDate, Integer pmCount, UserAccount owner){
         for (AssetInfo tempAssetInfo : assetInfoList) {
-            this.savePmOrder(tempAssetInfo, startDate, endDate, pmCount);
+            if(tempAssetInfo.getAssetOwnerId() != null){
+                this.savePmOrder(tempAssetInfo, startDate, endDate, pmCount, userAccountDao.findById(tempAssetInfo.getAssetOwnerId()));
+            }else{
+                this.savePmOrder(tempAssetInfo, startDate, endDate, pmCount, owner);
+            }
+
         }
     }
 
