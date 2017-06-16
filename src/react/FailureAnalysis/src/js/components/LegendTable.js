@@ -1,9 +1,7 @@
 // @flow
 import React, { Component } from 'react'
 import { translate } from 'react-i18next'
-import Radium from 'radium'
 import { ParamUpdate } from 'actions'
-import autobind from 'autobind-decorator'
 import { connect } from 'react-redux'
 
 type LegendItem = {
@@ -50,14 +48,11 @@ let styles = {
   },
   active: {
     opacity: 1,
-  },
-  symbol: {
-    width: '1.1em',
-    height: '1.1em', 
-    fontSize: '1em',
-    display: 'inline-block',
-    textAlign: 'center'
   }
+}
+
+function conditionalStyle(b, style) {
+  return b ? style : {}
 }
 
 function mapState2Props(state) {
@@ -73,14 +68,13 @@ function mapDispatch2Props(dispatch) {
 }
 
 @connect(mapState2Props, mapDispatch2Props)
-@autobind
-@Radium
-export class LegendTable extends Component<void, Props, void> {
+@translate()
+export default class LegendTable extends Component<void, Props, void> {
 
   _getSymbol(item: LegendItem) {
-    return (<span style={[{ color: item.color }, styles.symbol ]}>
-              { item.key !== 'same_period_last_year' ? '◼' : this.props.showLastYear ? '▣' : '⛶' }
-            </span>)
+    let lastYearUnchecked = !this.props.showLastYear && item.key === 'same_period_last_year'
+    let style  = lastYearUnchecked ? { border: '2px solid ' + item.color } : { background : item.color }
+    return <span style={{...style, ...styles.symbol}} className='legend-symbol'/>
   }
 
   _getTitle() {
@@ -112,7 +106,7 @@ export class LegendTable extends Component<void, Props, void> {
               items.map(_ => 
               <tr key={_.key}>
                 <td>
-                  <label htmlFor={_.key} key={_.key} style={[styles.firstCol, (_.key === dataType) && styles.active ]}>
+                  <label htmlFor={_.key} key={_.key} style={{...styles.firstCol, ...conditionalStyle(_.key === dataType, styles.active)}}>
                     <input id={_.key} type="radio" name="para-type" value={_.key} 
                       checked={_.key === dataType}
                       onChange={onDataTypeChange} style={{display:'none'}}/>
@@ -131,7 +125,7 @@ export class LegendTable extends Component<void, Props, void> {
               checkBoxes.map(_ => 
               <tr key={_.key}>
                 <td>
-                  <label htmlFor={_.key} key={_.key} style={[styles.firstCol, showLastYear && styles.active ]}>
+                  <label htmlFor={_.key} key={_.key} style={{...styles.firstCol, ...conditionalStyle(showLastYear, styles.active)}}>
                     <input id={_.key} name={_.key} type="checkbox"
                       checked={showLastYear}
                       onChange={() => onToggleLastYear(!showLastYear)} style={{display:'none'}}/>
@@ -149,5 +143,3 @@ export class LegendTable extends Component<void, Props, void> {
     )
   }
 }
-
-export default translate()(LegendTable)

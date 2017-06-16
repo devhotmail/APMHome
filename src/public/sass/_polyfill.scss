@@ -1,0 +1,9 @@
+// polyfill for flex items in IE 10
+.flex__item {
+  display: block;
+}
+
+// let postcss to polyfill `flex-wrap` for IE 10
+.ui-g {
+  flex-wrap: wrap;
+}

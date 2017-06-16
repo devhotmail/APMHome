@@ -31,7 +31,7 @@ public class ProcessTimeService {
     private Database db;
 
     private static final String SQL_PROCESS_TIME_BY_GROUP = "select :groupby as id,cast(avg(wst.responseTime)as integer) as avg_respond,cast(avg(wst.arrivedTime)as integer) as avg_arrived, cast(avg(wst.ETTRTime)as integer) as avg_ETTR "
-            + "from asset_info ai, v2_work_order wo, (select wo_id,count(*) as count,sum(case  when step_id <=2 then extract(epoch FROM(ws.end_time-ws.start_time))  end) as responseTime,"
+            + "from asset_info ai left join org_info oi on ai.clinical_dept_id=oi.id , v2_work_order wo, (select wo_id,count(*) as count,sum(case  when step_id <=2 then extract(epoch FROM(ws.end_time-ws.start_time))  end) as responseTime,"
             + "sum(case  when step_id <=3 then extract(epoch FROM(ws.end_time-ws.start_time))  end) as arrivedTime,"
             + "sum(case  when step_id <=7 then extract(epoch FROM(ws.end_time-ws.start_time))  end) as ETTRTime "
             + "from v2_work_order_step ws where start_time > :start_time and end_time < :end_time   group by wo_id ) wst "
@@ -85,7 +85,7 @@ public class ProcessTimeService {
 
     @Cacheable(cacheNames = "springCache", key = "'processTimeService.queryCount.'+#siteId+'.'+#hospitalId+'.'+#typeId+'.'+#deptId+'.'+#supplier+'.'+#fromTime+'.'+#toTime+'.groupby'+#groupby")
     public Observable<Integer> queryCount(Integer siteId, Integer hospitalId, DateTime fromTime, DateTime toTime, String groupby, Integer typeId, Integer deptId, Integer supplier) {
-        return db.select(SQL_PROCESS_TIME_COUNT.replace(":groupby", ImmutableMap.of("type", "ai.asset_group", "dept", "ai.clinical_dept_name,ai.clinical_dept_id", "supplier", "ai.supplier_id", "assetId", "ai.id","WorkOrder","wo_id").get(groupby))
+        return db.select(SQL_PROCESS_TIME_COUNT.replace(":groupby", ImmutableMap.of("type", "ai.asset_group", "dept", "ai.clinical_dept_id", "supplier", "ai.supplier_id", "assetId", "ai.id","WorkOrder","wo_id").get(groupby))
                 .replace(":conditions", "".concat(typeId > 0 ? " and ai.asset_group=" + typeId : "").concat(deptId > 0 ? "and ai.clinical_dept_id=" + deptId : "").concat(supplier > 0 ? "and ai.supplier_id=" + supplier : "")))
                 .parameter("site_id", siteId).parameter("hospital_id", hospitalId)
                 .parameter("start_time", fromTime.toDate()).parameter("end_time", toTime.toDate())
@@ -95,7 +95,7 @@ public class ProcessTimeService {
     @Cacheable(cacheNames = "springCache", key = "'processTimeService.queryListByType.'+#siteId+'.'+#hospitalId+'.'+#typeId+'.'+#deptId+'.'+#supplier+'.'+#offset+'.'+#limit+'.'+#fromTime+'.'+#toTime+'.orderBy'+#orderBy+'.groupby'+#groupby")
     public Observable<Tuple5<String, String, Integer, Integer, Integer>> queryListByType(Integer siteId, Integer hospitalId, DateTime fromTime, DateTime toTime, String orderBy, String groupby, Integer typeId, Integer deptId, Integer supplier, Integer offset, Integer limit) {
 
-        return db.select(SQL_PROCESS_TIME_BY_GROUP.replace(":groupby", ImmutableMap.of("type", "ai.asset_group", "dept", "ai.clinical_dept_name,ai.clinical_dept_id", "supplier", "ai.supplier_id").get(groupby))
+        return db.select(SQL_PROCESS_TIME_BY_GROUP.replace(":groupby", ImmutableMap.of("type", "ai.asset_group", "dept", "oi.name,ai.clinical_dept_id", "supplier", "ai.supplier_id").get(groupby))
                 .replace(":conditionType", typeId == 0 ? "" : "and ai.asset_group=".concat(typeId.toString()))
                 .replace(":conditionDept", deptId == 0 ? "" : "and ai.clinical_dept_id=".concat(deptId.toString()))
                 .replace(":conditionSupplier", supplier == 0 ? "" : "and ai.supplier_id=".concat(supplier.toString()))
@@ -103,7 +103,7 @@ public class ProcessTimeService {
                 .replace(":offset", limit == 0 || offset == 0 ? "" : " offset ".concat(offset.toString())))
                 .parameter("site_id", siteId).parameter("hospital_id", hospitalId)
                 .parameter("start_time", fromTime.toDate()).parameter("end_time", toTime.toDate())
-                .get(rs -> new Tuple5<>(rs.getString("id"), groupby.contains("dept") ? rs.getString("clinical_dept_name") : "", rs.getInt("avg_respond"), rs.getInt("avg_arrived"), rs.getInt("avg_ETTR")));
+                .get(rs -> new Tuple5<>(rs.getString("id"), groupby.contains("dept") ? rs.getString("name") : "", rs.getInt("avg_respond"), rs.getInt("avg_arrived"), rs.getInt("avg_ETTR")));
     }
 
     @Cacheable(cacheNames = "springCache", key = "'processTimeService.queryListByAsset.'+#siteId+'.'+#hospitalId+'.'+#typeId+'.'+#deptId+'.'+#supplier+'.'+#offset+'.'+#limit+'.'+#fromTime+'.'+#toTime+'.orderBy'+#orderBy+'.groupby'+#groupby")

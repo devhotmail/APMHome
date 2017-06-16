@@ -109,11 +109,15 @@ device-pagination {
   }
 
   .label {
-    fill: $gray1;
-    writing-mode: tb;
     font-size: .8rem;
     cursor: default;
+    fill: $label-text-color;
   }
+}
+
+.canvas:not([data-isie]) .sector .label {
+  writing-mode: tb;
+  fill: $gray1;
 }
 
 .label {

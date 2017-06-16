@@ -425,8 +425,6 @@ export class App extends Component<void, Props, void> {
               outerRadius={outer_R} innerRadius={outer_r}
               margin={7}
               onClick={this.clickLeftTooth}
-              onMouseMove={this.showTooltip}
-              onMouseLeave={this.showTooltip}
               clockwise={false}
               clockwiseAnimate={leftClockwise}
               items={DataOrPlaceHolder(briefs, pagination.left.top)} 
@@ -483,8 +481,6 @@ export class App extends Component<void, Props, void> {
               margin={3}
               clockwiseAnimate={rightClockwise}
               onClick={this.clickRightTooth}
-              onMouseMove={this.showTooltip}
-              onMouseLeave={this.showTooltip}
               items={DataOrPlaceHolder(details, pagination.right.top)} />
 
             <div className="range-wrapper">

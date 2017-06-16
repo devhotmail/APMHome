@@ -67,6 +67,22 @@ public class UsrGenerator extends AbstractDbTest {
       .parameter("email", "")
       .execute();
 
+    db.update(sql)
+      .parameter("site_id", 1)
+      .parameter("hospital_id", 1)
+      .parameter("org_id", 1)
+      .parameter("login_name", "assetHead")
+      .parameter("name", "设备科主任")
+      .parameter("pwd_salt", salt)
+      .parameter("password", pwd)
+      .parameter("is_super_admin", false)
+      .parameter("is_site_admin", false)
+      .parameter("is_local_admin", false)
+      .parameter("is_active", true)
+      .parameter("is_online", false)
+      .parameter("email", "")
+      .execute();
+
     Observable.from(List.range(1, 10).map(i -> Tuple.of(1, 1, 1, String.format("admin%s", i), String.format("管理员%s", i), salt, pwd)).toJavaList())
       .subscribe(r -> db.update(sql)
         .parameter("site_id", r._1)

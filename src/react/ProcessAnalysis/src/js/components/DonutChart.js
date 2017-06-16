@@ -6,7 +6,6 @@ import { decorate } from 'core-decorators'
 import { memoize } from 'lodash-es'
 import colorUtil from 'color'
 
-
 const MAGIC_NUMBER = 2.1546
 const DARKEN_LIMIT = .8
 
@@ -29,6 +28,7 @@ let centered = (radius, fontColor) => ({
   top: '50%',
   left: '50%',
   transform: 'translate(-50%, -50%)',
+  WebkitTransform: 'translate(-50%, -50%)',
   textAlign: 'center'
 })
 

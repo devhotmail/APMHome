@@ -76,7 +76,7 @@ public class DmService {
   public Observable<Tuple4<Integer, LocalDate, Integer, Double>> findMonthUsage(Integer siteId, Integer hospitalId, LocalDate startDate, LocalDate endDate) {
     log.info("siteId: {}; hospitalId: {}; startdate:{}; endDate:{}", siteId, hospitalId, startDate, endDate);
     return db.select(new SQL() {{
-      SELECT("ai.id", "date_trunc(:time_unit,asu.created) as created_date", "ai.asset_group", "COALESCE(avg(asu.exam_duration),0) as use_time");
+      SELECT("ai.id", "date_trunc(:time_unit,asu.created) as created_day", "ai.asset_group", "COALESCE(avg(asu.exam_duration),0) as use_time");
       FROM("asset_info ai");
       LEFT_OUTER_JOIN("asset_summit asu on ai.id = asu.asset_id");
       WHERE("ai.is_valid = true");
@@ -86,9 +86,9 @@ public class DmService {
       WHERE("asu.created <= :end_day");
       WHERE("ai.install_date IS NOT NULL");
       GROUP_BY("ai.id");
-      GROUP_BY("created_date");
+      GROUP_BY("created_day");
       ORDER_BY("ai.id");
-      ORDER_BY("created_date");
+      ORDER_BY("created_day");
     }}.toString())
       .parameter("time_unit", "month").parameter("site_id", siteId).parameter("hospital_id", hospitalId).parameter("start_day", Date.valueOf(startDate)).parameter("end_day", Date.valueOf(endDate))
       .getAs(Integer.class, java.sql.Timestamp.class, Integer.class, Double.class)
