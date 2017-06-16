@@ -2274,6 +2274,10 @@ deep-is@~0.1.3:
   version "0.1.3"
   resolved "https://registry.yarnpkg.com/deep-is/-/deep-is-0.1.3.tgz#b369d6fb5dbc13eecf524f91b070feedc357cf34"
 
+deep-property@^1.1.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/deep-property/-/deep-property-1.1.0.tgz#22eb26f49e62c9d5153141a4db62b33f80418008"
+
 default-require-extensions@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/default-require-extensions/-/default-require-extensions-1.0.0.tgz#f37ea15d3e13ffd9b437d33e1a75b5fb97874cb8"
@@ -6748,13 +6752,14 @@ react-dom@^15.5.4:
     prop-types "~15.5.7"
 
 "react-gear-list-chart@git+https://github.build.ge.com/foundry-sh/dew-gear-chart.git":
-  version "0.0.8"
-  resolved "git+https://github.build.ge.com/foundry-sh/dew-gear-chart.git#3dd78926f34113c17a9231b045d6315281d242d1"
+  version "0.0.10"
+  resolved "git+https://github.build.ge.com/foundry-sh/dew-gear-chart.git#713eb8e2b3448b58308be9de8c8563bf78d82865"
   dependencies:
     classnames "^2.2.5"
     lodash-es "^4.17.4"
     react-motion "^0.5.0"
     shortid "^2.2.8"
+    should-update "^2.0.0"
 
 react-hammerjs@~0.5.0:
   version "0.5.0"
@@ -7518,6 +7523,12 @@ shelljs@^0.6.0:
 shortid@^2.2.8:
   version "2.2.8"
   resolved "https://registry.yarnpkg.com/shortid/-/shortid-2.2.8.tgz#033b117d6a2e975804f6f0969dbe7d3d0b355131"
+
+should-update@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/should-update/-/should-update-2.0.0.tgz#c40ee1ddb5ae52caceaeb23da7e0f5bba6620a77"
+  dependencies:
+    deep-property "^1.1.0"
 
 signal-exit@^2.0.0:
   version "2.1.2"
