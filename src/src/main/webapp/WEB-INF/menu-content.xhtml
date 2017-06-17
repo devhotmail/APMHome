@@ -22,7 +22,6 @@
 				
                 <p:menuitem id="um081" value="#{msg.TerminatedAsset}" outcome="/portal/asset/info/List.xhtml?terminate=true"/>
                 <p:menuitem id="um083" value="#{msg.Create}#{msg.BuildAsset}" outcome="/portal/asset/createAsset/RequestsList.xhtml"/>
-                <p:menuitem id="um085" value="#{msg.AssetTagMsgSubscriber}" outcome="/portal/asset/assetTag/TagSubscribeList.xhtml"/>
 
                 <p:menuitem id="um086" value="采购申请" outcome="/portal/asset/assetTag/ApplicationList.xhtml"/>
                 <p:menuitem id="um087" value="#{msg.ImportAssetDataFile}" outcome="/portal/asset/assetImport/assetImport.xhtml"/>
@@ -30,10 +29,8 @@
             <p:submenu id="um09" label="#{msg.WorkOrderMgmt}" icon="fa fa-wrench"
                        rendered="#{userContextService.hasRole('SuperAdmin') or userContextService.hasRole('HospitalHead') or userContextService.hasRole('AssetHead') or userContextService.hasRole('AssetStaff')}">
                 <p:menuitem id="um10" value="#{msg.ServiceRequestMgmt}" outcome="/portal/wo/woList.xhtml"/>
-                <p:menuitem id="um11" value="#{msg.MyWorkOrder}" outcome="/portal/wo/myWoList.xhtml"/>
-                <p:menuitem id="um12" value="#{msg.MaintainanceRecord}" rendered="false" outcome="/empty"/>
-                <p:menuitem id="um13" value="#{msg.ServiceQualityReview}" outcome="/empty" rendered="false"/>
-                <p:menuitem id="um14" value="#{msg.Inspection}" rendered="false" outcome="/empty"/>
+                <p:menuitem id="um11" value="#{msg.MyWorkOrder}" rendered="false" outcome="/portal/wo/myWoList.xhtml"/>
+                <p:menuitem id="um085" value="#{msg.AssetTagMsgSubscriber}" outcome="/portal/asset/assetTag/TagSubscribeList.xhtml"/>
             </p:submenu>
             <p:submenu id="um15" label="#{msg.DeviceMonitor}" icon="fa fa-bell-o"
                        rendered="#{userContextService.hasRole('SuperAdmin') or userContextService.hasRole('HospitalHead') or userContextService.hasRole('AssetHead') or userContextService.hasRole('AssetStaff')}">
@@ -41,7 +38,7 @@
                             outcome="/portal/analysis/deviceStatusMonitor"/>
                 <p:menuitem id="um17" value="#{msg.DeviceDowntimeAnalysis}" outcome="/empty" rendered="false"/>
                 <p:menuitem id="um171" value="#{msg.FailureAnalysis}" outcome="/portal/analysis/failureAnalysis"/>
-                <p:menuitem id="um172" value="#{msg.StaffPerformance}" outcome="/portal/analysis/staffPerf.xhtml" />
+                <p:menuitem id="um172" value="#{msg.StaffPerformance}" outcome="/portal/analysis/staffPerf.xhtml" rendered="#{userContextService.hasRole('SuperAdmin') or userContextService.hasRole('HospitalHead') or userContextService.hasRole('AssetHead')}"/>
                 <p:menuitem id="um173" value="#{msg.MaintenanceCost}" outcome="/portal/analysis/maintenanceCost.xhtml" />
                 <p:menuitem id="um19" value="#{msg.DeviceMaintainanceCostAnalysis}" rendered="false"
                             outcome="/empty"/>

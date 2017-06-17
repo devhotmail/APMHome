@@ -6,11 +6,11 @@
                 template="/WEB-INF/template.xhtml">
 
     <ui:define name="preRenderView">
-        <f:metadata>
+<!--        <f:metadata>
             <f:viewParam name="isClosed" value="#{workOrderController.filterIsClosed}"/>
             <f:viewParam name="aid" value="#{workOrderController.filterAssetId}"/>
         </f:metadata>
-        <f:event type="preRenderView" listener="#{workOrderController.setViewFilter()}"/>
+        <f:event type="preRenderView" listener="#{workOrderController.setViewFilter()}"/>-->
     </ui:define>
 
     <ui:define name="head">
@@ -26,9 +26,9 @@
             <div class="ui-g-12 card">
                 <p:messages autoUpdate="true" closable="true" showDetail="false"/>
 
-                <h:form id="WorkOrderListForm">
-                    <p:dataTable id="datalist" value="#{workOrderController.lazyModel}" var="item" widgetVar="varDataList"
-                                 selectionMode="single" selection="#{workOrderController.selected}"
+                <h:form id="SRListForm">
+                    <p:dataTable id="datalist" value="#{serviceRequestController.lazyModel}" var="item" widgetVar="varDataList"
+                                 selectionMode="single" selection="#{serviceRequestController.selected}"
                                  lazy="true" paginator="true" paginatorPosition="top" paginatorAlwaysVisible="true"
                                  rowKey="#{item.id}" sortMode="single" sortOrder="descending" sortBy="#{item.id}"
                                  paginatorTemplate="{CurrentPageReport} {Toolbar} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} #{msg.RowsPerPage}: {RowsPerPageDropdown}"
@@ -36,8 +36,8 @@
                                  rows="10" emptyMessage="#{msg.noRecordFound}"
                                  rowsPerPageTemplate="10,20,30,90">
 
-                        <p:ajax event="rowSelect" listener="#{workOrderController.onSelectWorkOrder}" update="WorkOrderEditForm WorkOrderStepListForm"/>
-                        <p:ajax event="filter" listener="#{workOrderController.onFilter}" update="WorkOrderEditForm WorkOrderStepListForm"/>
+                        <p:ajax event="rowSelect" listener="#{serviceRequestController.onSelectWorkOrder}" update="SRListForm"/>
+                        <p:ajax event="filter" listener="#{serviceRequestController.onFilter}" update="SRListForm"/>
 
                         <p:column styleClass="textCenter"  headerText="#{msg.casePriority}" sortBy="#{item.casePriority}" filterBy="#{item.casePriority}" filterMatchMode="EQ">
                             <f:facet name="filter">
@@ -60,14 +60,14 @@
                             <f:facet name="filter">
                                 <p:selectOneMenu onchange="PF('varDataList').filter()" >
                                     <f:selectItem itemLabel="#{msg.SelectOneMessage}" itemValue="#{null}" noSelectionOption="true" />
-                                    <f:selectItems value="#{workOrderController.usersInHospital}" var="item" itemLabel="#{item.name}" itemValue="#{item.id}"/>
+                                    <f:selectItems value="#{serviceRequestController.usersInHospital}" var="item" itemLabel="#{item.name}" itemValue="#{item.id}"/>
                                 </p:selectOneMenu>
                             </f:facet>
                             <h:outputText value="#{item.requestorName}"/>
                         </p:column>
                         <p:column headerText="#{msg.assetName}" sortBy="#{item.assetName}" filterBy="#{item.assetName}" filterMatchMode="LIKE">
                             <h:outputText value="#{item.assetName}"/>
-                        </p:column>
+                        </p:column><!--
                         <p:column headerText="#{msg.caseType}" sortBy="#{item.caseType}" filterBy="#{item.caseType}" filterMatchMode="EQ">
                             <f:facet name="filter">
                                 <p:selectOneMenu onchange="PF('varDataList').filter()" >
@@ -78,9 +78,9 @@
                             </f:facet>
                             <h:outputText value="#{fieldMsg.fieldValue('caseType', item.caseType)}"/>
                         </p:column>
-                        <p:column headerText="#{msg.requestReason}" sortBy="#{item.requestReason}" filterBy="#{item.requestReason}" filterMatchMode="LIKE">
-                            <h:outputText value="#{item.requestReasonInShort}" title="#{item.requestReason}"/>
-                        </p:column>
+-->                        <p:column headerText="#{msg.requestReason}" sortBy="#{item.requestReason}" filterBy="#{item.requestReason}" filterMatchMode="LIKE">
+                            <h:outputText value="#{serviceRequestController.getRequestReasonInShort(item)}" title="#{item.requestReason}"/>
+                        </p:column><!--
                         <p:column headerText="#{msg.currentPersonName}" sortBy="#{item.currentPersonName}" filterBy="#{item.currentPersonId}" filterMatchMode="EQ">
                             <f:facet name="filter">
                                 <p:selectOneMenu onchange="PF('varDataList').filter()" >
@@ -99,7 +99,7 @@
                             </f:facet>
                             <h:outputText value="#{fieldMsg.fieldValue('woSteps', item.currentStepId)}"/>
                         </p:column>
-                        <p:column headerText="#{msg.status}" sortBy="#{item.status}" filterBy="#{item.status}" filterMatchMode="EQ">
+-->                        <p:column headerText="#{msg.status}" sortBy="#{item.status}" filterBy="#{item.status}" filterMatchMode="EQ">
                             <f:facet name="filter">
                                 <p:selectOneMenu onchange="PF('varDataList').filter()" >
                                     <f:selectItem itemLabel="#{msg.SelectOneMessage}" itemValue="#{null}" noSelectionOption="true" />
@@ -109,7 +109,7 @@
                             <h:outputText value="#{fieldMsg.fieldValue('status', item.status)}"/>
                         </p:column>
                         <f:facet name="{Toolbar}">
-                            <p:button id="createButton" icon="ui-icon-plus" class="btn btn-sm btn-gray" title="#{msg.Create}" outcome="woCreate" />
+                            <!--<p:button id="createButton" icon="ui-icon-plus" class="btn btn-sm btn-gray" title="#{msg.Create}" outcome="woCreate" />-->
                             <p:commandButton title="#{msg.exportToXLS}" icon="ui-icon-arrowstop-1-s" ajax="false">
                                 <p:dataExporter type="xls" target="datalist" fileName="WorkOrder_export"/>
                             </p:commandButton>
@@ -117,9 +117,9 @@
                     </p:dataTable>
                 </h:form>
 
-                <ui:include src="woView.xhtml"/>
+                <ui:include src="srView.xhtml"/>
 
-                <p:overlayPanel widgetVar="panelFilterRequestTime" for=":WorkOrderListForm:datalist:filterRequestTime" dismissable="false">
+<!--                <p:overlayPanel widgetVar="panelFilterRequestTime" for=":WorkOrderListForm:datalist:filterRequestTime" dismissable="false">
                     <h:panelGrid columns="2">
                         <p:outputLabel value="#{msg.From}"/>
                         <p:calendar timeZone="GMT+8"  widgetVar="varDateFrom" pattern="yyyy/MM/dd" showOn="button" showButtonPanel="false" navigator="true" mask="true" size="12" locale="zh"/>
@@ -128,7 +128,7 @@
                     </h:panelGrid>
                     <p:commandButton onclick="setDateFilter('varDataList', 'varFilterRequestTime', 'varDateFrom', 'varDateTo'); PF('panelFilterRequestTime').hide();" title="#{msg.Confirm}" icon="ui-icon-check" immediate="true" style="zoom: 0.8;"/>
                     <p:commandButton onclick="PF('panelFilterRequestTime').hide()" title="#{msg.Close}" icon="ui-icon-close" immediate="true" type="button" style="zoom: 0.8;"/>
-                </p:overlayPanel>
+                </p:overlayPanel>-->
 
             </div>
         </div>

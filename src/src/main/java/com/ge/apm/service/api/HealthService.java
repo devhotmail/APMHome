@@ -41,7 +41,7 @@ public class HealthService {
 			.parameter("hospital_id", hospital_id)
 			.get(rs ->
 				new Tuple6<Integer, String, Integer, String, String, Integer> (
-					rs.getInt("asset_id"), rs.getString("name"), rs.getInt("current_step_id"), rs.getString("current_step_name"), rs.getString("case_owner_name"), rs.getInt("clinical_dept_id") ) )
+					rs.getInt("asset_id"), rs.getString("name"), rs.getInt("current_step_id"), rs.getString("current_step_name"), rs.getString("current_person_name"), rs.getInt("clinical_dept_id") ) )
 			.cache();
 
 	}
@@ -54,7 +54,7 @@ public class HealthService {
 			.parameter("hospital_id", hospital_id)
 			.get(rs ->
 				new Tuple6<Integer, String, Integer, String, String, Integer> (
-					rs.getInt("asset_id"), rs.getString("name"), rs.getInt("current_step_id"), rs.getString("current_step_name"), rs.getString("case_owner_name"), rs.getInt("clinical_dept_id") ) )
+					rs.getInt("asset_id"), rs.getString("name"), rs.getInt("current_step_id"), rs.getString("current_step_name"), rs.getString("current_person_name"), rs.getInt("clinical_dept_id") ) )
 			.filter(t6 -> t6.getElement5()==dept)
 			.cache();
 
