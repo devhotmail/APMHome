@@ -170,7 +170,8 @@ public class AssetFileImportService {
             asset.setLastMeteringDate((Date) rowMap.get("上次计量日期"));
             asset.setLastQaDate((Date) rowMap.get("上次质检日期"));
             asset.setMaitanance((String) rowMap.get("维护商"));
-            asset.setMaitananceTel(String.valueOf((ExcelDocument.getCellDoubleValue(rowMap.get("维护商电话"))).longValue()));
+            Double maitananceTel = ExcelDocument.getCellDoubleValue(rowMap.get("维护商电话"));
+            asset.setMaitananceTel(maitananceTel==null? "" : String.valueOf(maitananceTel.longValue()));
             asset.setQrCode((String) rowMap.get("二维码"));
 
             Map<String, Object> map = new HashMap();
@@ -325,12 +326,12 @@ public class AssetFileImportService {
 
     @Transactional
     private void createAsset(AssetInfo asset) {
+        assetDao.save(asset);
         if (null != asset.getQrCode() || !asset.getQrCode().isEmpty()) {
             QrCodeLib qrCodeLib = qrcodeDao.findByQrCode(asset.getQrCode());
             qrCodeLib.setStatus(3);
             qrcodeDao.save(qrCodeLib);
         }
-        assetDao.save(asset);
         assetDepreciationService.saveAssetDerpeciation(asset);
     }
 
