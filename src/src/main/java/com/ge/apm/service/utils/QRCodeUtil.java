@@ -201,17 +201,17 @@ public class QRCodeUtil {
     public static void main(String[] args) throws Exception {
 
         String logoFile = "c:/Temp/logo.jpg";
-        String backGroundPath = "c:/Temp/background.png";
+        String backGroundPath = "c:/Temp/background_nin.png";
         String prefix = "http://weixin.qq.com/r/nCnx6dbEDItzrZKK93yO";
         String text = "1703307223655922";
 //		QRCodeUtil.encode(text, logoFile, "c:/Temp", true);
 
         //    批量生成
-        String srcFolder = "c:/Temp/1706082";
+        String srcFolder = "c:/Temp/170615";
         String[] files = new File(srcFolder).list();
         for (String item : files) {
             System.out.println(item);
-            qrCodeBatchJob(srcFolder + File.separator + item, logoFile, backGroundPath, prefix);
+            qrCodeBatchJob(srcFolder + File.separator + item, null, backGroundPath, prefix);
         }
 
 //        BufferedImage image = QRCodeUtil.createImage(prefix + "1703307223655922", logoFile, true);
@@ -293,7 +293,7 @@ public class QRCodeUtil {
             InputStreamReader read = new InputStreamReader(new FileInputStream(src));
             BufferedReader bufferedReader = new BufferedReader(read);
             String lineTxt = null;
-            int smallCount = 350;
+            int smallCount = 500;
             while ((lineTxt = bufferedReader.readLine()) != null) {
                 System.out.println(lineTxt);
 //                String prefix = UUID.randomUUID().toString();

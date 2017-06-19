@@ -50,6 +50,7 @@ import org.springframework.web.jsf.FacesContextUtils;
 
 import com.ge.apm.dao.UserAccountRepository;
 import com.ge.apm.domain.UserAccount;
+import com.ge.apm.service.utils.MicroServiceUtil;
 
 import webapp.framework.context.WrappedRequest;
 import webapp.framework.web.WebUtil;
@@ -67,6 +68,8 @@ public class LoginService implements Serializable, ApplicationEventPublisherAwar
 	private UserAccountRepository userAccountDao;
 
 	private ApplicationEventPublisher applicationEventPublisher;
+        
+        private MicroServiceUtil msUtil;
 
 	static {
 		IdFuzzyResolver.registerResolver();
@@ -83,6 +86,7 @@ public class LoginService implements Serializable, ApplicationEventPublisherAwar
 		sessionAuthenticationStrategy = ctx.getBean(SessionAuthenticationStrategy.class);
 		securityContextRepository = ctx.getBean(SecurityContextRepository.class);
 		messageUtil = ctx.getBean(MessageUtil.class);
+                msUtil = ctx.getBean(MicroServiceUtil.class);
 	}
 
 	public void setSessionExpired(String value) {
@@ -225,6 +229,8 @@ public class LoginService implements Serializable, ApplicationEventPublisherAwar
 			afterLogin();
 
                         updateLoginStatus(userName, true);
+                        String accessToken = msUtil.getAuthenticateByUserPassword(userName, originPwd);
+                        request.getSession().setAttribute("ACCESS_TOKEN", accessToken);
 			// redirects to the home page
 			/*
 			 * FacesContext context = FacesContext.getCurrentInstance();

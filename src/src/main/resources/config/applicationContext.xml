@@ -212,4 +212,15 @@
     <property name="basePackage" value="com.ge.apm.dao.mapper"/>
     <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"></property>
   </bean>
+    
+    <bean id="httpClientFactory"
+        class="org.springframework.http.client.SimpleClientHttpRequestFactory">
+        <property name="connectTimeout" value="10000" />
+        <property name="readTimeout" value="10000" />
+    </bean>
+
+    <!--RestTemplate -->
+    <bean id="restTemplate" class="org.springframework.web.client.RestTemplate">
+        <constructor-arg ref="httpClientFactory" />
+    </bean>
 </beans>

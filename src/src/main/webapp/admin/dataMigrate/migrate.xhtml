@@ -1,0 +1,48 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/WEB-INF/template.xhtml">
+
+    <ui:define name="content">
+        <div class="ui-g">
+            <div class="ui-g-12  card cardTitle">
+                <b>Migrate Tool</b><br/><br/>
+            </div>
+            <h:form id="migrateForm">
+                <div class="ui-g-12 card">
+                    <p:tabView>
+                        <p:tab title="资产附件导入">
+                            <p:dataTable id="assetAttachTable" value="#{dataMigrateController.assetAttachmentList}" var="item" rows="10" paginator="true"
+                                         paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                         rowsPerPageTemplate="5,10,15" >
+
+                                <p:column headerText="租户">
+                                    <h:outputText value="#{dataMigrateController.getSiteName(item.siteId)}"/>
+                                </p:column>
+                                <p:column headerText="医院">
+                                    <h:outputText value="#{dataMigrateController.getHospitalName(item.hospitalId)}"/>
+                                </p:column>
+                                <p:column headerText="#{msg.assetName}"  >
+                                    <h:outputText value="#{assetInfoService.getAssetInfoName(item.assetId)}"/>
+                                </p:column>
+                                <p:column headerText="#{msg.fileType}" >
+                                    <h:outputText value="#{fieldMsg.fieldValue('attachmentType', item.fileType)}"/>
+                                </p:column>
+                                <p:column headerText="#{msg.name}">
+                                    <h:outputText value="#{item.name}"/>
+                                </p:column>
+
+                            </p:dataTable>
+                            <p:commandButton validateClient="true" actionListener="#{dataMigrateController.migrateAssetAttachData()}" value="#{msg.Import}" update="assetAttachTable :growl" icon="ui-icon-check"/>
+                        </p:tab>
+
+                    </p:tabView>
+
+                </div>
+            </h:form>
+        </div>
+
+    </ui:define>
+</ui:composition>
