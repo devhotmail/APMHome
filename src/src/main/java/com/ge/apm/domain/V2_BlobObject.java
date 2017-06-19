@@ -34,6 +34,9 @@ public class V2_BlobObject implements Serializable {
 
     @Column(name = "bo_type")
     private String boType;
+    
+    @Column(name = "bo_sub_type")
+    private String boSubType;
 
     @Column(name = "object_storage_id")
     private String objectStorageId;
@@ -122,6 +125,15 @@ public class V2_BlobObject implements Serializable {
         this.boType = boType;
     }
 
+    public String getBoSubType() {
+        return boSubType;
+    }
+
+    public void setBoSubType(String boSubType) {
+        this.boSubType = boSubType;
+    }
+
+    
     @Override
     public int hashCode() {
         Integer hash = 0;

@@ -210,6 +210,7 @@
     </bean>
     
     <util:properties id="wxProperties" location="classpath:/wx.properties" />
+    <util:properties id="urlProperties" location="classpath:/url.properties" />
     
     <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">  
         <property name="dataSource" ref="risDataSource" />  
@@ -223,5 +224,14 @@
         <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"></property>  
     </bean>  
     
-    
+    <bean id="httpClientFactory"
+        class="org.springframework.http.client.SimpleClientHttpRequestFactory">
+        <property name="connectTimeout" value="10000" />
+        <property name="readTimeout" value="10000" />
+    </bean>
+
+    <!--RestTemplate -->
+    <bean id="restTemplate" class="org.springframework.web.client.RestTemplate">
+        <constructor-arg ref="httpClientFactory" />
+    </bean>
 </beans>
