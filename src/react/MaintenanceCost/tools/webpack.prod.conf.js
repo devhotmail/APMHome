@@ -132,7 +132,7 @@ const webpackConfig = merge(baseWebpackConfig, {
   plugins: [
     new webpack.NamedModulesPlugin(),
     new webpack.DefinePlugin({
-      'process.env': config.production.env
+      'process.env': process.env.NODE_ENV === 'local' ? config.watch.env : config.production.env
     }),
     new webpack.LoaderOptionsPlugin({
       minimize: true,
