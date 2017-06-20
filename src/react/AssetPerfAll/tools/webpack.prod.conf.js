@@ -8,8 +8,10 @@ const baseWebpackConfig = require('./webpack.base.conf')
 const utils = require('./utils')
 const config = require('../config')
 
-const publicPath = utils.getProdPublicPath(config.production.commonPrefix)
-
+const publicPath = process.env.NODE_ENV === 'local' ?
+  utils.getProdPublicPath(config.watch.commonPrefix) :
+  utils.getProdPublicPath(config.production.commonPrefix)
+  
 const webpackConfig = merge(baseWebpackConfig, {
   devtool: false,
   entry: {

@@ -13,6 +13,7 @@
     "dev": "NODE_ENV=development node server.js",
     "watch": "NODE_ENV=watch node tools/bundle.js",
     "build": "NODE_ENV=production node tools/bundle.js",
+    "build:local": "NODE_ENV=local node tools/bundle.js",
     "build:analysis": "NODE_ENV=analysis node tools/bundle.js",
     "predeploy": "npm run build",
     "deploy": "cf push"
