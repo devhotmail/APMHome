@@ -34,6 +34,9 @@ public class QrCodeAttachment implements Serializable {
     @Basic(optional = false)
     @Column(name = "file_id")
     private int fileId;
+    @Basic(optional = true)
+    @Column(name = "object_id")
+    private String objectId;
 
     public QrCodeAttachment() {
     }
@@ -80,6 +83,16 @@ public class QrCodeAttachment implements Serializable {
     public void setFileId(int fileId) {
         this.fileId = fileId;
     }
+
+    public String getObjectId() {
+        return objectId;
+    }
+
+    public void setObjectId(String objectId) {
+        this.objectId = objectId;
+    }
+    
+    
 
     @Override
     public int hashCode() {

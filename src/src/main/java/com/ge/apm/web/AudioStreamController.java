@@ -6,6 +6,7 @@
 package com.ge.apm.web;
 
 import com.ge.apm.service.asset.AttachmentFileService;
+import com.ge.apm.service.utils.MimeTypesUtil;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.logging.Level;
@@ -67,7 +68,7 @@ public class AudioStreamController {
         try {
             String fileName = attachFileService.getFileNameById(fileId);
             fileStream = attachFileService.getFile(fileId).getStream();
-            String type = new MimetypesFileTypeMap().getContentType(fileName);
+            String type = MimeTypesUtil.getMimeTypeByName(fileName);
             outStream = response.getOutputStream();
             response.setContentType(type);
             response.addHeader("Content-Disposition", "attachment; filename="

@@ -138,11 +138,11 @@ public class V2_ServiceRequest implements Serializable {
     @Temporal(TemporalType.TIMESTAMP)
     private Date takeTime;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, targetEntity = V2_BlobObject.class)
-    @JoinColumn(name = "bo_uuid", referencedColumnName = "id")
-    @Fetch(FetchMode.SUBSELECT)
+//    @OneToMany(cascade=CascadeType.ALL,fetch=FetchType.EAGER,targetEntity=V2_BlobObject.class)
+//    @JoinColumn(name="bo_uuid",referencedColumnName="id", foreignKey = @javax.persistence.ForeignKey(value = ConstraintMode.NO_CONSTRAINT))
+//    @Fetch(FetchMode.SUBSELECT)
     //@Where(clause="bo_uuid=id")
-    private List<V2_BlobObject> attachments;
+//    private List<V2_BlobObject> attachments;
 
     @JoinColumn(name = "sr_id")
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
@@ -317,13 +317,13 @@ public class V2_ServiceRequest implements Serializable {
         this.status = status;
     }
 
-    public List<V2_BlobObject> getAttachments() {
-        return attachments;
-    }
-
-    public void setAttachments(List<V2_BlobObject> attachments) {
-        this.attachments = attachments;
-    }
+//    public List<V2_BlobObject> getAttachments() {
+//        return attachments;
+//    }
+//
+//    public void setAttachments(List<V2_BlobObject> attachments) {
+//        this.attachments = attachments;
+//    }
 
     public String getEquipmentTaker() {
         return equipmentTaker;
