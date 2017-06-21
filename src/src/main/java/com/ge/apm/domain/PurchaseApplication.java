@@ -1,6 +1,7 @@
 package com.ge.apm.domain;
 
 import com.ge.apm.service.utils.TimeUtils;
+import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -11,15 +12,17 @@ import java.util.Date;
  * @author 121601104
  */
 @Entity
-@Table(name = "account_application")
+@Table(name = "purchase_application")
 public class PurchaseApplication implements Serializable {
 
     private static final long serialVersionUID = 1L;
+
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Basic(optional = false)
-    @Column(name = "id")
-    private Integer id;
+    @GeneratedValue(generator = "uuid")
+    @GenericGenerator(name = "uuid", strategy = "uuid")
+    @Column(columnDefinition = "CHAR(32)")
+    private String id;
+
     @Basic(optional = false)
     @Column(name = "apply_clinical")
     private String applyClinical;
@@ -200,11 +203,11 @@ private String infoSign;
         this.leaderSignDate = leaderSignDate;
     }
 
-    public Integer getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(String id) {
         this.id = id;
     }
 

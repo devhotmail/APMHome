@@ -55,6 +55,7 @@ public class ApplicationController extends JpaCRUDController<PurchaseApplication
             setSelectedByUrlParam(encodeStr, "selectedid");
             prepareEdit();
             PurchaseApplication byId = dao.findById(this.selected.getId());
+
             int v1=  byId.getIntent();
             if(v1==7){
                 selectedIntention2.add("1");
@@ -79,6 +80,17 @@ public class ApplicationController extends JpaCRUDController<PurchaseApplication
         } else if ("Delete".equalsIgnoreCase(actionName)) {
             prepareDelete();
         }
+    }
+
+    public void onSelectAsset() throws IOException{
+        if(this.selected!=null){
+            PurchaseApplication byId = dao.findById(this.selected.getId());
+          /*  int v1=  byId.getIntent();
+            System.out.println("v1v1 "+v1);
+            // selectedIntention1 = intToIntegerList(v1);
+            System.out.println();*/
+        }
+
     }
 
     public static  List<Integer> intToIntegerList(int ind) {
