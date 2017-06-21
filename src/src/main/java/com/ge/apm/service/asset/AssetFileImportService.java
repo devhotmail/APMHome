@@ -172,7 +172,7 @@ public class AssetFileImportService {
             asset.setLastQaDate((Date) rowMap.get("上次质检日期"));
             asset.setMaitanance((String) rowMap.get("维护商"));
             Double maitananceTel = ExcelDocument.getCellDoubleValue(rowMap.get("维护商电话"));
-            asset.setMaitananceTel(maitananceTel==null? "" : String.valueOf(maitananceTel.longValue()));
+            asset.setMaitananceTel(maitananceTel == null ? "" : String.valueOf(maitananceTel.longValue()));
             asset.setQrCode((String) rowMap.get("二维码"));
 
             Map<String, Object> map = new HashMap();
@@ -180,7 +180,7 @@ public class AssetFileImportService {
             map.put("status", ImportStatus.New);
             map.put("rowData", rowMap);
 
-            result.put(modalityId.concat(assetName).concat(financingNum==null?"":financingNum), map);
+            result.put(modalityId.concat(assetName).concat(financingNum == null ? "" : financingNum), map);
         }
 
         return result;
@@ -225,6 +225,9 @@ public class AssetFileImportService {
                 item.put("status", ImportStatus.Failure);
                 addErrMessage(item, "Warning:" + WebUtil.getMessage("OrgIngo") + orgName + "无法关联");
                 newAsset.setClinicalDeptName(null);
+            }else{
+                newAsset.setClinicalDeptName(orgName);
+                newAsset.setClinicalDeptId(clinicalDept.getId());
             }
 
             List<UserAccount> userList = getUserInfosByName(newAsset.getAssetOwnerName());
@@ -233,7 +236,7 @@ public class AssetFileImportService {
                 newAsset.setAssetOwnerId(assetOwner.getId());
                 newAsset.setAssetOwnerTel(assetOwner.getTelephone());
             } else {
-                addErrMessage(item, "Warning:" +  WebUtil.getMessage("AssetOwnerName") + newAsset.getAssetOwnerName() + "无法关联");
+                addErrMessage(item, "Warning:" + WebUtil.getMessage("AssetOwnerName") + newAsset.getAssetOwnerName() + "无法关联");
                 newAsset.setAssetOwnerName(null);
             }
 
@@ -248,7 +251,7 @@ public class AssetFileImportService {
                 Supplier supplier = supplierList.get(0);
                 newAsset.setSupplierId(supplier.getId());
             } else {
-                addErrMessage(item, "Warning:" + WebUtil.getMessage("Vendor")+ (String) item.get("superlierName") + "无法关联");
+                addErrMessage(item, "Warning:" + WebUtil.getMessage("Vendor") + (String) item.get("superlierName") + "无法关联");
                 newAsset.setVendor(null);
             }
 
@@ -265,7 +268,7 @@ public class AssetFileImportService {
 
             } else if (assetList.size() > 1) {
                 item.put("status", ImportStatus.Failure);
-                addErrMessage(item, "Error:" + WebUtil.getMessage("InvalidParameter") +WebUtil.getMessage("AssetInfo") + newAsset.getName() + "/" + newAsset.getDepartNum()+"/" + newAsset.getFinancingNum());
+                addErrMessage(item, "Error:" + WebUtil.getMessage("InvalidParameter") + WebUtil.getMessage("AssetInfo") + newAsset.getName() + "/" + newAsset.getDepartNum() + "/" + newAsset.getFinancingNum());
             } else {
                 item.put("asset", assetList.get(0));
                 item.put("status", ImportStatus.Exist);
@@ -301,17 +304,15 @@ public class AssetFileImportService {
         Integer keyRowOrg = 4;
         Integer dataRowOrg = 5;
         Boolean hasFailData = false;
-        doc.clearRowsData(SHEET_ORG, 5, 4+importOrgMap.values().size());
+        doc.clearRowsData(SHEET_ORG, 5, 4 + importOrgMap.values().size());
         for (Map<String, Object> item : importOrgMap.values()) {
-            if (item.get("status").equals(ImportStatus.Failure)) {
-                doc.writeRowData(SHEET_ORG, keyRowOrg, dataRowOrg++, (Map<String, Object>) item.get("rowData"));
-                hasFailData = true;
-            }
+            doc.writeRowData(SHEET_ORG, keyRowOrg, dataRowOrg++, (Map<String, Object>) item.get("rowData"));
+            hasFailData = item.get("status").equals(ImportStatus.Failure);
         }
 
         Integer keyRowAsset = 6;
         Integer dataRowAsset = 7;
-        doc.clearRowsData(SHEET_ASSET, 7, 6+importAssetMap.values().size());
+        doc.clearRowsData(SHEET_ASSET, 7, 6 + importAssetMap.values().size());
         for (Map<String, Object> item : importAssetMap.values()) {
             if (item.get("status").equals(ImportStatus.Failure)) {
                 doc.writeRowData(SHEET_ASSET, keyRowAsset, dataRowAsset++, (Map<String, Object>) item.get("rowData"));
@@ -321,7 +322,6 @@ public class AssetFileImportService {
 //        doc.clearRowsData(SHEET_ASSET, dataRowAsset, 6+importAssetMap.values().size());
 
 //        doc.clearRowsData(SHEET_USER, 5, 6);
-
         return hasFailData;
     }
 
