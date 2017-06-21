@@ -56,7 +56,7 @@ public class DataMigrateController {
     }
 
     public List<QrCodeAttachment> getQrAttachmentList() {
-        return qrattachDao.getNoneAssetAttachments();
+        return qrattachDao.getNoneAssetAttachments().stream().filter(item -> item.getObjectId()== null || item.getObjectId().isEmpty()).collect(Collectors.toList());
     }
 
     public List<AssetFileAttachment> getAttachementList() {

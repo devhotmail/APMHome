@@ -22,6 +22,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
+import webapp.framework.web.WebUtil;
 
 /**
  *
@@ -31,23 +32,25 @@ import org.springframework.transaction.annotation.Transactional;
 public class DataMigrateService {
 
     @Autowired
-    MicroServiceUtil msService;
+    private MicroServiceUtil msService;
     @Autowired
-    AssetInfoRepository assetDao;
+    private AssetInfoRepository assetDao;
     @Autowired
-    BlobObjectRepository boDao;
+    private BlobObjectRepository boDao;
     @Autowired
-    AssetFileAttachmentRepository attachDao;
+    private AssetFileAttachmentRepository attachDao;
     @Autowired
-    AttachmentFileService attachService;
+    private QrCodeLibRepository qrLibDao;
     @Autowired
-    QrCodeLibRepository qrLibDao;
-    @Autowired
-    QrCodeAttachmentRepository qrAttachDao;
+    private QrCodeAttachmentRepository qrCodeAttachDao;
+    
+    private AttachmentFileService fileService = WebUtil.getBean(AttachmentFileService.class);
 
     @Value("#{urlProperties.url_localFileUrl}")
     private String url_localFileUrl;
 
+    
+    
     @Transactional
     public Boolean migrateAssetAttchment(AssetFileAttachment item, String token) {
 
@@ -75,7 +78,7 @@ public class DataMigrateService {
     @Transactional
     public Boolean migrateQrAttchment(QrCodeAttachment item, String token) {
 
-        String fileName = attachService.getFileNameById(item.getFileId());
+        String fileName = fileService.getFileNameById(item.getFileId());
         Map<String, Object> docMap = msService.uploadSingleFileByUrl(token, url_localFileUrl.concat("/").concat(String.valueOf(item.getFileId())), fileName);
         if (null == docMap) {
             return false;
@@ -94,7 +97,7 @@ public class DataMigrateService {
         boDao.save(blobObject);
         
         item.setObjectId((String) docMap.get("objectId"));
-        qrAttachDao.save(item);
+        qrCodeAttachDao.save(item);
         return blobObject.getId() != null;
     }
 
