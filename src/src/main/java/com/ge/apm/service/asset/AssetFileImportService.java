@@ -153,7 +153,8 @@ public class AssetFileImportService {
             asset.setSerialNum((String) rowMap.get("制造商序列号"));
             asset.setSystemId((String) rowMap.get("SystemID/厂商报修ID"));
             asset.setBarcode((String) rowMap.get("条码"));
-            asset.setFinancingNum((String) rowMap.get("资产编号"));
+            String financingNum = (String) rowMap.get("资产编号");
+            asset.setFinancingNum(financingNum);
             asset.setModalityId((String) rowMap.get("IT系统编号"));
             asset.setPurchasePrice(ExcelDocument.getCellDoubleValue(rowMap.get("采购价格")));
             asset.setSalvageValue(ExcelDocument.getCellDoubleValue(rowMap.get("最终残值")));
@@ -179,7 +180,7 @@ public class AssetFileImportService {
             map.put("status", ImportStatus.New);
             map.put("rowData", rowMap);
 
-            result.put(modalityId.concat(assetName), map);
+            result.put(modalityId.concat(assetName).concat(financingNum==null?"":financingNum), map);
         }
 
         return result;
@@ -208,7 +209,7 @@ public class AssetFileImportService {
                 item.put("status", ImportStatus.Created);
             } else if (orgs.size() > 1) {
                 item.put("status", ImportStatus.Failure);
-                addErrMessage(item, WebUtil.getMessage("InvalidParameter") + ((OrgInfo) item.get("org")).getName());
+                addErrMessage(item, "Error:" + WebUtil.getMessage("InvalidParameter") + WebUtil.getMessage("OrgIngo") + ((OrgInfo) item.get("org")).getName());
             } else {
                 item.put("org", orgs.get(0));
                 item.put("status", ImportStatus.Exist);
@@ -222,7 +223,7 @@ public class AssetFileImportService {
             OrgInfo clinicalDept = (OrgInfo) importOrgMap.get(orgName).get("org");
             if (clinicalDept.getId() == null || clinicalDept.getId() <= 0) {
                 item.put("status", ImportStatus.Failure);
-                addErrMessage(item, WebUtil.getMessage("InvalidParameter") + orgName);
+                addErrMessage(item, "Warning:" + WebUtil.getMessage("OrgIngo") + orgName + "无法关联");
                 newAsset.setClinicalDeptName(null);
             }
 
@@ -232,7 +233,7 @@ public class AssetFileImportService {
                 newAsset.setAssetOwnerId(assetOwner.getId());
                 newAsset.setAssetOwnerTel(assetOwner.getTelephone());
             } else {
-                addErrMessage(item, WebUtil.getMessage("InvalidParameter") + newAsset.getAssetOwnerName());
+                addErrMessage(item, "Warning:" +  WebUtil.getMessage("AssetOwnerName") + newAsset.getAssetOwnerName() + "无法关联");
                 newAsset.setAssetOwnerName(null);
             }
 
@@ -247,7 +248,7 @@ public class AssetFileImportService {
                 Supplier supplier = supplierList.get(0);
                 newAsset.setSupplierId(supplier.getId());
             } else {
-                addErrMessage(item, WebUtil.getMessage("InvalidParameter") + (String) item.get("superlierName"));
+                addErrMessage(item, "Warning:" + WebUtil.getMessage("Vendor")+ (String) item.get("superlierName") + "无法关联");
                 newAsset.setVendor(null);
             }
 
@@ -259,12 +260,12 @@ public class AssetFileImportService {
                     item.put("status", ImportStatus.Created);
                 } else {
                     item.put("status", ImportStatus.Failure);
-                    addErrMessage(item, WebUtil.getMessage("InvalidParameter") + "QRCode:" + qrCode);
+//                    addErrMessage(item, WebUtil.getMessage("InvalidParameter") +WebUtil.getMessage("qrCode")+ qrCode);
                 }
 
             } else if (assetList.size() > 1) {
                 item.put("status", ImportStatus.Failure);
-                addErrMessage(item, WebUtil.getMessage("InvalidParameter") + newAsset.getName() + "/" + newAsset.getDepartNum());
+                addErrMessage(item, "Error:" + WebUtil.getMessage("InvalidParameter") +WebUtil.getMessage("AssetInfo") + newAsset.getName() + "/" + newAsset.getDepartNum()+"/" + newAsset.getFinancingNum());
             } else {
                 item.put("asset", assetList.get(0));
                 item.put("status", ImportStatus.Exist);
@@ -281,15 +282,15 @@ public class AssetFileImportService {
 
         QrCodeLib qrCodeLib = qrcodeDao.findByQrCode(qrcode);
         if (qrCodeLib == null) {
-            addErrMessage(item, WebUtil.getMessage("InvalidQRCode") + qrcode);
+            addErrMessage(item, "Error:" + WebUtil.getMessage("InvalidQRCode") + qrcode);
             return false;
         }
         if (qrCodeLib.getSiteId() != siteId || qrCodeLib.getHospitalId() != hospitalId) {
-            addErrMessage(item, WebUtil.getMessage("WrongHospitalQRCode"));
+            addErrMessage(item, "Error:" + WebUtil.getMessage("WrongHospitalQRCode"));
             return false;
         }
         if (qrCodeLib.getStatus() != 1) {
-            addErrMessage(item, WebUtil.getMessage("AlreadyUsingQrCode"));
+            addErrMessage(item, "Error:" + WebUtil.getMessage("AlreadyUsingQrCode"));
             return false;
         }
 
@@ -349,6 +350,7 @@ public class AssetFileImportService {
         assetFilters.add(new SearchFilter("siteId", SearchFilter.Operator.EQ, siteId));
         assetFilters.add(new SearchFilter("name", SearchFilter.Operator.EQ, asset.getName()));
         assetFilters.add(new SearchFilter("departNum", SearchFilter.Operator.EQ, asset.getDepartNum()));
+        assetFilters.add(new SearchFilter("financingNum", SearchFilter.Operator.EQ, asset.getFinancingNum()));
         return assetDao.findBySearchFilter(assetFilters);
     }
 
