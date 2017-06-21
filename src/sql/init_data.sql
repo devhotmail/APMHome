@@ -50,10 +50,6 @@ INSERT INTO user_role(id,user_id,role_id) VALUES ('7', '7', '2');
 INSERT INTO user_role(id,user_id,role_id) VALUES ('8', '8', '4');
 
 
-INSERT INTO field_code_type (id,msg_type,msg_type_name) VALUES (2,'caseSubType','故障子类别');
-INSERT INTO field_code_type (id,msg_type,msg_type_name) VALUES (3,'assetGroup','设备类型');
-
-
 SELECT setval('"site_info_id_seq"', 3, false);
 SELECT setval('"org_info_id_seq"', 7, false);
 SELECT setval('"sys_role_id_seq"', 7, false);
