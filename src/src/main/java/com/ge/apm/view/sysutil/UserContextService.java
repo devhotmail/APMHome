@@ -15,6 +15,7 @@ import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 import java.io.Serializable;
 import java.util.List;
+import javax.servlet.http.HttpServletRequest;
 
 @ManagedBean(name = "userContextService")
 @SessionScoped
@@ -185,4 +186,25 @@ public class UserContextService implements Serializable {
       return uaaService.getUserDefaultHomePage(userAccount);
     }
   }
+  
+  
+    public static String getAccessToken(){
+        return getAccessToken(null);
+    }
+    public static String getAccessToken(HttpServletRequest request){
+        
+        String token = null;
+        if(request==null){
+                try{
+                    request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
+                }
+                catch(Exception ex){
+                }
+            }
+        if(request!=null){
+           token = (String) request.getSession().getAttribute("ACCESS_TOKEN");
+        }
+        return token;
+    }
+    
 }

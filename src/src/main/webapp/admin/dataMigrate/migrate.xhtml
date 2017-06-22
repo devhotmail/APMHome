@@ -1,0 +1,85 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/WEB-INF/template.xhtml">
+
+    <ui:define name="content">
+        <div class="ui-g">
+            <div class="ui-g-12  card cardTitle">
+                <b>Migrate Tool</b><br/><br/>
+            </div>
+            <h:form id="migrateForm">
+                <div class="ui-g-12 card">
+                    <p:tabView class="ui-g-12">
+                        <p:tab title="实体检查" class="ui-g-12">
+
+                            <p:panelGrid columns="1" layout="grid" styleClass="ui-panelgrid-blank form-group"  >
+                                <h:panelGroup id="assetEntity">
+                                    <label class="label">#{msg.AssetInfo}: there are #{dataMigrateController.getCountOfAssetEntity()} items need update uuid </label>
+                                    <p:commandButton actionListener="#{dataMigrateController.updateAssetEntity()}" value="#{msg.Update}" update="assetEntity :growl" icon="ui-icon-check"  disabled="#{dataMigrateController.getCountOfAssetEntity() == 0}"/>
+                                </h:panelGroup>
+                                <h:panelGroup id="QrLibEntity">
+                                    <label class="label">#{msg.QrCodeLib}: there are #{dataMigrateController.getCountOfQrLibEntity()} items need update uuid </label>
+                                    <p:commandButton actionListener="#{dataMigrateController.updateQrLibEntity()}" value="#{msg.Update}" update="QrLibEntity :growl" icon="ui-icon-check"  disabled="#{dataMigrateController.getCountOfQrLibEntity() == 0}"/>
+                                </h:panelGroup>
+
+                            </p:panelGrid>
+
+                        </p:tab>
+                        <p:tab title="资产附件导入">
+                            <p:dataTable id="assetAttachTable" value="#{dataMigrateController.assetAttachmentList}" var="item" rows="10" paginator="true"
+                                         paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                         rowsPerPageTemplate="5,10,15" >
+
+                                <p:column headerText="租户">
+                                    <h:outputText value="#{dataMigrateController.getSiteName(item.siteId)}"/>
+                                </p:column>
+                                <p:column headerText="医院">
+                                    <h:outputText value="#{dataMigrateController.getHospitalName(item.hospitalId)}"/>
+                                </p:column>
+                                <p:column headerText="#{msg.assetName}"  >
+                                    <h:outputText value="#{assetInfoService.getAssetInfoName(item.assetId)}"/>
+                                </p:column>
+                                <p:column headerText="#{msg.fileType}" >
+                                    <h:outputText value="#{fieldMsg.fieldValue('attachmentType', item.fileType)}"/>
+                                </p:column>
+                                <p:column headerText="#{msg.name}">
+                                    <h:outputText value="#{item.name}"/>
+                                </p:column>
+                                <p:column headerText="#{msg.importStatus}">
+                                    <h:outputText value="#{item.fileUrl==null?'':'msg.Success'}"/>
+                                </p:column>
+
+                            </p:dataTable>
+                            <p:commandButton validateClient="true" actionListener="#{dataMigrateController.migrateAssetAttachData()}" value="#{msg.Import}" update="assetAttachTable :growl" icon="ui-icon-check"/>
+                        </p:tab>
+
+                        <p:tab title="扫码附件导入">
+                            <p:dataTable id="qrAttachTable" value="#{dataMigrateController.qrAttachList}" var="item" rows="10" paginator="true"
+                                         paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                         rowsPerPageTemplate="5,10,15" >
+
+                                <p:column headerText="#{msg.qrCodeId}">
+                                    <h:outputText value="#{item.qrCodeId}"/>
+                                </p:column>
+                                <p:column headerText="#{msg.fileType}">
+                                    <h:outputText value="#{item.fileType}"/>
+                                </p:column>
+                                <p:column headerText="#{msg.importStatus}">
+                                    <h:outputText value="#{item.objectId==null?'':'Success'}"/>
+                                </p:column>
+
+                            </p:dataTable>
+                            <p:commandButton validateClient="true" actionListener="#{dataMigrateController.migrateQrAttachData()}" value="#{msg.Import}" update="qrAttachTable :growl" icon="ui-icon-check"/>
+                        </p:tab>
+
+                    </p:tabView>
+
+                </div>
+            </h:form>
+        </div>
+
+    </ui:define>
+</ui:composition>

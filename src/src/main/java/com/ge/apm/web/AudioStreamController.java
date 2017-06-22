@@ -6,10 +6,12 @@
 package com.ge.apm.web;
 
 import com.ge.apm.service.asset.AttachmentFileService;
+import com.ge.apm.service.utils.MimeTypesUtil;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.activation.MimetypesFileTypeMap;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -44,12 +46,11 @@ public class AudioStreamController {
             outStream.write(b);
             outStream.flush();
             mp3Src.close();
-            
+
         } catch (IOException ex) {
             Logger.getLogger(AudioStreamController.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        finally{
-            if(outStream != null){
+        } finally {
+            if (outStream != null) {
                 try {
                     outStream.close();
                 } catch (IOException ex) {
@@ -57,7 +58,39 @@ public class AudioStreamController {
                 }
             }
         }
-        
+
+    }
+
+    @RequestMapping(value = "/uploadedFile/{fileId}", method = RequestMethod.GET)
+    public void getFile(@PathVariable Integer fileId, HttpServletRequest request, HttpServletResponse response) {
+        InputStream fileStream = null;
+        ServletOutputStream outStream = null;
+        try {
+            String fileName = attachFileService.getFileNameById(fileId);
+            fileStream = attachFileService.getFile(fileId).getStream();
+            String type = MimeTypesUtil.getMimeTypeByName(fileName);
+            outStream = response.getOutputStream();
+            response.setContentType(type);
+            response.addHeader("Content-Disposition", "attachment; filename="
+                    + fileName);
+            response.setContentLength(fileStream.available());
+            byte[] b = new byte[fileStream.available()];
+            fileStream.read(b);
+            outStream.write(b);
+            outStream.flush();
+            fileStream.close();
+
+        } catch (IOException ex) {
+            Logger.getLogger(AudioStreamController.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            if (outStream != null) {
+                try {
+                    outStream.close();
+                } catch (IOException ex) {
+                    Logger.getLogger(AudioStreamController.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        }
     }
 
 }
