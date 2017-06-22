@@ -4,6 +4,7 @@ import com.ge.apm.service.utils.TimeUtils;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.Date;
 
@@ -144,7 +145,11 @@ private String infoSign;
     @Column(name = "leader_advice")
     private String leaderAdvice;
 
+    @Column(name = "site_id")
+    private Integer siteId;
 
+    @Column(name = "hospital_id")
+    private Integer hospitalId;
 
 
 
@@ -430,5 +435,21 @@ private String infoSign;
 
     public void setLeaderSign(String leaderSign) {
         this.leaderSign = leaderSign;
+    }
+
+    public Integer getSiteId() {
+        return siteId;
+    }
+
+    public void setSiteId(Integer siteId) {
+        this.siteId = siteId;
+    }
+
+    public Integer getHospitalId() {
+        return hospitalId;
+    }
+
+    public void setHospitalId(Integer hospitalId) {
+        this.hospitalId = hospitalId;
     }
 }

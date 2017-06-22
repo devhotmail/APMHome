@@ -6,8 +6,13 @@ import com.ge.apm.domain.*;
 import com.ge.apm.service.utils.UrlParamUtil;
 import com.ge.apm.view.asset.AssetInfoController;
 import com.ge.apm.view.sysutil.UrlEncryptController;
+import com.ge.apm.view.sysutil.UserContextService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.transaction.annotation.Transactional;
+import webapp.framework.dao.SearchFilter;
 import webapp.framework.web.WebUtil;
+import webapp.framework.web.mvc.GenericCRUDUUIDController;
 import webapp.framework.web.mvc.JpaCRUDController;
 
 import javax.faces.bean.ManagedBean;
@@ -27,7 +32,7 @@ import java.util.stream.IntStream;
 
 @ManagedBean
 @ViewScoped
-public class ApplicationController extends JpaCRUDController<PurchaseApplication> {
+public class ApplicationController extends GenericCRUDUUIDController<PurchaseApplication> {
 
     private static final long serialVersionUID = 1L;
 
@@ -35,16 +40,17 @@ public class ApplicationController extends JpaCRUDController<PurchaseApplication
     private List<Integer> selectedIntention1;
     private List<String> selectedIntention2;
     private String needCost;
-
+    private UserAccount currentUser;
     @Override
     protected void init() {
+        currentUser = UserContextService.getCurrentUserAccount();
         this.filterBySite=false;
         dao=WebUtil.getBean(PurchaseApplicationRepository.class);
         selectedIntention1=new ArrayList<Integer>();
         selectedIntention2 = new ArrayList<String>();
         HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
         String encodeStr = request.getParameter("str");
-        String actionName = (String) UrlEncryptController.getValueFromMap(encodeStr, "actionName");
+        String actionName =WebUtil.getRequestParameter("actionName");// (String) UrlEncryptController.getValueFromMap(encodeStr, "actionName");
         if ("Create".equalsIgnoreCase(actionName)) {
             try {
                 prepareCreate();
@@ -52,9 +58,11 @@ public class ApplicationController extends JpaCRUDController<PurchaseApplication
                 Logger.getLogger(AssetInfoController.class.getName()).log(Level.SEVERE, null, ex);
             }
         }else if ("Edit".equalsIgnoreCase(actionName)) {
-            setSelectedByUrlParam(encodeStr, "selectedid");
+          //  setSelectedByUrlParam(encodeStr, "selectedid");
+            String id = WebUtil.getRequestParameter("selectedId");
+            PurchaseApplication byId = dao.findById(id);
+            this.selected=byId;
             prepareEdit();
-            PurchaseApplication byId = dao.findById(this.selected.getId());
 
             int v1=  byId.getIntent();
             if(v1==7){
@@ -80,15 +88,14 @@ public class ApplicationController extends JpaCRUDController<PurchaseApplication
         } else if ("Delete".equalsIgnoreCase(actionName)) {
             prepareDelete();
         }
+
+        this.filterBySite=true;
+        this.filterByHospital=true;
     }
 
     public void onSelectAsset() throws IOException{
         if(this.selected!=null){
             PurchaseApplication byId = dao.findById(this.selected.getId());
-          /*  int v1=  byId.getIntent();
-            System.out.println("v1v1 "+v1);
-            // selectedIntention1 = intToIntegerList(v1);
-            System.out.println();*/
         }
 
     }
@@ -103,8 +110,9 @@ public class ApplicationController extends JpaCRUDController<PurchaseApplication
         return integelist;
     }
     protected void setSelectedByUrlParam(String encodeUrl, String paramName) {
-        setSelected(Integer.parseInt((String) UrlEncryptController.getValueFromMap(encodeUrl, paramName)));
+        setSelected((PurchaseApplication) UrlEncryptController.getValueFromMap(encodeUrl, paramName));
     }
+
 
     @Transactional
     public void applyChange() {
@@ -126,17 +134,39 @@ public class ApplicationController extends JpaCRUDController<PurchaseApplication
         return WebUtil.getMessage("申请单"+WebUtil.getMessage(actionName));
     }
 
+
+
+    @Override
+    public void prepareCreate() throws InstantiationException, IllegalAccessException {
+        super.prepareCreate();
+
+        this.selected.setHospitalId(currentUser.getHospitalId());
+        this.selected.setSiteId(currentUser.getSiteId());
+    }
+
     @Override
     protected PurchaseApplicationRepository getDAO() {
         return dao;
     }
     String url;
     public String getViewPage(String pageName, String actionName) throws IOException {
-        url = "actionName=Edit&selectedid="
-                + selected.getId().toString();
-        url = "application.xhtml?str="+ UrlParamUtil.encodeUrlQueryString(url);
-        FacesContext.getCurrentInstance().getExternalContext().redirect(url);
+
+        url=pageName+".xhtml?actionName="+actionName+"&faces-redirect=true";
+if(actionName.equalsIgnoreCase("edit")){
+    url= url.concat("&selectedId=").concat(this.selected.getId());
+}
         return url;
+    }
+
+    @Override
+    protected Page<PurchaseApplication> loadData(PageRequest pageRequest) {
+        selected = null;
+
+        if(searchFilters.size() <= 0){
+            return dao.findAll(pageRequest);
+        }else{
+            return dao.findBySearchFilter(searchFilters, pageRequest);
+        }
     }
 
     public String getNeedCost() {
@@ -169,4 +199,6 @@ public class ApplicationController extends JpaCRUDController<PurchaseApplication
     public void setSelectedIntention2(List<String> selectedIntention2) {
         this.selectedIntention2 = selectedIntention2;
     }
+
+
 }

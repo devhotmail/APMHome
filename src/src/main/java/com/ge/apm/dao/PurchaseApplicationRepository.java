@@ -12,6 +12,5 @@ import java.util.List;
 
 public interface PurchaseApplicationRepository extends GenericRepositoryUUID<PurchaseApplication> {
 
-    public PurchaseApplication findById(String id);
 
 }
