@@ -52,9 +52,11 @@ public class PmOrderService {
         LocalDateTime endLocalDateTime = LocalDateTime.ofInstant(endDateInstant, zone);
         LocalDate endLocalDate = endLocalDateTime.toLocalDate();
 
-        Period period = Period.between(startLocalDate, endLocalDate);
+        //Period period = Period.between(startLocalDate, endLocalDate);
+        //Integer days = period.getDays()/(pmCount - 1);
 
-        Integer days = period.getDays()/pmCount;
+        long daysDiff = ChronoUnit.DAYS.between(startLocalDate, endLocalDate);
+        long days = daysDiff/(pmCount - 1);
 
         for(int i = 1 ; i <= pmCount ; i++){
             PmOrder pmOrder = new PmOrder();
@@ -84,7 +86,7 @@ public class PmOrderService {
                 }else if(i == pmCount){
                     plantimeInstant = endLocalDate.atStartOfDay().atZone(zone).toInstant();
                 }else{
-                    plantimeInstant = startLocalDate.plus(days, ChronoUnit.DAYS).atStartOfDay().atZone(zone).toInstant();
+                    plantimeInstant = startLocalDate.plus(days * (i - 1), ChronoUnit.DAYS).atStartOfDay().atZone(zone).toInstant();
                 }
             }
 
