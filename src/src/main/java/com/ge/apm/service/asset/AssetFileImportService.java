@@ -90,36 +90,35 @@ public class AssetFileImportService {
         return result;
     }
 
-    /*
-    public Map<String, Map<String, Object>> getUserMapFromTemplate(ExcelDocument doc, Map<String, Map<String, Object>> orgMap) {
+    public Map<String, Map<String, Object>> getUserMapFromTemplate(ExcelDocument doc) {
         Map<String, Map<String, Object>> result = new HashMap();
         int keyRow = 4;
         int dataRow = 5;
 
         for (Map< String, Object> rowMap = doc.getDataRowMap(SHEET_USER, keyRow, dataRow); rowMap != null; rowMap = doc.getDataRowMap(SHEET_USER, keyRow, ++dataRow)) {
-            UserAccount user = new UserAccount();
-            String userName = (String) rowMap.get("人员名字");
-            String loginName = (String) rowMap.get("用户名");
+//            UserAccount user = new UserAccount();
+            String userName = ExcelDocument.getCellStringValue(rowMap.get("人员名字"));
+            String loginName = ExcelDocument.getCellStringValue(rowMap.get("用户名"));
             if (userName == null || userName.isEmpty() || loginName == null || loginName.isEmpty()) {
                 break;
             }
-            String orgName = (String) rowMap.get("所属科室");
-            user.setHospitalId(hospitalId);
-            user.setSiteId(siteId);
-            user.setTelephone(String.valueOf(rowMap.get("电话")));
-            user.setName(userName);
-            user.setLoginName(loginName);
-            OrgInfo org = (OrgInfo) orgMap.get(orgName).get("org");
+//            String orgName = (String) rowMap.get("所属科室");
+//            user.setHospitalId(hospitalId);
+//            user.setSiteId(siteId);
+//            user.setTelephone(ExcelDocument.getCellDoubleValue(rowMap.get("电话")).toString());
+//            user.setName(userName);
+//            user.setLoginName(loginName);
 
             Map<String, Object> map = new HashMap();
-            map.put("user", user);
-            map.put("org", org);
-            map.put("status", ImportStatus.New);
+//            map.put("user", user);
+//            map.put("org", orgName);
+//            map.put("status", ImportStatus.New);
+            map.put("rowData", rowMap);
             result.put(userName, map);
         }
         return result;
     }
-     */
+
     public Map<String, Map<String, Object>> getAssetMapFromTemplate(ExcelDocument doc) {
 
         Map<String, Map<String, Object>> result = new HashMap();
@@ -128,38 +127,38 @@ public class AssetFileImportService {
 
         for (Map< String, Object> rowMap = doc.getDataRowMap(SHEET_ASSET, keyRow, dataRow); rowMap != null; rowMap = doc.getDataRowMap(SHEET_ASSET, keyRow, ++dataRow)) {
             AssetInfo asset = new AssetInfo();
-            String assetName = (String) rowMap.get("设备名称");
+            String assetName = ExcelDocument.getCellStringValue(rowMap.get("设备名称"));
             if (assetName == null || assetName.isEmpty()) {
                 break;
             }
-            String modalityId = (String) rowMap.get("设备编号");
+            String modalityId = ExcelDocument.getCellStringValue(rowMap.get("设备编号"));
             asset.setDepartNum(modalityId);
             asset.setName(assetName);
-            asset.setAliasName((String) rowMap.get("设备别名"));
+            asset.setAliasName(ExcelDocument.getCellStringValue(rowMap.get("设备别名")));
             asset.setSiteId(siteId);
             asset.setHospitalId(hospitalId);
             asset.setIsValid(true);
             asset.setStatus(1);
-            asset.setAssetOwnerName((String) rowMap.get("负责人"));
+            asset.setAssetOwnerName(ExcelDocument.getCellStringValue(rowMap.get("负责人")));
 
-            asset.setClinicalDeptName((String) rowMap.get("使用部门"));
-            asset.setManufacture((String) rowMap.get("制造商"));
-            asset.setVendor((String) rowMap.get("供应商"));
-            String functionGroup = (String) rowMap.get("功能分组");
+            asset.setClinicalDeptName(ExcelDocument.getCellStringValue(rowMap.get("使用部门")));
+            asset.setManufacture(ExcelDocument.getCellStringValue(rowMap.get("制造商")));
+            asset.setVendor(ExcelDocument.getCellStringValue(rowMap.get("供应商")));
+            String functionGroup = ExcelDocument.getCellStringValue(rowMap.get("功能分组"));
             asset.setFunctionGroup(getI18nMsgKey(assetFunctionTypes, functionGroup));
-            String assetGroupName = (String) rowMap.get("设备类型");
+            String assetGroupName = ExcelDocument.getCellStringValue(rowMap.get("设备类型"));
             asset.setAssetGroup(getI18nMsgKey(assetGroup, assetGroupName));
             asset.setFunctionGrade(ExcelDocument.getCellIntegerValue(rowMap.get("功能等级")));
-            asset.setSerialNum((String) rowMap.get("制造商序列号"));
-            asset.setSystemId((String) rowMap.get("SystemID/厂商报修ID"));
-            asset.setBarcode((String) rowMap.get("条码"));
-            String financingNum = (String) rowMap.get("资产编号");
+            asset.setSerialNum(ExcelDocument.getCellStringValue(rowMap.get("制造商序列号")));
+            asset.setSystemId(ExcelDocument.getCellStringValue(rowMap.get("SystemID/厂商报修ID")));
+            asset.setBarcode(ExcelDocument.getCellStringValue(rowMap.get("条码")));
+            String financingNum = ExcelDocument.getCellStringValue(rowMap.get("资产编号"));
             asset.setFinancingNum(financingNum);
-            asset.setModalityId((String) rowMap.get("IT系统编号"));
+            asset.setModalityId(ExcelDocument.getCellStringValue(rowMap.get("IT系统编号")));
             asset.setPurchasePrice(ExcelDocument.getCellDoubleValue(rowMap.get("采购价格")));
             asset.setSalvageValue(ExcelDocument.getCellDoubleValue(rowMap.get("最终残值")));
             asset.setLifecycleInYear(ExcelDocument.getCellDoubleValue(rowMap.get("使用年限")));
-            String depreciationMethodNmae = (String) rowMap.get("折旧算法");
+            String depreciationMethodNmae = ExcelDocument.getCellStringValue(rowMap.get("折旧算法"));
             asset.setDepreciationMethod(getI18nMsgKey(depreciationMethod, depreciationMethodNmae));
             asset.setManufactDate((Date) rowMap.get("生产日期"));
             asset.setPurchaseDate((Date) rowMap.get("采购日期"));
@@ -170,7 +169,7 @@ public class AssetFileImportService {
             asset.setLastPmDate((Date) rowMap.get("上次维护日期"));
             asset.setLastMeteringDate((Date) rowMap.get("上次计量日期"));
             asset.setLastQaDate((Date) rowMap.get("上次质检日期"));
-            asset.setMaitanance((String) rowMap.get("维护商"));
+            asset.setMaitanance(ExcelDocument.getCellStringValue(rowMap.get("维护商")));
             Double maitananceTel = ExcelDocument.getCellDoubleValue(rowMap.get("维护商电话"));
             asset.setMaitananceTel(maitananceTel == null ? "" : String.valueOf(maitananceTel.longValue()));
             asset.setQrCode((String) rowMap.get("二维码"));
@@ -225,7 +224,7 @@ public class AssetFileImportService {
                 item.put("status", ImportStatus.Failure);
                 addErrMessage(item, "Warning:" + WebUtil.getMessage("OrgIngo") + orgName + "无法关联");
                 newAsset.setClinicalDeptName(null);
-            }else{
+            } else {
                 newAsset.setClinicalDeptName(orgName);
                 newAsset.setClinicalDeptId(clinicalDept.getId());
             }
@@ -300,7 +299,7 @@ public class AssetFileImportService {
         return true;
     }
 
-    public Boolean exportFailData(ExcelDocument doc, Map<String, Map<String, Object>> importOrgMap, Map<String, Map<String, Object>> importAssetMap) {
+    public Boolean exportFailData(ExcelDocument doc, Map<String, Map<String, Object>> importOrgMap, Map<String, Map<String, Object>> importAssetMap, Map<String, Map<String, Object>> importUserMap) {
         Integer keyRowOrg = 4;
         Integer dataRowOrg = 5;
         Boolean hasFailData = false;
@@ -308,6 +307,13 @@ public class AssetFileImportService {
         for (Map<String, Object> item : importOrgMap.values()) {
             doc.writeRowData(SHEET_ORG, keyRowOrg, dataRowOrg++, (Map<String, Object>) item.get("rowData"));
             hasFailData = item.get("status").equals(ImportStatus.Failure);
+        }
+
+        Integer keyRowUser = 4;
+        Integer dataRowUser = 5;
+        doc.clearRowsData(SHEET_USER, 5, 4 + importUserMap.values().size());
+        for (Map<String, Object> item : importUserMap.values()) {
+            doc.writeRowData(SHEET_USER, keyRowUser, dataRowUser++, (Map<String, Object>) item.get("rowData"));
         }
 
         Integer keyRowAsset = 6;
