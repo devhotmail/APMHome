@@ -27,7 +27,7 @@ public class BiomedGroupController extends JpaCRUDController<BiomedGroup> {
 
     private BiomedGroupRepository dao = null;
     private I18nMessageRepository i18nDao = null;
-    private SiteInfoRepository siteInfoDao = null;
+    private TenantInfoRepository siteInfoDao = null;
     private OrgInfoRepository orgInfoDao = null;
 
     private DualListModel<UserAccount> availableUserAccount;
@@ -53,7 +53,7 @@ public class BiomedGroupController extends JpaCRUDController<BiomedGroup> {
     protected void init() {
         dao = WebUtil.getBean(BiomedGroupRepository.class);
         i18nDao = WebUtil.getBean(I18nMessageRepository.class);
-        siteInfoDao = WebUtil.getBean(SiteInfoRepository.class);
+        siteInfoDao = WebUtil.getBean(TenantInfoRepository.class);
         orgInfoDao = WebUtil.getBean(OrgInfoRepository.class);
         acService = WebUtil.getBean(AssetCreateService.class);
         biomedGroupService = WebUtil.getBean(BiomedGroupService.class);
@@ -104,12 +104,12 @@ public class BiomedGroupController extends JpaCRUDController<BiomedGroup> {
     }
 
     public String getSiteName(Integer siteId) {
-        return acService.getSiteName(siteId);
+        return acService.getTenantName(siteId);
     }
 
-    public List<SiteInfo> getSiteList() {
+    public List<TenantInfo> getSiteList() {
 
-        List<SiteInfo> siteList = siteInfoDao.find();
+        List<TenantInfo> siteList = siteInfoDao.find();
 
         return siteList;
     }

@@ -22,7 +22,7 @@
                                 <p:selectOneListbox style="border: none;" value="#{orgInfoController.siteId}">
                                     <p:ajax process="@this" event="click" update=":editForm" oncomplete="PF('varPanelSite').hide();"/>
 
-                                    <f:selectItems value="#{siteInfoController.itemList}" var="item" itemLabel="#{item.name}" itemValue="#{item.id}"/>
+                                    <f:selectItems value="#{tenantInfoController.itemList}" var="item" itemLabel="#{item.name}" itemValue="#{item.id}"/>
                                 </p:selectOneListbox>
                             </p:overlayPanel>
 

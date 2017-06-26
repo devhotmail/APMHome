@@ -13,8 +13,8 @@
                     <b>#{msg.SiteInfo}</b>
                 </p>
             <h:form id="SiteInfoListForm">
-                <p:dataTable id="datalist" value="#{siteInfoCrudController.lazyModel}" var="item" widgetVar="varDataList"
-                    selectionMode="single" selection="#{siteInfoCrudController.selected}"
+                <p:dataTable id="datalist" value="#{tenantInfoCrudController.lazyModel}" var="item" widgetVar="varDataList"
+                    selectionMode="single" selection="#{tenantInfoCrudController.selected}"
                     lazy="true" paginator="true" paginatorPosition="top" paginatorAlwaysVisible="true"
                     rowKey="#{item.id}" sortMode="single" sortOrder="descending" sortBy="#{item.id}"
                     paginatorTemplate="{CurrentPageReport} {Toolbar} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} #{msg.RowsPerPage}: {RowsPerPageDropdown}"
@@ -23,7 +23,7 @@
                     rowsPerPageTemplate="20,40,60,90">
 
                     <p:ajax event="rowSelect" update="createButton editButton viewButton deleteButton"/>
-                    <p:ajax event="filter" listener="#{siteInfoCrudController.onFilter}" update="createButton editButton viewButton deleteButton"/>
+                    <p:ajax event="filter" listener="#{tenantInfoCrudController.onFilter}" update="createButton editButton viewButton deleteButton"/>
                     
                     <p:column headerText="#{msg.id}" sortBy="#{item.id}" filterBy="#{item.id}" filterMatchMode="EQ">
                         <h:outputText value="#{item.id}"/>
@@ -131,10 +131,10 @@
                         <p:commandButton title="#{msg.exportToXLS}" icon="ui-icon-file-download" class="btn btn-sm btn-gray" ajax="false">
                             <p:dataExporter type="xls" target="datalist" fileName="SiteInfo_export"/>
                         </p:commandButton>
-                        <p:commandButton id="createButton" icon="ui-icon-plus" title="#{msg.Create}" actionListener="#{siteInfoCrudController.prepareCreate}" update=":SiteInfoEditDlg" oncomplete="PF('SiteInfoEditDialog').show()"/>
-                        <p:commandButton id="viewButton" icon="ui-icon-search" title="#{msg.View}" actionListener="#{siteInfoCrudController.prepareView}" update=":SiteInfoViewDlg" oncomplete="PF('SiteInfoViewDialog').show()" disabled="#{empty siteInfoCrudController.selected}"/>
-                        <p:commandButton id="editButton" icon="ui-icon-pencil" title="#{msg.Edit}" actionListener="#{siteInfoCrudController.prepareEdit}" update=":SiteInfoEditDlg" oncomplete="PF('SiteInfoEditDialog').show()" disabled="#{empty siteInfoCrudController.selected}"/>
-                        <p:commandButton id="deleteButton" process="@this" icon="ui-icon-close" title="#{msg.Delete}" actionListener="#{siteInfoCrudController.delete}" update="datalist" disabled="#{empty siteInfoCrudController.selected}">
+                        <p:commandButton id="createButton" icon="ui-icon-plus" title="#{msg.Create}" actionListener="#{tenantInfoCrudController.prepareCreate}" update=":SiteInfoEditDlg" oncomplete="PF('SiteInfoEditDialog').show()"/>
+                        <p:commandButton id="viewButton" icon="ui-icon-search" title="#{msg.View}" actionListener="#{tenantInfoCrudController.prepareView}" update=":SiteInfoViewDlg" oncomplete="PF('SiteInfoViewDialog').show()" disabled="#{empty tenantInfoCrudController.selected}"/>
+                        <p:commandButton id="editButton" icon="ui-icon-pencil" title="#{msg.Edit}" actionListener="#{tenantInfoCrudController.prepareEdit}" update=":SiteInfoEditDlg" oncomplete="PF('SiteInfoEditDialog').show()" disabled="#{empty tenantInfoCrudController.selected}"/>
+                        <p:commandButton id="deleteButton" process="@this" icon="ui-icon-close" title="#{msg.Delete}" actionListener="#{tenantInfoCrudController.delete}" update="datalist" disabled="#{empty tenantInfoCrudController.selected}">
                             <p:confirm header="#{msg.DeleteConformation}" message="#{msg.DeleteConformationMsg}" icon="ui-icon-alert"/>
                         </p:commandButton>
                     </f:facet>

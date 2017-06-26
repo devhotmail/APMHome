@@ -8,49 +8,49 @@
 
     <ui:composition>
 
-        <p:dialog id="SiteInfoViewDlg" widgetVar="SiteInfoViewDialog" modal="true" resizable="true" draggable="true" appendTo="@(body)" header="#{siteInfoCrudController.CRUDActionName} #{msg.SiteInfo}">
+        <p:dialog id="SiteInfoViewDlg" widgetVar="SiteInfoViewDialog" modal="true" resizable="true" draggable="true" appendTo="@(body)" header="#{tenantInfoCrudController.CRUDActionName} #{msg.SiteInfo}">
             <h:form id="SiteInfoViewForm">
                 <h:panelGroup id="display">
-                    <p:panelGrid columns="6" rendered="#{siteInfoCrudController.selected != null}">
+                    <p:panelGrid columns="6" rendered="#{tenantInfoCrudController.selected != null}">
                         <h:outputLabel value="#{msg.id}" for="id" />
-                        <h:outputText value="#{siteInfoCrudController.selected.id}"/>
+                        <h:outputText value="#{tenantInfoCrudController.selected.id}"/>
                         <h:outputLabel value="#{msg.name}" for="name" />
-                        <h:outputText value="#{siteInfoCrudController.selected.name}"/>
+                        <h:outputText value="#{tenantInfoCrudController.selected.name}"/>
                         <h:outputLabel value="#{msg.nameEn}" for="nameEn" />
-                        <h:outputText value="#{siteInfoCrudController.selected.nameEn}"/>
+                        <h:outputText value="#{tenantInfoCrudController.selected.nameEn}"/>
                         <h:outputLabel value="#{msg.aliasName}" for="aliasName" />
-                        <h:outputText value="#{siteInfoCrudController.selected.aliasName}"/>
+                        <h:outputText value="#{tenantInfoCrudController.selected.aliasName}"/>
                         <h:outputLabel value="#{msg.description}" for="description" />
-                        <h:outputText value="#{siteInfoCrudController.selected.description}"/>
+                        <h:outputText value="#{tenantInfoCrudController.selected.description}"/>
                         <h:outputLabel value="#{msg.contactPerson}" for="contactPerson" />
-                        <h:outputText value="#{siteInfoCrudController.selected.contactPerson}"/>
+                        <h:outputText value="#{tenantInfoCrudController.selected.contactPerson}"/>
                         <h:outputLabel value="#{msg.contactPhone}" for="contactPhone" />
-                        <h:outputText value="#{siteInfoCrudController.selected.contactPhone}"/>
+                        <h:outputText value="#{tenantInfoCrudController.selected.contactPhone}"/>
                         <h:outputLabel value="#{msg.contactEmail}" for="contactEmail" />
-                        <h:outputText value="#{siteInfoCrudController.selected.contactEmail}"/>
+                        <h:outputText value="#{tenantInfoCrudController.selected.contactEmail}"/>
                         <h:outputLabel value="#{msg.location}" for="location" />
-                        <h:outputText value="#{siteInfoCrudController.selected.location}"/>
+                        <h:outputText value="#{tenantInfoCrudController.selected.location}"/>
                         <h:outputLabel value="#{msg.locationEn}" for="locationEn" />
-                        <h:outputText value="#{siteInfoCrudController.selected.locationEn}"/>
+                        <h:outputText value="#{tenantInfoCrudController.selected.locationEn}"/>
                         <h:outputLabel value="#{msg.timeZone}" for="timeZone" />
-                        <h:outputText value="#{siteInfoCrudController.selected.timeZone}"/>
+                        <h:outputText value="#{tenantInfoCrudController.selected.timeZone}"/>
                         <h:outputLabel value="#{msg.defaultLang}" for="defaultLang" />
-                        <h:outputText value="#{siteInfoCrudController.selected.defaultLang}"/>
+                        <h:outputText value="#{tenantInfoCrudController.selected.defaultLang}"/>
                         <h:outputLabel value="#{msg.isEnabled}" for="isEnabled" />
-                        <p:selectBooleanCheckbox id="isEnabled" value="#{siteInfoCrudController.selected.isEnabled}" disabled="true"/>
+                        <p:selectBooleanCheckbox id="isEnabled" value="#{tenantInfoCrudController.selected.isEnabled}" disabled="true"/>
                         <h:outputLabel value="#{msg.wfAutoStep2}" for="wfAutoStep2" />
-                        <p:selectBooleanCheckbox id="wfAutoStep2" value="#{siteInfoCrudController.selected.wfAutoStep2}" disabled="true"/>
+                        <p:selectBooleanCheckbox id="wfAutoStep2" value="#{tenantInfoCrudController.selected.wfAutoStep2}" disabled="true"/>
                         <h:outputLabel value="#{msg.wfAutoStep3}" for="wfAutoStep3" />
-                        <p:selectBooleanCheckbox id="wfAutoStep3" value="#{siteInfoCrudController.selected.wfAutoStep3}" disabled="true"/>
+                        <p:selectBooleanCheckbox id="wfAutoStep3" value="#{tenantInfoCrudController.selected.wfAutoStep3}" disabled="true"/>
                         <h:outputLabel value="#{msg.wfAutoStep4}" for="wfAutoStep4" />
-                        <p:selectBooleanCheckbox id="wfAutoStep4" value="#{siteInfoCrudController.selected.wfAutoStep4}" disabled="true"/>
+                        <p:selectBooleanCheckbox id="wfAutoStep4" value="#{tenantInfoCrudController.selected.wfAutoStep4}" disabled="true"/>
                         <h:outputLabel value="#{msg.wfAutoStep5}" for="wfAutoStep5" />
-                        <p:selectBooleanCheckbox id="wfAutoStep5" value="#{siteInfoCrudController.selected.wfAutoStep5}" disabled="true"/>
+                        <p:selectBooleanCheckbox id="wfAutoStep5" value="#{tenantInfoCrudController.selected.wfAutoStep5}" disabled="true"/>
                         <h:outputLabel value="#{msg.wfAutoStep6}" for="wfAutoStep6" />
-                        <p:selectBooleanCheckbox id="wfAutoStep6" value="#{siteInfoCrudController.selected.wfAutoStep6}" disabled="true"/>
+                        <p:selectBooleanCheckbox id="wfAutoStep6" value="#{tenantInfoCrudController.selected.wfAutoStep6}" disabled="true"/>
                     </p:panelGrid>
                     <br/>
-                    <p:commandButton rendered="#{siteInfoCrudController.deleteAction}" icon="ui-icon-trash" actionListener="#{siteInfoCrudController.delete}" value="#{msg.Delete}" update="display,:SiteInfoViewDlg, :SiteInfoListForm:datalist, :growl" oncomplete="handleSubmit(args, 'SiteInfoViewDialog');"/>
+                    <p:commandButton rendered="#{tenantInfoCrudController.deleteAction}" icon="ui-icon-trash" actionListener="#{tenantInfoCrudController.delete}" value="#{msg.Delete}" update="display,:SiteInfoViewDlg, :SiteInfoListForm:datalist, :growl" oncomplete="handleSubmit(args, 'SiteInfoViewDialog');"/>
                     &nbsp;&nbsp;
                     <p:commandButton immediate="true" value="#{msg.Close}" icon="glyphicon-off" onclick="PF('SiteInfoViewDialog').hide()"/>
                     

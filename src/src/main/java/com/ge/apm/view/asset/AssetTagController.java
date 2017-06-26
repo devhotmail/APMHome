@@ -29,7 +29,7 @@ public class AssetTagController extends JpaCRUDController<AssetTag> {
 
     AssetTagRepository dao = null;
     I18nMessageRepository i18nDao = null;
-    SiteInfoRepository siteInfoDao = null;
+    TenantInfoRepository tenantInfoDao = null;
     OrgInfoRepository orgInfoDao = null;
 
     private DualListModel<BiomedGroup> availableBiomedGroup;
@@ -57,7 +57,7 @@ public class AssetTagController extends JpaCRUDController<AssetTag> {
     protected void init() {
         dao = WebUtil.getBean(AssetTagRepository.class);
         i18nDao = WebUtil.getBean(I18nMessageRepository.class);
-        siteInfoDao = WebUtil.getBean(SiteInfoRepository.class);
+        tenantInfoDao = WebUtil.getBean(TenantInfoRepository.class);
         orgInfoDao = WebUtil.getBean(OrgInfoRepository.class);
         acService = WebUtil.getBean(AssetCreateService.class);
         assetTagService = WebUtil.getBean(AssetTagService.class);
@@ -112,13 +112,13 @@ public class AssetTagController extends JpaCRUDController<AssetTag> {
         return acService.getHospitalName(hospitalId);
     }
 
-    public String getSiteName(Integer siteId) {
-        return acService.getSiteName(siteId);
+    public String getTenantName(Integer siteId) {
+        return acService.getTenantName(siteId);
     }
 
-    public List<SiteInfo> getSiteList() {
+    public List<TenantInfo> getSiteList() {
 
-        List<SiteInfo> siteList = siteInfoDao.find();
+        List<TenantInfo> siteList = tenantInfoDao.find();
 
         return siteList;
     }

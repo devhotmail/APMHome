@@ -10,14 +10,13 @@ import com.ge.apm.dao.AssetInfoRepository;
 import com.ge.apm.dao.OrgInfoRepository;
 import com.ge.apm.dao.QrCodeAttachmentRepository;
 import com.ge.apm.dao.QrCodeLibRepository;
-import com.ge.apm.dao.SiteInfoRepository;
 import com.ge.apm.dao.UserAccountRepository;
 import com.ge.apm.domain.AssetFileAttachment;
 import com.ge.apm.domain.AssetInfo;
 import com.ge.apm.domain.OrgInfo;
 import com.ge.apm.domain.QrCodeAttachment;
 import com.ge.apm.domain.QrCodeLib;
-import com.ge.apm.domain.SiteInfo;
+import com.ge.apm.domain.TenantInfo;
 import com.ge.apm.domain.UserAccount;
 import com.ge.apm.domain.WorkOrderPhoto;
 import com.ge.apm.service.utils.ConfigUtils;
@@ -40,6 +39,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import webapp.framework.dao.SearchFilter;
 import webapp.framework.web.WebUtil;
+import com.ge.apm.dao.TenantInfoRepository;
 
 /**
  *
@@ -51,7 +51,7 @@ public class AssetCreateService {
     @Autowired
     protected WxMpService wxMpService;
     @Autowired
-    private SiteInfoRepository siteDao;
+    private TenantInfoRepository tenantDao;
     @Autowired
     private OrgInfoRepository orgDao;
 
@@ -74,8 +74,8 @@ public class AssetCreateService {
 
     
     
-    public String getSiteName(Integer siteId) {
-        SiteInfo si = siteDao.findById(siteId);
+    public String getTenantName(Integer siteId) {
+        TenantInfo si = tenantDao.findById(siteId);
         return si.getName();
     }
 

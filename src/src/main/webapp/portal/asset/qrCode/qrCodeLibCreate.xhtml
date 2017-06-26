@@ -11,7 +11,7 @@
     <h:form id="qrCodeLibCreateForm">
         <h:panelGroup id="display">
             <h:outputLabel for="siteIdSelect" value="租户 ： " />
-            <p:selectOneMenu id="siteIdSelect" value="#{qrCodeLibController.siteId}" required="true" requiredMessage="租户园区不能为空">
+            <p:selectOneMenu id="siteIdSelect" value="#{qrCodeLibController.siteId}" required="true" requiredMessage="租户院区不能为空">
                 <p:ajax  listener="#{qrCodeLibController.onSiteChange}" update="hospitalIdSelect" />
                 <f:selectItem itemLabel="#{msg.selectOneMessage}"/>
                 <f:selectItems value="#{qrCodeLibController.siteList}" var="item" itemLabel="#{item.name}" itemValue="#{item.id}"/>

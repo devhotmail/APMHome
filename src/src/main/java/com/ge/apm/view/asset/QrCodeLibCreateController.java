@@ -10,14 +10,14 @@ import webapp.framework.web.mvc.JpaCRUDController;
 
 import com.ge.apm.dao.OrgInfoRepository;
 import com.ge.apm.dao.QrCodeLibRepository;
-import com.ge.apm.dao.SiteInfoRepository;
 import com.ge.apm.domain.OrgInfo;
 import com.ge.apm.domain.QrCodeLib;
-import com.ge.apm.domain.SiteInfo;
+import com.ge.apm.domain.TenantInfo;
 import com.ge.apm.service.asset.AssetCreateService;
 import com.ge.apm.view.sysutil.UserContextService;
 import webapp.framework.dao.SearchFilter;
 import webapp.framework.web.WebUtil;
+import com.ge.apm.dao.TenantInfoRepository;
 
 @ManagedBean
 @ViewScoped
@@ -25,7 +25,7 @@ public class QrCodeLibCreateController extends JpaCRUDController<QrCodeLib> {
 
 	private static final long serialVersionUID = -1;
 	QrCodeLibRepository dao = null;
-    SiteInfoRepository sitedao = null;
+    TenantInfoRepository tenantdao = null;
     OrgInfoRepository orgDao = null;
 
     private AssetCreateService acService;
@@ -37,7 +37,7 @@ public class QrCodeLibCreateController extends JpaCRUDController<QrCodeLib> {
     protected void init() {
     	orgDao = WebUtil.getBean(OrgInfoRepository.class);
         dao = WebUtil.getBean(QrCodeLibRepository.class);
-        sitedao = WebUtil.getBean(SiteInfoRepository.class);
+        tenantdao = WebUtil.getBean(TenantInfoRepository.class);
         acService = WebUtil.getBean(AssetCreateService.class);
 
         userContextService = WebUtil.getBean(UserContextService.class);
@@ -82,13 +82,13 @@ public class QrCodeLibCreateController extends JpaCRUDController<QrCodeLib> {
         return dao.find();
     }
 
-    public List<SiteInfo> getSiteList() {
+    public List<TenantInfo> getSiteList() {
 
-        List<SiteInfo> res = new ArrayList();
+        List<TenantInfo> res = new ArrayList();
         if (userContextService.hasRole("SuperAdmin")) {
-            res.addAll(sitedao.find());
+            res.addAll(tenantdao.find());
         } else {
-            res.add(sitedao.findById(UserContextService.getCurrentUserAccount().getSiteId()));
+            res.add(tenantdao.findById(UserContextService.getCurrentUserAccount().getSiteId()));
         }
         return res;
     }
@@ -98,7 +98,7 @@ public class QrCodeLibCreateController extends JpaCRUDController<QrCodeLib> {
     }
 
     public String getSiteName(Integer siteId) {
-        return acService.getSiteName(siteId);
+        return acService.getTenantName(siteId);
     }
     
     public String getOrgName(Integer orgId) {

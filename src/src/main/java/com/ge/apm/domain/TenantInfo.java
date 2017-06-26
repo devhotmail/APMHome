@@ -24,10 +24,10 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
  * @author 212547631
  */
 @Entity
-@Table(name = "site_info")
+@Table(name = "tenant_info")
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Cacheable(true)
-public class SiteInfo implements Serializable {
+public class TenantInfo implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -97,7 +97,7 @@ public class SiteInfo implements Serializable {
     @Column(name = "password_lifetime")
     private Integer passwordLifeTime; //密码有效天数
 
-    public SiteInfo() {
+    public TenantInfo() {
         isEnabled = true;
         wfAutoStep2 = false;
         wfAutoStep3 = false;
@@ -291,10 +291,10 @@ public class SiteInfo implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof SiteInfo)) {
+        if (!(object instanceof TenantInfo)) {
             return false;
         }
-        SiteInfo other = (SiteInfo) object;
+        TenantInfo other = (TenantInfo) object;
         if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
             return false;
         }

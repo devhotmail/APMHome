@@ -1,7 +1,6 @@
 package com.ge.apm.view.sysutil;
 
 import com.ge.apm.dao.OrgInfoRepository;
-import com.ge.apm.dao.SiteInfoRepository;
 import com.ge.apm.dao.UserAccountRepository;
 import com.ge.apm.domain.OrgInfo;
 import com.ge.apm.domain.UserAccount;
@@ -18,6 +17,7 @@ import javax.faces.context.FacesContext;
 import java.io.Serializable;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
+import com.ge.apm.dao.TenantInfoRepository;
 
 @ManagedBean(name = "userContextService")
 @SessionScoped
@@ -121,7 +121,7 @@ public class UserContextService implements Serializable {
   }
 
   public String getLoginUserSiteName() {
-    return Option.of(getLoginUser()).map(u -> WebUtil.getBean(SiteInfoRepository.class).findById(getLoginUser().getSiteId()).getName()).getOrElse("");
+    return Option.of(getLoginUser()).map(u -> WebUtil.getBean(TenantInfoRepository.class).findById(getLoginUser().getSiteId()).getName()).getOrElse("");
   }
 
   public int getLoginUserHospitalId() {

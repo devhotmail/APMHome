@@ -8,45 +8,45 @@
 
     <ui:composition>
 
-        <p:dialog id="SiteInfoViewDlg" widgetVar="SiteInfoViewDialog" modal="true" resizable="true" draggable="true" appendTo="@(body)" header="#{siteInfoController.CRUDActionName} #{msg.SiteInfo}">
+        <p:dialog id="SiteInfoViewDlg" widgetVar="SiteInfoViewDialog" modal="true" resizable="true" draggable="true" appendTo="@(body)" header="#{tenantInfoController.CRUDActionName} #{msg.SiteInfo}">
             <h:form id="SiteInfoViewForm">
                 <h:panelGroup id="display">
-                    <p:panelGrid columns="4" rendered="#{siteInfoController.selected != null}">
+                    <p:panelGrid columns="4" rendered="#{tenantInfoController.selected != null}">
                         <h:outputLabel value="#{msg.name}" for="name" />
-                        <h:outputText value="#{siteInfoController.selected.name}"/>
+                        <h:outputText value="#{tenantInfoController.selected.name}"/>
                         <h:outputLabel value="#{msg.nameEn}" for="nameEn" />
-                        <h:outputText value="#{siteInfoController.selected.nameEn}"/>
+                        <h:outputText value="#{tenantInfoController.selected.nameEn}"/>
                         <h:outputLabel value="#{msg.aliasName}" for="aliasName" />
-                        <h:outputText value="#{siteInfoController.selected.aliasName}"/>
+                        <h:outputText value="#{tenantInfoController.selected.aliasName}"/>
                         <h:outputLabel value="#{msg.siteDescription}" for="description" />
-                        <h:outputText value="#{siteInfoController.selected.description}"/>
+                        <h:outputText value="#{tenantInfoController.selected.description}"/>
                         <h:outputLabel value="#{msg.contactPerson}" for="contactPerson" />
-                        <h:outputText value="#{siteInfoController.selected.contactPerson}"/>
+                        <h:outputText value="#{tenantInfoController.selected.contactPerson}"/>
                         <h:outputLabel value="#{msg.contactPhone}" for="contactPhone" />
-                        <h:outputText value="#{siteInfoController.selected.contactPhone}"/>
+                        <h:outputText value="#{tenantInfoController.selected.contactPhone}"/>
                         <h:outputLabel value="#{msg.contactEmail}" for="contactEmail" />
-                        <h:outputText value="#{siteInfoController.selected.contactEmail}"/>
+                        <h:outputText value="#{tenantInfoController.selected.contactEmail}"/>
                         <h:outputLabel value="#{msg.location}" for="location" />
-                        <h:outputText value="#{siteInfoController.selected.location}"/>
+                        <h:outputText value="#{tenantInfoController.selected.location}"/>
                         <h:outputLabel rendered="false" value="#{msg.timeZone}" for="timeZone" />
-                        <h:outputText rendered="false" value="#{siteInfoController.selected.timeZone}"/>
+                        <h:outputText rendered="false" value="#{tenantInfoController.selected.timeZone}"/>
                         <h:outputLabel value="#{msg.defaultLang}" for="defaultLang" />
-                        <h:outputText value="#{siteInfoController.selected.defaultLang}"/>
+                        <h:outputText value="#{tenantInfoController.selected.defaultLang}"/>
                         <h:outputLabel value="#{msg.isEnabled}" for="isEnabled" />
-                        <p:selectBooleanCheckbox id="isEnabled" value="#{siteInfoController.selected.isEnabled}" disabled="true"/>
+                        <p:selectBooleanCheckbox id="isEnabled" value="#{tenantInfoController.selected.isEnabled}" disabled="true"/>
                         <h:outputLabel value="#{msg.wfAutoStep2}" for="isEnabled" />
-                        <p:selectBooleanCheckbox id="wfAutoStep2" value="#{siteInfoController.selected.wfAutoStep2}" disabled="true"/>
+                        <p:selectBooleanCheckbox id="wfAutoStep2" value="#{tenantInfoController.selected.wfAutoStep2}" disabled="true"/>
                         <h:outputLabel value="#{msg.wfAutoStep3}" for="isEnabled" />
-                        <p:selectBooleanCheckbox id="wfAutoStep3" value="#{siteInfoController.selected.wfAutoStep3}" disabled="true"/>
+                        <p:selectBooleanCheckbox id="wfAutoStep3" value="#{tenantInfoController.selected.wfAutoStep3}" disabled="true"/>
                         <h:outputLabel value="#{msg.wfAutoStep4}" for="isEnabled" />
-                        <p:selectBooleanCheckbox id="wfAutoStep4" value="#{siteInfoController.selected.wfAutoStep4}" disabled="true"/>
+                        <p:selectBooleanCheckbox id="wfAutoStep4" value="#{tenantInfoController.selected.wfAutoStep4}" disabled="true"/>
                         <h:outputLabel value="#{msg.wfAutoStep5}" for="isEnabled" rendered="false"/>
-                        <p:selectBooleanCheckbox id="wfAutoStep5" value="#{siteInfoController.selected.wfAutoStep5}" disabled="true" rendered="false"/>
+                        <p:selectBooleanCheckbox id="wfAutoStep5" value="#{tenantInfoController.selected.wfAutoStep5}" disabled="true" rendered="false"/>
                         <h:outputLabel value="#{msg.wfAutoStep6}" for="isEnabled" rendered="false"/>
-                        <p:selectBooleanCheckbox id="wfAutoStep6" value="#{siteInfoController.selected.wfAutoStep6}" disabled="true" rendered="false"/>
+                        <p:selectBooleanCheckbox id="wfAutoStep6" value="#{tenantInfoController.selected.wfAutoStep6}" disabled="true" rendered="false"/>
                     </p:panelGrid>
                     <br/>
-                    <p:commandButton rendered="#{siteInfoController.deleteAction}" icon="ui-icon-trash" actionListener="#{siteInfoController.delete}" value="#{msg.Delete}" update=":SiteInfoListForm:datalist, :growl" oncomplete="handleSubmit(args, 'SiteInfoViewDialog');"/>
+                    <p:commandButton rendered="#{tenantInfoController.deleteAction}" icon="ui-icon-trash" actionListener="#{tenantInfoController.delete}" value="#{msg.Delete}" update=":SiteInfoListForm:datalist, :growl" oncomplete="handleSubmit(args, 'SiteInfoViewDialog');"/>
                     &nbsp;&nbsp;
                     <p:commandButton immediate="true" value="#{msg.Close}" icon="ui-icon ui-icon-close" onclick="PF('SiteInfoViewDialog').hide()"/>
                     

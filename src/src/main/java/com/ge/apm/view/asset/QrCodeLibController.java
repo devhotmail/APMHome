@@ -6,10 +6,9 @@ import javax.faces.bean.ViewScoped;
 
 import com.ge.apm.dao.I18nMessageRepository;
 import com.ge.apm.dao.OrgInfoRepository;
-import com.ge.apm.dao.SiteInfoRepository;
 import com.ge.apm.domain.I18nMessage;
 import com.ge.apm.domain.OrgInfo;
-import com.ge.apm.domain.SiteInfo;
+import com.ge.apm.domain.TenantInfo;
 import com.ge.apm.service.utils.QRCodeUtil;
 import org.joda.time.DateTime;
 import org.primefaces.context.RequestContext;
@@ -22,6 +21,7 @@ import com.ge.apm.domain.QrCodeLib;
 import com.ge.apm.service.asset.AssetCreateService;
 import com.ge.apm.view.sysutil.UserContextService;
 import webapp.framework.web.WebUtil;
+import com.ge.apm.dao.TenantInfoRepository;
 
 @ManagedBean
 @ViewScoped
@@ -29,7 +29,7 @@ public class QrCodeLibController extends JpaCRUDController<QrCodeLib> {
 
     QrCodeLibRepository dao = null;
     I18nMessageRepository i18nDao = null;
-    SiteInfoRepository siteInfoDao = null;
+    TenantInfoRepository tenantInfoDao = null;
     OrgInfoRepository orgInfoDao = null;
     QrCodeLibRepository qrCodeLibDao = null;
 
@@ -50,7 +50,7 @@ public class QrCodeLibController extends JpaCRUDController<QrCodeLib> {
     protected void init() {
         dao = WebUtil.getBean(QrCodeLibRepository.class);
         i18nDao = WebUtil.getBean(I18nMessageRepository.class);
-        siteInfoDao = WebUtil.getBean(SiteInfoRepository.class);
+        tenantInfoDao = WebUtil.getBean(TenantInfoRepository.class);
         orgInfoDao = WebUtil.getBean(OrgInfoRepository.class);
         qrCodeLibDao = WebUtil.getBean(QrCodeLibRepository.class);
         acService = WebUtil.getBean(AssetCreateService.class);
@@ -125,7 +125,7 @@ public class QrCodeLibController extends JpaCRUDController<QrCodeLib> {
     }
 
     public String getSiteName(Integer siteId) {
-        return acService.getSiteName(siteId);
+        return acService.getTenantName(siteId);
     }
 
     public List<I18nMessage> getQrCodeLibStatusList() {
@@ -135,9 +135,9 @@ public class QrCodeLibController extends JpaCRUDController<QrCodeLib> {
         return qrCodeLibStatusList;
     }
 
-    public List<SiteInfo> getSiteList() {
+    public List<TenantInfo> getSiteList() {
 
-        List<SiteInfo> siteList = siteInfoDao.find();
+        List<TenantInfo> siteList = tenantInfoDao.find();
 
         return siteList;
     }

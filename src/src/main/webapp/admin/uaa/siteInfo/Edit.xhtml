@@ -8,50 +8,50 @@
 
     <ui:composition>
 
-        <p:dialog id="SiteInfoEditDlg" widgetVar="SiteInfoEditDialog" modal="true" resizable="true" draggable="true" appendTo="@(body)" header="#{siteInfoController.CRUDActionName} #{msg.SiteInfo}">
+        <p:dialog id="SiteInfoEditDlg" widgetVar="SiteInfoEditDialog" modal="true" resizable="true" draggable="true" appendTo="@(body)" header="#{tenantInfoController.CRUDActionName} #{msg.SiteInfo}">
             <p:ajax event="close" update=":SiteInfoListForm:datalist" />
             <h:form id="SiteInfoEditForm">
                 <h:panelGroup id="display">
-                    <p:panelGrid columns="3" layout="grid" styleClass="ui-panelgrid-blank form-group" rendered="#{siteInfoController.selected != null}">
+                    <p:panelGrid columns="3" layout="grid" styleClass="ui-panelgrid-blank form-group" rendered="#{tenantInfoController.selected != null}">
                         <h:panelGroup>
                             <label class="label">#{msg.name}*</label>
-                            <p:inputText id="name" value="#{siteInfoController.selected.name}" required="true" requiredMessage="#{msg.name} #{msg.ValidationRequire}"/>
+                            <p:inputText id="name" value="#{tenantInfoController.selected.name}" required="true" requiredMessage="#{msg.name} #{msg.ValidationRequire}"/>
                         </h:panelGroup>
                         <h:panelGroup>
                             <label class="label">#{msg.nameEn}</label>
-                            <p:inputText id="nameEn" value="#{siteInfoController.selected.nameEn}" />
+                            <p:inputText id="nameEn" value="#{tenantInfoController.selected.nameEn}" />
                         </h:panelGroup>
                         <h:panelGroup>
                             <label class="label">#{msg.aliasName}</label>
-                            <p:inputText id="aliasName" value="#{siteInfoController.selected.aliasName}" />
+                            <p:inputText id="aliasName" value="#{tenantInfoController.selected.aliasName}" />
                         </h:panelGroup>
                         <h:panelGroup>
                             <label class="label">#{msg.siteDescription}</label>
-                            <p:inputText id="description" value="#{siteInfoController.selected.description}" />
+                            <p:inputText id="description" value="#{tenantInfoController.selected.description}" />
                         </h:panelGroup>
                         <h:panelGroup>
                             <label class="label">#{msg.contactPerson}</label>
-                            <p:inputText id="contactPerson" value="#{siteInfoController.selected.contactPerson}" />
+                            <p:inputText id="contactPerson" value="#{tenantInfoController.selected.contactPerson}" />
                         </h:panelGroup>
                         <h:panelGroup>
                             <label class="label">#{msg.contactPhone}</label>
-                            <p:inputText id="contactPhone" value="#{siteInfoController.selected.contactPhone}" />
+                            <p:inputText id="contactPhone" value="#{tenantInfoController.selected.contactPhone}" />
                         </h:panelGroup>
                         <h:panelGroup>
                             <label class="label">#{msg.contactEmail}</label>
-                            <p:inputText id="contactEmail" value="#{siteInfoController.selected.contactEmail}" validatorMessage="#{msg.invalidEmail}"/>
+                            <p:inputText id="contactEmail" value="#{tenantInfoController.selected.contactEmail}" validatorMessage="#{msg.invalidEmail}"/>
                         </h:panelGroup>
                         <h:panelGroup>
                             <label class="label">#{msg.location}</label>
-                            <p:inputText id="location" value="#{siteInfoController.selected.location}" />
+                            <p:inputText id="location" value="#{tenantInfoController.selected.location}" />
                         </h:panelGroup>
                         <h:panelGroup rendered="false">
                             <label class="label">#{msg.timeZone}</label>
-                            <p:inputText id="timeZone" value="#{siteInfoController.selected.timeZone}" />
+                            <p:inputText id="timeZone" value="#{tenantInfoController.selected.timeZone}" />
                         </h:panelGroup>
                         <h:panelGroup>
                             <label class="label">#{msg.defaultLang}</label>
-                            <p:selectOneMenu value="#{siteInfoController.selected.defaultLang}">
+                            <p:selectOneMenu value="#{tenantInfoController.selected.defaultLang}">
                                 <f:selectItem itemLabel="zh" itemValue="zh"/>
                                 <f:selectItem itemLabel="en" itemValue="en"/>
                                 <f:selectItem itemLabel="tw" itemValue="tw"/>
@@ -59,25 +59,25 @@
                         </h:panelGroup>
                         <h:panelGroup rendered="true">
                             <label class="label">#{msg.manhourPrice}*</label>
-                            <p:inputText id="manhourPrice" value="#{siteInfoController.selected.manhourPrice}" />
+                            <p:inputText id="manhourPrice" value="#{tenantInfoController.selected.manhourPrice}" />
                         </h:panelGroup>
                         <h:panelGroup>
                             <label class="label">&nbsp;</label>
-                            <p:selectBooleanCheckbox itemLabel="#{msg.isEnabled}" value="#{siteInfoController.selected.isEnabled}"/>
+                            <p:selectBooleanCheckbox itemLabel="#{msg.isEnabled}" value="#{tenantInfoController.selected.isEnabled}"/>
                         </h:panelGroup>
                     </p:panelGrid>
                     <br/>
-                    <p:fieldset legend="#{msg.WorkOrderConfig}">
-                        <h:panelGrid columns="6" rendered="#{siteInfoController.selected != null}">
-                            <p:selectBooleanCheckbox itemLabel="#{msg.wfAutoStep2}" value="#{siteInfoController.selected.wfAutoStep2}"/>
-                            <p:selectBooleanCheckbox itemLabel="#{msg.wfAutoStep3}" value="#{siteInfoController.selected.wfAutoStep3}"/>
-                            <p:selectBooleanCheckbox itemLabel="#{msg.wfAutoStep4}" value="#{siteInfoController.selected.wfAutoStep4}"/>
-                            <p:selectBooleanCheckbox itemLabel="#{msg.wfAutoStep5}" value="#{siteInfoController.selected.wfAutoStep5}" rendered="false"/>
-                            <p:selectBooleanCheckbox itemLabel="#{msg.wfAutoStep6}" value="#{siteInfoController.selected.wfAutoStep6}" rendered="false"/>
+                    <p:fieldset legend="#{msg.WorkOrderConfig}" rendered="false">
+                        <h:panelGrid columns="6" rendered="#{tenantInfoController.selected != null}">
+                            <p:selectBooleanCheckbox itemLabel="#{msg.wfAutoStep2}" value="#{tenantInfoController.selected.wfAutoStep2}"/>
+                            <p:selectBooleanCheckbox itemLabel="#{msg.wfAutoStep3}" value="#{tenantInfoController.selected.wfAutoStep3}"/>
+                            <p:selectBooleanCheckbox itemLabel="#{msg.wfAutoStep4}" value="#{tenantInfoController.selected.wfAutoStep4}"/>
+                            <p:selectBooleanCheckbox itemLabel="#{msg.wfAutoStep5}" value="#{tenantInfoController.selected.wfAutoStep5}" rendered="false"/>
+                            <p:selectBooleanCheckbox itemLabel="#{msg.wfAutoStep6}" value="#{tenantInfoController.selected.wfAutoStep6}" rendered="false"/>
                         </h:panelGrid>
                     </p:fieldset>
                     <br/>
-                    <p:commandButton validateClient="true" actionListener="#{siteInfoController.save}" value="#{msg.Save}" update=":growl" icon="ui-icon-check" oncomplete="handleSubmit(args, 'SiteInfoEditDialog');"/>
+                    <p:commandButton validateClient="true" actionListener="#{tenantInfoController.save}" value="#{msg.Save}" update=":growl" icon="ui-icon-check" oncomplete="handleSubmit(args, 'SiteInfoEditDialog');"/>
                     &nbsp;&nbsp;
                     <p:commandButton immediate="true" process="@this" value="#{msg.Cancel}" type="button" icon="ui-icon-cancel" onclick="PF('SiteInfoEditDialog').hide()"/>
                 </h:panelGroup>

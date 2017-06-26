@@ -7,10 +7,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import webapp.framework.web.mvc.JpaCRUDController;
 import com.ge.apm.dao.OrgInfoRepository;
-import com.ge.apm.dao.SiteInfoRepository;
 import com.ge.apm.dao.WorkflowConfigRepository;
 import com.ge.apm.domain.OrgInfo;
-import com.ge.apm.domain.SiteInfo;
+import com.ge.apm.domain.TenantInfo;
 import com.ge.apm.domain.UserAccount;
 import com.ge.apm.domain.WorkflowConfig;
 import com.ge.apm.service.uaa.UaaService;
@@ -20,6 +19,7 @@ import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.TreeNode;
 import org.springframework.dao.DataIntegrityViolationException;
 import webapp.framework.web.WebUtil;
+import com.ge.apm.dao.TenantInfoRepository;
 
 @ManagedBean
 @ViewScoped
@@ -63,20 +63,20 @@ public class OrgInfoController extends JpaCRUDController<OrgInfo> {
     }
     public void setSiteId(int siteId) {
         this.siteId = siteId;
-        SiteInfoRepository siteDao = WebUtil.getBean(SiteInfoRepository.class);
+        TenantInfoRepository siteDao = WebUtil.getBean(TenantInfoRepository.class);
         selectedSite = siteDao.findById(siteId);
         
         this.selected = null;
         buildOrdTree();
     }
     
-    private SiteInfo selectedSite;
+    private TenantInfo selectedSite;
 
-    public SiteInfo getSelectedSite() {
+    public TenantInfo getSelectedSite() {
         return selectedSite;
     }
 
-    public void setSelectedSite(SiteInfo selectedSite) {
+    public void setSelectedSite(TenantInfo selectedSite) {
         this.selectedSite = selectedSite;
     }
     

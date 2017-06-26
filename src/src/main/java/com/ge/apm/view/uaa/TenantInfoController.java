@@ -7,34 +7,35 @@ import javax.faces.bean.ViewScoped;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import webapp.framework.web.mvc.JpaCRUDController;
-import com.ge.apm.dao.SiteInfoRepository;
 import com.ge.apm.domain.OrgInfo;
-import com.ge.apm.domain.SiteInfo;
+import com.ge.apm.domain.TenantInfo;
+import java.util.UUID;
 import javax.faces.context.FacesContext;
 import org.springframework.dao.DataIntegrityViolationException;
 import webapp.framework.dao.NativeSqlUtil;
 import webapp.framework.web.WebUtil;
+import com.ge.apm.dao.TenantInfoRepository;
 
 @ManagedBean
 @ViewScoped
-public class SiteInfoController extends JpaCRUDController<SiteInfo> {
+public class TenantInfoController extends JpaCRUDController<TenantInfo> {
 
-    SiteInfoRepository dao = null;
+    TenantInfoRepository dao = null;
 
     @Override
     protected void init() {
         filterBySite = false;
 
-        dao = WebUtil.getBean(SiteInfoRepository.class);
+        dao = WebUtil.getBean(TenantInfoRepository.class);
     }
 
     @Override
-    protected SiteInfoRepository getDAO() {
+    protected TenantInfoRepository getDAO() {
         return dao;
     }
 
     @Override
-    protected Page<SiteInfo> loadData(PageRequest pageRequest) {
+    protected Page<TenantInfo> loadData(PageRequest pageRequest) {
         selected = null;
 
         if (this.searchFilters == null) {
@@ -45,25 +46,25 @@ public class SiteInfoController extends JpaCRUDController<SiteInfo> {
     }
 
     @Override
-    public List<SiteInfo> getItemList() {
+    public List<TenantInfo> getItemList() {
         //to do: change the code if necessary
         return dao.find();
     }
     
     @Override
-    public String getErrorMessageForDuplicateKey(SiteInfo site){
+    public String getErrorMessageForDuplicateKey(TenantInfo site){
         return String.format(WebUtil.getMessage("DuplicateSiteName"), site.getName());
     }
     
     @Override
-    public String getKeyFieldNameValue(SiteInfo site){
+    public String getKeyFieldNameValue(TenantInfo site){
         return WebUtil.getMessage("name")+"="+site.getName();
     }
 
     @Override
-    public void onAfterNewObject(SiteInfo site, boolean isOK) {
+    public void onAfterNewObject(TenantInfo site, boolean isOK) {
         if(!isOK) return;
-
+/*
         // import field code type data for this site
         try{
             String sql = "insert into i18n_message(msg_type, msg_key, value_zh, value_en, value_tw, site_id) select distinct msg_type, msg_key, value_zh, value_en, value_tw, %d as site_id from i18n_message where msg_type in (select msg_type from field_code_type)";
@@ -72,10 +73,20 @@ public class SiteInfoController extends JpaCRUDController<SiteInfo> {
         catch(Exception ex){
             logger.error(ex.getMessage(), ex);
         }
+*/
 
         // and create an default org for this site
+        String orgUID = UUID.randomUUID().toString().replace("-", "");
         OrgInfo hospital = new OrgInfo();
         hospital.setSiteId(site.getId());
+
+        //for new UUIDs
+        hospital.setUid(orgUID);
+        hospital.setTenantUID(selected.getUid());
+        hospital.setInstitutionUID(orgUID);
+        hospital.setHospitalUID(orgUID);
+        hospital.setSiteUID(orgUID);
+        
         hospital.setName(WebUtil.getMessage("DefaultHospitalName"));
         
         OrgInfoRepository orgDao = WebUtil.getBean(OrgInfoRepository.class);
@@ -83,7 +94,7 @@ public class SiteInfoController extends JpaCRUDController<SiteInfo> {
     }
 
     @Override
-    protected boolean onPersistException(Exception ex, SiteInfo site){
+    protected boolean onPersistException(Exception ex, TenantInfo site){
         if(ex.getClass().equals(DataIntegrityViolationException.class)){
             DataIntegrityViolationException exFkey = (DataIntegrityViolationException) ex;
             if(exFkey.getRootCause().getMessage().toLowerCase().contains("foreign key constraint ")){

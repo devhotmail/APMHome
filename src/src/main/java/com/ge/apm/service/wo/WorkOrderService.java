@@ -43,7 +43,7 @@ public class WorkOrderService {
     private static final Logger logger = Logger.getLogger(WorkOrderService.class);
 
     @Autowired
-    private SiteInfoRepository siteDao;
+    private TenantInfoRepository siteDao;
     @Autowired
     private WorkOrderStepRepository stepDao;
     @Autowired
@@ -623,7 +623,7 @@ public class WorkOrderService {
         //judge whether continue, if auto_stepX is true then continue
         int currentStep = wo.getCurrentStepId();
         if ( wo.getSiteId() == null) return;
-        SiteInfo site = siteDao.findById(wo.getSiteId());
+        TenantInfo site = siteDao.findById(wo.getSiteId());
         if (site == null) return;
         List<WorkOrderStep> list = stepDao.getByWorkOrderIdAndStepId(wo.getId(), currentStep);
         if (list.size() == 0) return;
@@ -682,7 +682,7 @@ public class WorkOrderService {
         int totalManHour = wo.getTotalManHour();
         double totalPrice = wo.getTotalPrice();
         if ( wo.getSiteId() == null) return;
-        SiteInfo site = siteDao.findById(wo.getSiteId());
+        TenantInfo site = siteDao.findById(wo.getSiteId());
         if (site == null) return;
         double hourPrice = site.getManhourPrice()==null?0.0:site.getManhourPrice();
         List<WorkOrderStepDetail> details = wos.getStepDetails();

@@ -1,6 +1,5 @@
 package com.ge.apm.view.uaa;
 
-import com.ge.apm.dao.SiteInfoRepository;
 import java.util.List;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
@@ -10,7 +9,7 @@ import org.springframework.data.domain.PageRequest;
 import webapp.framework.web.mvc.JpaCRUDController;
 import com.ge.apm.dao.UserAccountRepository;
 import com.ge.apm.domain.OrgInfo;
-import com.ge.apm.domain.SiteInfo;
+import com.ge.apm.domain.TenantInfo;
 import com.ge.apm.domain.UserAccount;
 import com.ge.apm.domain.UserRole;
 import com.ge.apm.service.uaa.UaaService;
@@ -24,6 +23,7 @@ import org.primefaces.event.NodeSelectEvent;
 import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.TreeNode;
 import webapp.framework.web.WebUtil;
+import com.ge.apm.dao.TenantInfoRepository;
 
 @ManagedBean
 @ViewScoped
@@ -63,14 +63,14 @@ public class UserAccountController extends JpaCRUDController<UserAccount> {
     }
     public void setSiteId(int siteId) {
         this.siteId = siteId;
-        SiteInfoRepository siteDao = WebUtil.getBean(SiteInfoRepository.class);
+        TenantInfoRepository siteDao = WebUtil.getBean(TenantInfoRepository.class);
         selectedSite = siteDao.findById(siteId);
         orgList = uaaService.getFullOrgListBySiteId(siteId);
         buildOrgTree(siteId, null);
     }
     
-    private SiteInfo selectedSite;
-    public SiteInfo getSelectedSite() {
+    private TenantInfo selectedSite;
+    public TenantInfo getSelectedSite() {
         return selectedSite;
     }
 

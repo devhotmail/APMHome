@@ -34,7 +34,7 @@
                                          rowsPerPageTemplate="5,10,15" >
 
                                 <p:column headerText="租户">
-                                    <h:outputText value="#{dataMigrateController.getSiteName(item.siteId)}"/>
+                                    <h:outputText value="#{dataMigrateController.getTenantName(item.siteId)}"/>
                                 </p:column>
                                 <p:column headerText="医院">
                                     <h:outputText value="#{dataMigrateController.getHospitalName(item.hospitalId)}"/>

@@ -68,8 +68,8 @@ public class DataMigrateController {
         return acService.getHospitalName(hospitalId);
     }
 
-    public String getSiteName(Integer siteId) {
-        return acService.getSiteName(siteId);
+    public String getTenantName(Integer siteId) {
+        return acService.getTenantName(siteId);
     }
 
     public void migrateAssetAttachData() {

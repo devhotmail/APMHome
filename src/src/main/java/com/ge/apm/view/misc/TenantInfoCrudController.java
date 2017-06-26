@@ -5,30 +5,30 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import com.ge.apm.dao.SiteInfoRepository;
-import com.ge.apm.domain.SiteInfo;
+import com.ge.apm.domain.TenantInfo;
 import webapp.framework.web.WebUtil;
 import webapp.framework.web.mvc.GenericCRUDController;
+import com.ge.apm.dao.TenantInfoRepository;
 
 @ManagedBean
 @ViewScoped
-public class SiteInfoCrudController extends GenericCRUDController<SiteInfo> {
+public class TenantInfoCrudController extends GenericCRUDController<TenantInfo> {
 
-    SiteInfoRepository dao = null;
+    TenantInfoRepository dao = null;
 
     @Override
     protected void init() {
         filterBySite = false;
-        dao = WebUtil.getBean(SiteInfoRepository.class);
+        dao = WebUtil.getBean(TenantInfoRepository.class);
     }
 
     @Override
-    protected SiteInfoRepository getDAO() {
+    protected TenantInfoRepository getDAO() {
         return dao;
     }
 
     @Override
-    protected Page<SiteInfo> loadData(PageRequest pageRequest) {
+    protected Page<TenantInfo> loadData(PageRequest pageRequest) {
         if (this.searchFilters == null) {
             return dao.findAll(pageRequest);
         } else {
@@ -37,7 +37,7 @@ public class SiteInfoCrudController extends GenericCRUDController<SiteInfo> {
     }
 
     @Override
-    public List<SiteInfo> getItemList() {
+    public List<TenantInfo> getItemList() {
         //to do: change the code if necessary
         return dao.find();
     }

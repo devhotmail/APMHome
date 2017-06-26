@@ -19,7 +19,7 @@
                         <p:selectOneListbox style="border: none;" value="#{userAccountController.siteId}">
                             <p:ajax process="@this" event="click" update=":UserAccountListForm" listener="#{userAccountController.setSiteId(userAccountController.siteId)}" oncomplete="PF('varPanelSite').hide();"/>
 
-                            <f:selectItems value="#{siteInfoController.itemList}" var="item" itemLabel="#{item.name}" itemValue="#{item.id}"/>
+                            <f:selectItems value="#{tenantInfoController.itemList}" var="item" itemLabel="#{item.name}" itemValue="#{item.id}"/>
                         </p:selectOneListbox>
                     </p:overlayPanel>
 

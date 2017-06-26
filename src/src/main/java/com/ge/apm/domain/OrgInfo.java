@@ -5,6 +5,7 @@ package com.ge.apm.domain;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.io.Serializable;
+import java.util.UUID;
 import javax.persistence.Basic;
 import javax.persistence.Cacheable;
 import javax.persistence.Column;
@@ -15,6 +16,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.PrePersist;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -37,6 +39,30 @@ public class OrgInfo implements Serializable {
     @Basic(optional = false)
     @Column(name = "id")
     private Integer id;
+
+    @Column(name = "uid")
+    @Size(max=32)
+    private String uid;
+
+    @Column(name = "tenant_uid")
+    @Size(max=32)
+    private String tenantUID;
+
+    @Column(name = "institution_uid")
+    @Size(max=32)
+    private String institutionUID;
+
+    @Column(name = "hospital_uid")
+    @Size(max=32)
+    private String hospitalUID;
+
+    @Column(name = "site_uid")
+    @Size(max=32)
+    private String siteUID;
+    
+    @Column(name = "org_level")
+    private Integer orgLevel;
+    
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 64)
@@ -58,8 +84,54 @@ public class OrgInfo implements Serializable {
     @NotNull
     @Column(name = "site_id")
     private Integer siteId;
+
+    @PrePersist
+    public void initializeUid() {
+        if(uid==null)
+            uid = UUID.randomUUID().toString().replace("-", "");
+    }
     
     public OrgInfo() {
+    }
+
+    public String getTenantUID() {
+        return tenantUID;
+    }
+
+    public void setTenantUID(String tenantUID) {
+        this.tenantUID = tenantUID;
+    }
+
+    public String getInstitutionUID() {
+        return institutionUID;
+    }
+
+    public void setInstitutionUID(String institutionUID) {
+        this.institutionUID = institutionUID;
+    }
+
+    public String getHospitalUID() {
+        return hospitalUID;
+    }
+
+    public void setHospitalUID(String hospitalUID) {
+        this.hospitalUID = hospitalUID;
+    }
+
+    public String getSiteUID() {
+        return siteUID;
+    }
+
+    public void setSiteUID(String siteUID) {
+        this.siteUID = siteUID;
+    }
+
+    public Integer getOrgLevel() {
+        return orgLevel;
+    }
+
+    public void setOrgLevel(Integer orgLevel) {
+        this.orgLevel = orgLevel;
     }
 
     public Integer getId() {
@@ -68,6 +140,14 @@ public class OrgInfo implements Serializable {
 
     public void setId(Integer id) {
         this.id = id;
+    }
+
+    public String getUid() {
+        return uid;
+    }
+
+    public void setUid(String uid) {
+        this.uid = uid;
     }
 
     public String getName() {
