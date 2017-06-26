@@ -47,6 +47,7 @@
       <!--  <p:commandButton id="createButton" actionListener="#{tagSubscriberController.prepareCreate}" icon="ui-icon-plus" class="btn btn-sm btn-gray" title="#{msg.Create}" />-->
 
         <p:commandButton id="createButton" icon="ui-icon-plus" class="btn btn-sm btn-gray" title="#{msg.Create}" actionListener="#{tagSubscriberController.prepareCreate}" update=":AssetTagSubscribEditDlg" oncomplete="PF('AssetTagSubscribEditDialog').show()"/>
+
         <p:commandButton id="editButton" actionListener="#{tagSubscriberController.prepareEdit}" icon="ui-icon-pencil" title="#{msg.Edit}"  update=":AssetTagSubscribEditDlg" oncomplete="PF('AssetTagSubscribEditDialog').show()" disabled="#{empty tagSubscriberController.selected}"/>
 
 

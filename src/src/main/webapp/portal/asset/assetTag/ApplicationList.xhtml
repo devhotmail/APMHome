@@ -52,12 +52,14 @@
 
 
                     <f:facet name="{Toolbar}">
-                        <p:commandButton id="createButton" icon="ui-icon-plus" class="btn btn-sm btn-gray" title="#{msg.Create}" actionListener="#{applicationController.prepareCreate}" action="#{urlEncryptController.encodeUrlParam('application.xhtml?actionName=Create')}" />
-                      <!-- gl: origin: <p:commandButton id="createButton" icon="ui-icon-plus" class="btn btn-sm btn-gray" title="#{msg.Create}" actionListener="#{assetInfoController.prepareCreate}" action="#{urlEncryptController.encodeUrlParam('Create.xhtml?actionName=Create')}" rendered="#{!assetInfoController.isTerminate()}"/>-->
+                        <p:commandButton id="createButton" icon="ui-icon-plus" class="btn btn-sm btn-gray" title="#{msg.Create}"  action="#{applicationController.getViewPage('application','create')}"  />
 
-                        <p:commandButton rendered="true" id="editButton" icon="ui-icon-pencil" class="btn btn-sm btn-gray" title="#{msg.Edit}"  actionListener="#{applicationController.getViewPage('Create','Edit')}"  action="#{urlEncryptController.encodeUrlParam(applicationController.url)}"  disabled="#{empty applicationController.selected}" />
+                      <!--  <p:commandButton id="createButton" icon="ui-icon-plus" class="btn btn-sm btn-gray" title="#{msg.Create}"  action="application.xhtml?actionName=Create&amp;faces-redirect=true" />-->
 
-                        <p:commandButton id="deleteButton" process="@this" icon="ui-icon-close" title="#{msg.Edit}" actionListener="#{applicationController.delete}" update=":ApplicationForm:dataList" disabled="#{empty applicationController.selected}"/>
+
+                        <p:commandButton rendered="true" id="editButton" icon="ui-icon-pencil" class="btn btn-sm btn-gray" title="#{msg.Edit}"  action="#{applicationController.getViewPage('application','Edit')}"   disabled="#{empty applicationController.selected}" />
+
+                        <p:commandButton id="deleteButton" process="@this" icon="ui-icon-close" title="#{msg.Delete}" actionListener="#{applicationController.delete}" update=":ApplicationForm:dataList" disabled="#{empty applicationController.selected}"/>
                     </f:facet>
                 </p:dataTable>
             </h:form>
