@@ -70,7 +70,7 @@ public class DataMigrateService {
         blobObject.setObjectType((String) docMap.get("objectType"));
         boDao.save(blobObject);
 
-        item.setFileUrl(blobObject.getId());
+        item.setFileUrl(blobObject.getObjectStorageId());
         attachDao.save(item);
         return blobObject.getId() != null;
     }
@@ -96,7 +96,7 @@ public class DataMigrateService {
         blobObject.setObjectType((String) docMap.get("objectType"));
         boDao.save(blobObject);
         
-        item.setObjectId((String) docMap.get("objectId"));
+        item.setObjectId(blobObject.getObjectStorageId());
         qrCodeAttachDao.save(item);
         return blobObject.getId() != null;
     }
