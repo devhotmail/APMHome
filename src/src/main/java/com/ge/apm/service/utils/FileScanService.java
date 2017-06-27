@@ -30,7 +30,7 @@ public class FileScanService {
        
         String folderName = FILE_SCAN_FOLDER.concat(File.separator).concat(UUID.randomUUID().toString());
         FileUtils.createFolder(folderName, true);
-        String fileName = folderName.concat(File.separator).concat(FileUtils.getUploadedFileName(file.getFileName()));
+        String fileName = folderName.concat(File.separator).concat(file.getFileName());
         
         try(FileOutputStream out = new FileOutputStream(fileName)) {
             InputStream inputStream = file.getInputstream();
