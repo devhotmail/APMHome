@@ -8,11 +8,9 @@ package com.ge.apm.service.utils;
 import java.io.File;
 import java.io.InputStream;
 import java.io.ByteArrayInputStream;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.Collections;
 import java.util.List;
 import org.primefaces.json.JSONObject;
 import org.primefaces.model.DefaultStreamedContent;
@@ -40,6 +38,8 @@ public class MicroServiceUtil {
     @Autowired
     private RestTemplate template;
 
+    @Value("#{urlProperties.url_getAuthenticateByOpenId}")
+    private String url_getAuthenticateByOpenId;
     @Value("#{urlProperties.url_getAuthenticateByUserPassword}")
     private String url_getAuthenticateByUserPassword;
     @Value("#{urlProperties.url_uploadSingleFileByUrl}")
@@ -53,15 +53,15 @@ public class MicroServiceUtil {
 
     public StreamedContent downloadSingleFile(String fileId) {
         HttpHeaders headers = new HttpHeaders();
-        ResponseEntity<byte[]> response = template.exchange(url_downloadFile.concat("/").concat(fileId),HttpMethod.GET,new HttpEntity<byte[]>(headers),byte[].class);
+        ResponseEntity<byte[]> response = template.exchange(url_downloadFile.concat("/").concat(fileId), HttpMethod.GET, new HttpEntity<byte[]>(headers), byte[].class);
         HttpHeaders responseHeader = response.getHeaders();
         byte[] result = response.getBody();
         InputStream ins = new ByteArrayInputStream(result);
         DefaultStreamedContent fileStream = new DefaultStreamedContent(ins);
         fileStream.setContentType(responseHeader.getContentType().toString());
         List<String> dispositions = responseHeader.get("content-disposition");
-        String disposition = (String)dispositions.get(0);
-        String fileName = disposition.substring(disposition.lastIndexOf("name=")+5);
+        String disposition = (String) dispositions.get(0);
+        String fileName = disposition.substring(disposition.lastIndexOf("name=") + 5);
         fileStream.setName(fileName);
         return fileStream;
     }
@@ -77,14 +77,13 @@ public class MicroServiceUtil {
         return isOkay(response);
     }
 
-    public Map<String, Object> uploadSingleFile(String token, String fileName) {
-
+    public Map<String, Object> uploadSingleFile(String token, File file) {
         HttpHeaders headers = new HttpHeaders();
         headers.add("Content-Type", "multipart/form-data");
         headers.add("Authorization", token);
 
         MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
-        FileSystemResource resource = new FileSystemResource(fileName);
+        FileSystemResource resource = new FileSystemResource(file);
         body.add("file", resource);
 
         HttpEntity<Map> requestEntity = new HttpEntity<Map>(body, headers);
@@ -92,7 +91,6 @@ public class MicroServiceUtil {
         if (isOkay(response)) {
             LinkedHashMap<String, Object> responseMap = (LinkedHashMap<String, Object>) response.getBody();
             LinkedHashMap<String, Object> data = (LinkedHashMap<String, Object>) responseMap.get("data");
-            FileUtils.deleteFolder(fileName.substring(0, fileName.lastIndexOf(File.separator)));
             return data;
         }
 
@@ -126,6 +124,35 @@ public class MicroServiceUtil {
         LinkedHashMap<String, Object> body = (LinkedHashMap<String, Object>) res.getBody();
 
         return body.containsKey("bizStatusCode") && body.get("bizStatusCode").equals("OK");
+    }
+
+    public String getAuthenticateByOpenId(String code, String weChatId) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Content-Type", "application/json; charset=utf-8");
+
+        Map<String, String> postParameters = new HashMap<String, String>();
+        postParameters.put("code", code);
+        postParameters.put("weChatId", weChatId);
+        String requestBody = JSONObject.valueToString(postParameters);
+
+        HttpEntity<String> requestEntity = new HttpEntity<String>(
+                requestBody, headers);
+
+        ResponseEntity<? extends LinkedHashMap<String, Object>> response = template.postForEntity(url_getAuthenticateByOpenId, requestEntity, LinkedHashMap.class);
+
+        if (isOkay(response)) {
+            LinkedHashMap<String, Object> responseMap = (LinkedHashMap<String, Object>) response.getBody();
+            LinkedHashMap<String, Object> data = (LinkedHashMap<String, Object>) responseMap.get("data");
+            if (null != data && data.containsKey("jwtToken")) {
+                LinkedHashMap<String, Object> jwtToken = (LinkedHashMap<String, Object>) data.get("jwtToken");
+                if (null != jwtToken && jwtToken.containsKey("id_token")) {
+                    return (String) jwtToken.get("id_token");
+                }
+            }
+        }
+
+        return null;
+
     }
 
     public String getAuthenticateByUserPassword(String userName, String password) {

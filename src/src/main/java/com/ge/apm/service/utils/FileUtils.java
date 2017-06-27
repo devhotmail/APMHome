@@ -345,7 +345,7 @@ public class FileUtils {
             WebUtil.addErrorMessage(WebUtil.getMessage("fileTransFail"));
             java.util.logging.Logger.getLogger(AttachmentFileService.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return fileName;
+        return rowName;
     }
 
     public static void main(String args[]) {

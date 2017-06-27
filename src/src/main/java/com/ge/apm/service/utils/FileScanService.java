@@ -31,8 +31,6 @@ public class FileScanService {
         String folderName = FILE_SCAN_FOLDER.concat(File.separator).concat(UUID.randomUUID().toString());
         FileUtils.createFolder(folderName, true);
         String fileName = folderName.concat(File.separator).concat(FileUtils.getUploadedFileName(file.getFileName()));
-        File tempfile = new File(fileName);
-        
         
         try(FileOutputStream out = new FileOutputStream(fileName)) {
             InputStream inputStream = file.getInputstream();
@@ -60,6 +58,10 @@ public class FileScanService {
         
         return fileName;
         
+    }
+
+    public void deleteUploadedFile(String path) {
+        FileUtils.deleteFolder(path.substring(0,path.lastIndexOf(File.separator)));
     }
     
     

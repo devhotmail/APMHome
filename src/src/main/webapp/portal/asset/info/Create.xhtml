@@ -299,7 +299,7 @@
                                     <f:facet name="header">#{fieldMsg.fieldValue('attachmentType', 1)}</f:facet>
 
                                     #{fileitem.name}
-                                    <p:commandButton actionListener="#{assetInfoController.removeAttachment(fileitem.fileId)}" id="iconOnly" update="pictureList" icon="ui-icon-clear" title="#{msg.Delete}" class="popupIconButton" process="@this">
+                                    <p:commandButton actionListener="#{assetInfoController.removeAttachment(fileitem.fileUrl)}" id="iconOnly" update="pictureList" icon="ui-icon-clear" title="#{msg.Delete}" class="popupIconButton" process="@this">
                                         <p:confirm header="#{msg.DeleteConformation}" message="#{msg.DeleteFileConformationMsg}" icon="ui-icon-warning"/>
                                     </p:commandButton>
                                 </p:dataList>
@@ -310,7 +310,7 @@
                                 <p:dataList id="contractList" value="#{assetInfoController.getAttachList(assetInfoController.selected.id,2)}" var="fileitem" type="definition" emptyMessage="#{msg.noRecordFound}">
                                     <f:facet name="header">#{fieldMsg.fieldValue('attachmentType', 2)}</f:facet>
                                         #{fileitem.name}
-                                    <p:commandButton actionListener="#{assetInfoController.removeAttachment(fileitem.fileId)}" id="iconOnly" update="contractList" icon="ui-icon-clear" title="#{msg.Delete}" class="popupIconButton" process="@this">
+                                    <p:commandButton actionListener="#{assetInfoController.removeAttachment(fileitem.fileUrl)}" id="iconOnly" update="contractList" icon="ui-icon-clear" title="#{msg.Delete}" class="popupIconButton" process="@this">
                                         <p:confirm header="#{msg.DeleteConformation}" message="#{msg.DeleteFileConformationMsg}" icon="ui-icon-warning"/>
                                     </p:commandButton>
                                 </p:dataList>
@@ -321,7 +321,7 @@
                                 <p:dataList id="manualList" value="#{assetInfoController.getAttachList(assetInfoController.selected.id,3)}" var="fileitem" type="definition" emptyMessage="#{msg.noRecordFound}">
                                     <f:facet name="header">#{fieldMsg.fieldValue('attachmentType', 3)}</f:facet>
                                     #{fileitem.name},
-                                    <p:commandButton actionListener="#{assetInfoController.removeAttachment(fileitem.fileId)}" id="iconOnly" update="manualList" icon="ui-icon-clear" title="#{msg.Delete}" class="popupIconButton" process="@this">
+                                    <p:commandButton actionListener="#{assetInfoController.removeAttachment(fileitem.fileUrl)}" id="iconOnly" update="manualList" icon="ui-icon-clear" title="#{msg.Delete}" class="popupIconButton" process="@this">
                                         <p:confirm header="#{msg.DeleteConformation}" message="#{msg.DeleteFileConformationMsg}" icon="ui-icon-warning"/>
                                     </p:commandButton>
                                 </p:dataList>

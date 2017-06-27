@@ -148,11 +148,9 @@ and open the template in the editor.
                                                 <div class="weui-cell__bd my-gallery" style="display: inline;" data-pswp-uid="1">
                                                     <c:forEach items="#{wxAssetInfoController.getPictureList(wxAssetInfoController.assetInfo.id)}" var="fileitem" varStatus="status">
                                                         <div style="display: inline-block;width: 78px">
-                                                            <figure style="display: block; padding-right: 3px;" id="#{fileitem.fileId}">
+                                                            <figure style="display: block; padding-right: 3px;" id="#{fileitem.fileUrl}">
                                                                 <a href="" data-size="800x600">
-                                                                    <p:graphicImage  value="#{pictureService.getImage()}"   height="78px" width="78px" >
-                                                                        <f:param name="pictureId" value="#{fileitem.fileId}" />
-                                                                    </p:graphicImage>
+                                                                    <p:graphicImage url="#{fileDownloadService.getFileUrl(fileitem.fileUrl)}"  height="78px" width="78px" />
                                                                 </a>
                                                             </figure>
                                                             <p class="removePicButton" align="center" onclick="showConfirmDialog(this);" style="display:none;width: 78px">
