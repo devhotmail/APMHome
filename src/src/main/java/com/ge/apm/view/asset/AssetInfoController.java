@@ -14,23 +14,13 @@ import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpServletRequest;
 
+import com.ge.apm.dao.*;
+import com.ge.apm.domain.*;
 import org.primefaces.event.FileUploadEvent;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.ge.apm.dao.AssetFileAttachmentRepository;
-import com.ge.apm.dao.AssetInfoRepository;
-import com.ge.apm.dao.OrgInfoRepository;
-import com.ge.apm.dao.QrCodeLibRepository;
-import com.ge.apm.dao.SupplierRepository;
-import com.ge.apm.dao.UserAccountRepository;
-import com.ge.apm.domain.AssetFileAttachment;
-import com.ge.apm.domain.AssetInfo;
-import com.ge.apm.domain.OrgInfo;
-import com.ge.apm.domain.QrCodeLib;
-import com.ge.apm.domain.Supplier;
-import com.ge.apm.domain.UserAccount;
 import com.ge.apm.service.asset.AssetDepreciationService;
 import com.ge.apm.service.asset.AttachmentFileService;
 import com.ge.apm.service.uaa.UaaService;
@@ -86,6 +76,8 @@ public class AssetInfoController extends JpaCRUDController<AssetInfo> {
     Boolean terminate;
 
     private List<AssetInfo> parentAssetList;
+    private List<I18nMessage> code68List;
+    private I18nMessageRepository i18nDao;
 
     protected void setSelectedByUrlParam(String encodeUrl, String paramName) {
         setSelected(Integer.parseInt((String) UrlEncryptController.getValueFromMap(encodeUrl, paramName)));
@@ -116,6 +108,7 @@ public class AssetInfoController extends JpaCRUDController<AssetInfo> {
         uuaService = WebUtil.getBean(UaaService.class);
         assetDepreciationService = WebUtil.getBean(AssetDepreciationService.class);
         terminate = Boolean.valueOf(WebUtil.getRequestParameter("terminate"));
+        i18nDao = WebUtil.getBean(I18nMessageRepository.class);
         this.filterBySite = true;
         if (!userContextService.hasRole("MultiHospital")) {
             this.filterByHospital = true;
@@ -747,6 +740,16 @@ public class AssetInfoController extends JpaCRUDController<AssetInfo> {
 
     }
 
+    public void onFunctionGroupChange(){
+        Integer functionGroupId = this.selected.getFunctionGroup();
+        if(functionGroupId != null){
+            I18nMessage functionGroup = i18nDao.getByMsgTypeAndMsgKey("assetFunctionType",functionGroupId.toString());
+            if(functionGroup != null){
+                code68List = i18nDao.getByMsgType(functionGroup.getMsgKey());
+            }
+        }
+    }
+
     @Override
     public void prepareEdit() {
         super.prepareEdit();
@@ -759,6 +762,8 @@ public class AssetInfoController extends JpaCRUDController<AssetInfo> {
         }else{
             parentAssetList = new ArrayList<>();
         }
+
+        this.onFunctionGroupChange();
     }
 
     public List<AssetInfo> getParentAssetList() {
@@ -769,4 +774,11 @@ public class AssetInfoController extends JpaCRUDController<AssetInfo> {
         this.parentAssetList = parentAssetList;
     }
 
+    public List<I18nMessage> getCode68List() {
+        return code68List;
+    }
+
+    public void setCode68List(List<I18nMessage> code68List) {
+        this.code68List = code68List;
+    }
 }
