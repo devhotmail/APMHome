@@ -194,7 +194,7 @@
                                 </p:selectOneMenu>
                             </h:panelGroup>
                             <h:panelGroup >
-                                <label class="label">#{msg.functionGroup}</label>
+                                <label class="label">医疗器械分类</label>
                                 <p:selectOneMenu id="functionGroup" value="#{assetInfoController.selected.functionGroup}" style="width: 100%">
                                     <p:ajax  listener="#{assetInfoController.onFunctionGroupChange()}" update="assetCode68" />
                                     <f:selectItem itemLabel="#{msg.selectOneMessage}"/>
@@ -202,7 +202,7 @@
                                 </p:selectOneMenu>
                             </h:panelGroup>
                             <h:panelGroup >
-                                <label class="label">68码</label>
+                                <label class="label">医疗器械子分类</label>
                                 <p:selectOneMenu id="assetCode68" value="#{assetInfoController.selected.assetCode68}" style="width: 100%">
                                     <f:selectItem itemLabel="#{msg.selectOneMessage}"/>
                                     <f:selectItems value="#{assetInfoController.code68List}" var="item" itemLabel="#{item.value}" itemValue="#{item.msgKey}"/>
