@@ -760,6 +760,13 @@ public class AssetInfoController extends JpaCRUDController<AssetInfo> {
     }
 
     public void onFunctionGroupChange(){
+        code68List = new ArrayList<>();
+        this.selected.setAssetCode68(null);
+
+        this.changeFunctionGroup();
+    }
+
+    public void changeFunctionGroup(){
         Integer functionGroupId = this.selected.getFunctionGroup();
         if(functionGroupId != null){
             I18nMessage functionGroup = i18nDao.getByMsgTypeAndMsgKey("assetFunctionType",functionGroupId.toString());
@@ -782,7 +789,7 @@ public class AssetInfoController extends JpaCRUDController<AssetInfo> {
             parentAssetList = new ArrayList<>();
         }
 
-        this.onFunctionGroupChange();
+        this.changeFunctionGroup();
     }
 
     public List<AssetInfo> getParentAssetList() {
