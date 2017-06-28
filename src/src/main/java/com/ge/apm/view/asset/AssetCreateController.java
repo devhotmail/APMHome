@@ -20,6 +20,7 @@ import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
+import org.springframework.transaction.annotation.Transactional;
 import webapp.framework.dao.SearchFilter;
 import webapp.framework.web.WebUtil;
 
@@ -36,7 +37,7 @@ public class AssetCreateController {
     private AssetCreateService acServie;
     private AttachmentFileService attachFileService;
 
-    private Integer[] selectedPictures;
+    private String[] selectedPictures;
 
     private UserAccount owner;
 
@@ -62,9 +63,9 @@ public class AssetCreateController {
         audioList = acServie.getQrCodeAudioList(createRequest.getId());
 
         //默认图片全选
-        selectedPictures = new Integer[pictureList.size()];
+        selectedPictures = new String[pictureList.size()];
         for (int i = 0; i < pictureList.size(); i++) {
-            selectedPictures[i] = pictureList.get(i).getFileId();
+            selectedPictures[i] = pictureList.get(i).getObjectId();
         }
 
         rejectTextHistory = new ArrayList();
@@ -105,6 +106,7 @@ public class AssetCreateController {
         return acServie.getHospitalName(assetInfo.getHospitalId());
     }
 
+    @Transactional
     public String applyChange() {
         if (owner != null) {
             assetInfo.setAssetOwnerId(owner.getId());
@@ -179,11 +181,11 @@ public class AssetCreateController {
         this.assetInfo = assetInfo;
     }
 
-    public Integer[] getSelectedPictures() {
+    public String[] getSelectedPictures() {
         return selectedPictures;
     }
 
-    public void setSelectedPictures(Integer[] selectedPictures) {
+    public void setSelectedPictures(String[] selectedPictures) {
         this.selectedPictures = selectedPictures;
     }
 

@@ -14,15 +14,28 @@ import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpServletRequest;
 
-import com.ge.apm.dao.*;
-import com.ge.apm.domain.*;
 import org.primefaces.event.FileUploadEvent;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.ge.apm.dao.AssetFileAttachmentRepository;
+import com.ge.apm.dao.AssetInfoRepository;
+import com.ge.apm.dao.BlobObjectRepository;
+import com.ge.apm.dao.OrgInfoRepository;
+import com.ge.apm.dao.QrCodeLibRepository;
+import com.ge.apm.dao.SupplierRepository;
+import com.ge.apm.dao.UserAccountRepository;
+import com.ge.apm.domain.AssetFileAttachment;
+import com.ge.apm.domain.AssetInfo;
+import com.ge.apm.domain.OrgInfo;
+import com.ge.apm.domain.QrCodeLib;
+import com.ge.apm.domain.Supplier;
+import com.ge.apm.domain.UserAccount;
+import com.ge.apm.domain.V2_BlobObject;
 import com.ge.apm.service.asset.AssetDepreciationService;
 import com.ge.apm.service.asset.AttachmentFileService;
+import com.ge.apm.service.asset.BlobFileService;
 import com.ge.apm.service.uaa.UaaService;
 import com.ge.apm.service.utils.QRCodeUtil;
 import com.ge.apm.service.utils.UrlParamUtil;
@@ -46,7 +59,7 @@ public class AssetInfoController extends JpaCRUDController<AssetInfo> {
     AssetFileAttachmentRepository attachDao = null;
 
     private UserAccountRepository userDao;
-    
+
     private QrCodeLibRepository qrcodeDao;
 
     private boolean resultStatus;
@@ -56,34 +69,33 @@ public class AssetInfoController extends JpaCRUDController<AssetInfo> {
 
     private UserAccount owner;
     private UserAccount owner2;
-//    private List<UserAccount> ownerList;
+    //    private List<UserAccount> ownerList;
     private List<OrgInfo> ownerOrgList;
 
     private List<AssetFileAttachment> attachements;
 
-    @ManagedProperty("#{attachmentFileService}")
-    private AttachmentFileService fileService;
+    private BlobFileService blobService;
 
     private UaaService uuaService;
 
     private OrgInfoRepository orgDao;
 
+    private BlobObjectRepository blobDao;
+
     private String operation;
 
     private AssetDepreciationService assetDepreciationService;
 
-    private String  qrCode;
+    private String qrCode;
     Boolean terminate;
 
     private List<AssetInfo> parentAssetList;
-    private List<I18nMessage> code68List;
-    private I18nMessageRepository i18nDao;
 
     protected void setSelectedByUrlParam(String encodeUrl, String paramName) {
         setSelected(Integer.parseInt((String) UrlEncryptController.getValueFromMap(encodeUrl, paramName)));
 
-        owner = selected.getAssetOwnerId()==null?null:userDao.findById(selected.getAssetOwnerId());
-        owner2 = selected.getAssetOwnerId2()==null?null:userDao.findById(selected.getAssetOwnerId2());
+        owner = selected.getAssetOwnerId() == null ? null : userDao.findById(selected.getAssetOwnerId());
+        owner2 = selected.getAssetOwnerId2() == null ? null : userDao.findById(selected.getAssetOwnerId2());
 
         if (null != selected.getClinicalOwnerId()) {
             clinicalOwner = userDao.findById(selected.getClinicalOwnerId());
@@ -93,7 +105,7 @@ public class AssetInfoController extends JpaCRUDController<AssetInfo> {
             SupplierRepository supplierDao = WebUtil.getBean(SupplierRepository.class);
             supplier = supplierDao.findById(selected.getSupplierId());
         }
-        
+
         qrCode = selected.getQrCode();
     }
 
@@ -102,13 +114,14 @@ public class AssetInfoController extends JpaCRUDController<AssetInfo> {
         dao = WebUtil.getBean(AssetInfoRepository.class);
         userDao = WebUtil.getBean(UserAccountRepository.class);
         qrcodeDao = WebUtil.getBean(QrCodeLibRepository.class);
+        blobDao = WebUtil.getBean(BlobObjectRepository.class);
         UserContextService userContextService = WebUtil.getBean(UserContextService.class);
         attachDao = WebUtil.getBean(AssetFileAttachmentRepository.class);
         orgDao = WebUtil.getBean(OrgInfoRepository.class);
         uuaService = WebUtil.getBean(UaaService.class);
+        blobService = WebUtil.getBean(BlobFileService.class);
         assetDepreciationService = WebUtil.getBean(AssetDepreciationService.class);
         terminate = Boolean.valueOf(WebUtil.getRequestParameter("terminate"));
-        i18nDao = WebUtil.getBean(I18nMessageRepository.class);
         this.filterBySite = true;
         if (!userContextService.hasRole("MultiHospital")) {
             this.filterByHospital = true;
@@ -126,17 +139,17 @@ public class AssetInfoController extends JpaCRUDController<AssetInfo> {
             }
         } else if ("View".equalsIgnoreCase(actionName)) {
             // setSelected(Integer.parseInt(WebUtil.getRequestParameter("selectedid")));
-        	 String terminateStr = (String) UrlEncryptController.getValueFromMap(encodeStr, "terminate");
-             if(terminateStr != null){
-             	terminate = Boolean.parseBoolean(terminateStr);
-             }
+            String terminateStr = (String) UrlEncryptController.getValueFromMap(encodeStr, "terminate");
+            if (terminateStr != null) {
+                terminate = Boolean.parseBoolean(terminateStr);
+            }
             setSelectedByUrlParam(encodeStr, "selectedid");
             prepareView();
         } else if ("Edit".equalsIgnoreCase(actionName)) {
             //setSelected(Integer.parseInt(WebUtil.getRequestParameter("selectedid")));
             String terminateStr = (String) UrlEncryptController.getValueFromMap(encodeStr, "terminate");
-            if(terminateStr != null){
-            	terminate = Boolean.parseBoolean(terminateStr);
+            if (terminateStr != null) {
+                terminate = Boolean.parseBoolean(terminateStr);
             }
             setSelectedByUrlParam(encodeStr, "selectedid");
             prepareEdit();
@@ -159,19 +172,15 @@ public class AssetInfoController extends JpaCRUDController<AssetInfo> {
         }
     }
 
-    public void setFileService(AttachmentFileService fileService) {
-        this.fileService = fileService;
-    }
-    
     public Boolean getTerminate() {
-		return terminate;
-	}
+        return terminate;
+    }
 
-	public void setTerminate(Boolean terminate) {
-		this.terminate = terminate;
-	}
+    public void setTerminate(Boolean terminate) {
+        this.terminate = terminate;
+    }
 
-	@Override
+    @Override
     protected AssetInfoRepository getDAO() {
         return dao;
     }
@@ -186,38 +195,38 @@ public class AssetInfoController extends JpaCRUDController<AssetInfo> {
         }
     }
 
-    public void onSelectAsset() throws IOException{
-        String url = "actionName=View&selectedid=" 
-        			+ selected.getId().toString() 
-        			+ "&asset_name=" + selected.getName()
-					+ "&terminate=" + this.terminate;
-        url = "Detail.xhtml?str="+UrlParamUtil.encodeUrlQueryString(url);
-                
+    public void onSelectAsset() throws IOException {
+        String url = "actionName=View&selectedid="
+                + selected.getId().toString()
+                + "&asset_name=" + selected.getName()
+                + "&terminate=" + this.terminate;
+        url = "Detail.xhtml?str=" + UrlParamUtil.encodeUrlQueryString(url);
+
         FacesContext.getCurrentInstance().getExternalContext().redirect(url);
     }
-    
+
     public String getViewPage(String pageName, String actionName) {
         operation = pageName + "?actionName=" + actionName + "&selectedid=" + selected.getId();
         return operation;
     }
 
     public String getDetailPage() {
-        operation = "Detail.xhtml?actionName=View&selectedid=" + selected.getId() 
-        		+ "&asset_name=" + selected.getName();
+        operation = "Detail.xhtml?actionName=View&selectedid=" + selected.getId()
+                + "&asset_name=" + selected.getName();
         return operation;
     }
 
     public String getDetailPage(String assetId, String assetName) {
-        operation = "Detail.xhtml?actionName=View&selectedid=" + assetId 
-        		+ "&asset_name=" + assetName
-        		+ "&terminate=" + this.terminate;
+        operation = "Detail.xhtml?actionName=View&selectedid=" + assetId
+                + "&asset_name=" + assetName
+                + "&terminate=" + this.terminate;
         return UrlEncryptController.encodeUrlParam(operation);
     }
 
     public String getEditPage(String assetId, String assetName) {
-        operation = "Create.xhtml?actionName=Edit&selectedid=" + assetId 
-        		+ "&asset_name=" + assetName
-        		+ "&terminate=" + this.terminate;
+        operation = "Create.xhtml?actionName=Edit&selectedid=" + assetId
+                + "&asset_name=" + assetName
+                + "&terminate=" + this.terminate;
         return UrlEncryptController.encodeUrlParam(operation);
     }
 
@@ -245,7 +254,7 @@ public class AssetInfoController extends JpaCRUDController<AssetInfo> {
     public String getContractAddLink() {
         return "/portal/asset/contract/List?assetId=" + selected.getId() + "&actionName=Create";
     }
-    
+
     @Override
     public void onBeforeNewObject(AssetInfo object) {
         object.setSiteId(UserContextService.getSiteId());
@@ -309,24 +318,23 @@ public class AssetInfoController extends JpaCRUDController<AssetInfo> {
         }
     }
 
-    
-    private boolean updateQrCode(){
+    private boolean updateQrCode() {
         QrCodeLib qrCodeLib = qrcodeDao.findByQrCode(qrCode);
-        if(qrCodeLib==null){
+        if (qrCodeLib == null) {
             WebUtil.addErrorMessage(WebUtil.getMessage("InvalidQRCode"));
             return false;
         }
-        if(qrCodeLib.getSiteId()!=selected.getSiteId() || qrCodeLib.getHospitalId()!=selected.getHospitalId()){
+        if (qrCodeLib.getSiteId() != selected.getSiteId() || qrCodeLib.getHospitalId() != selected.getHospitalId()) {
             WebUtil.addErrorMessage(WebUtil.getMessage("WrongHospitalQRCode"));
             return false;
         }
-        if(qrCodeLib.getStatus()!=1){
+        if (qrCodeLib.getStatus() != 1) {
             WebUtil.addErrorMessage(WebUtil.getMessage("AlreadyUsingQrCode"));
             return false;
         }
-        
+
         QrCodeLib oldQRCodeLib = qrcodeDao.findByQrCode(selected.getQrCode());
-        if(null!=oldQRCodeLib){
+        if (null != oldQRCodeLib) {
             oldQRCodeLib.setStatus(4);
             qrcodeDao.save(oldQRCodeLib);
         }
@@ -335,18 +343,18 @@ public class AssetInfoController extends JpaCRUDController<AssetInfo> {
         selected.setQrCode(qrCode);
         return true;
     }
-    
+
     @Transactional
     public String applyChange() {
         if (!isTimeValidate()) {
             return "";
         }
-        if(!qrCode.equals(selected.getQrCode()) && !qrCode.isEmpty()){
-            if(!updateQrCode()){
+        if (!qrCode.equals(selected.getQrCode()) && !qrCode.isEmpty()) {
+            if (!updateQrCode()) {
                 return "";
             }
         }
-        
+
         this.save();
         assetDepreciationService.saveAssetDerpeciation(selected);
         if (resultStatus) {
@@ -359,18 +367,18 @@ public class AssetInfoController extends JpaCRUDController<AssetInfo> {
     public String getListPageLink() {
         return "List?faces-redirect=true" + (this.isTerminate() ? "&terminate=true" : "");
     }
-    
-  public String setValidButton(){
-	  if(terminate){
-		  this.selected.setIsValid(true);
-		  this.selected.setTerminateDate(null);
-	  }else{
-		  this.selected.setIsValid(false);
-		  this.selected.setTerminateDate(new Date());
-	  }
-	  update();
-	  return "List?faces-redirect=true" + (terminate ? "&terminate=true" : "");
-  }
+
+    public String setValidButton() {
+        if (terminate) {
+            this.selected.setIsValid(true);
+            this.selected.setTerminateDate(null);
+        } else {
+            this.selected.setIsValid(false);
+            this.selected.setTerminateDate(new Date());
+        }
+        update();
+        return "List?faces-redirect=true" + (terminate ? "&terminate=true" : "");
+    }
 
     public UserAccount getOwner() {
         return owner;
@@ -421,21 +429,43 @@ public class AssetInfoController extends JpaCRUDController<AssetInfo> {
 
     public void handleFileUpload(FileUploadEvent event) {
 
-        String type = event.getComponent().getId();
-        type = type.substring(type.indexOf("type") + 4);
-        AssetFileAttachment attach = new AssetFileAttachment();
-        String fileName = fileService.getFileName(event.getFile());
-        attach.setName(fileName);
-        attach.setFileType(type);
-        attach.setSiteId(UserContextService.getCurrentUserAccount().getSiteId());
-        attach.setAssetId(selected.getId());
-        attach.setHospitalId(selected.getHospitalId());
-        Integer uploadFileId = fileService.uploadFile(event.getFile());
-        if (uploadFileId > 0) {
-            attach.setFileId(uploadFileId);
-            WebUtil.addSuccessMessage(fileName + WebUtil.getMessage("SuccessUploaded"));
+        V2_BlobObject blobObject = blobService.uploadFile(event);
+        if (null != blobObject) {
+            String type = event.getComponent().getId();
+            type = type.substring(type.indexOf("type") + 4);
+            AssetFileAttachment attach = new AssetFileAttachment();
+            attach.setName(blobObject.getObjectName());
+            attach.setFileType(type);
+            attach.setSiteId(UserContextService.getCurrentUserAccount().getSiteId());
+            attach.setAssetId(selected.getId());
+            attach.setHospitalId(selected.getHospitalId());
+            attach.setFileUrl(blobObject.getObjectStorageId());
             attachements.add(attach);
+            blobObject.setBoId(selected.getId());
+            blobObject.setBoType(V2_BlobObject.BO_TYPE_AssetInfo);
+            blobObject.setBoSubType(type);
+            blobObject.setBoUuid(selected.getUid());
+            blobDao.save(blobObject);
+            WebUtil.addSuccessMessage(blobObject.getObjectName() + WebUtil.getMessage("SuccessUploaded"));
+        } else {
+            WebUtil.addErrorMessage("fail to upload file");
         }
+//
+//        String type = event.getComponent().getId();
+//        type = type.substring(type.indexOf("type") + 4);
+//        AssetFileAttachment attach = new AssetFileAttachment();
+//        String fileName = fileService.getFileName(event.getFile());
+//        attach.setName(fileName);
+//        attach.setFileType(type);
+//        attach.setSiteId(UserContextService.getCurrentUserAccount().getSiteId());
+//        attach.setAssetId(selected.getId());
+//        attach.setHospitalId(selected.getHospitalId());
+//        Integer uploadFileId = fileService.uploadFile(event.getFile());
+//        if (uploadFileId > 0) {
+//            attach.setFileId(uploadFileId);
+//            WebUtil.addSuccessMessage(fileName + WebUtil.getMessage("SuccessUploaded"));
+//            attachements.add(attach);
+//        }
 
     }
 
@@ -467,12 +497,11 @@ public class AssetInfoController extends JpaCRUDController<AssetInfo> {
         attachements.clear();
     }
 
-    public void removeAttachment(Integer attachid) {
+    public void removeAttachment(String  objectId) {
         List<AssetFileAttachment> tempList = new ArrayList();
         for (AssetFileAttachment item : attachements) {
-            if (attachid.equals(item.getFileId())) {
-                fileService.deleteAttachment(item.getFileId());
-                if (item.getId() != null) {
+            if (objectId.equals(item.getFileUrl())) {
+                if (blobService.deleteBlobFileByStorageId(objectId)) {
                     attachDao.delete(item);
                 }
             } else {
@@ -614,9 +643,8 @@ public class AssetInfoController extends JpaCRUDController<AssetInfo> {
             filterWarrantyDate = null;
         }
     }
-    
-    
-    public void deleteAsset(AssetInfo asset){
+
+    public void deleteAsset(AssetInfo asset) {
         asset.setIsDeleted(true);
         asset.setIsValid(false);
         dao.save(asset);
@@ -702,52 +730,42 @@ public class AssetInfoController extends JpaCRUDController<AssetInfo> {
     public void setQrCode(String qrCode) {
         this.qrCode = qrCode;
     }
-    
-    public String getOrgName(Integer orgId){
-    	OrgInfo org = orgDao.findById(orgId);
-    	if(org != null){
-    		return org.getName();
-    	}
-    	return null;
-    }
-    
-    public String getAssetDetailTitle(){
-    	return terminate ? WebUtil.getMessage("TerminateAssetInfoDetail"):WebUtil.getMessage("AssetInfoDetail");
-    }
-    
-    public String getAssetEditTitle(){
-    	return terminate ? WebUtil.getMessage("TerminateAssetInfo"):WebUtil.getMessage("AssetInfo");
-    }
-    
-    public String getAssetListTitle(){
-    	return terminate ? WebUtil.getMessage("TerminateAssetInfo"):WebUtil.getMessage("AssetInfo");
-    }
-    
-    public String getButtonName(){
-    	return terminate ? WebUtil.getMessage("ActiveAsset"):WebUtil.getMessage("InactiveAsset");
+
+    public String getOrgName(Integer orgId) {
+        OrgInfo org = orgDao.findById(orgId);
+        if (org != null) {
+            return org.getName();
+        }
+        return null;
     }
 
-    public void onAssetGroupChange(){
+    public String getAssetDetailTitle() {
+        return terminate ? WebUtil.getMessage("TerminateAssetInfoDetail") : WebUtil.getMessage("AssetInfoDetail");
+    }
+
+    public String getAssetEditTitle() {
+        return terminate ? WebUtil.getMessage("TerminateAssetInfo") : WebUtil.getMessage("AssetInfo");
+    }
+
+    public String getAssetListTitle() {
+        return terminate ? WebUtil.getMessage("TerminateAssetInfo") : WebUtil.getMessage("AssetInfo");
+    }
+
+    public String getButtonName() {
+        return terminate ? WebUtil.getMessage("ActiveAsset") : WebUtil.getMessage("InactiveAsset");
+    }
+
+    public void onAssetGroupChange() {
 
         List<SearchFilter> assetFilters = new ArrayList<>();
-        if(this.selected.getAssetGroup() != null){
+        if (this.selected.getAssetGroup() != null) {
             assetFilters.add(new SearchFilter("assetGroup", SearchFilter.Operator.EQ, this.selected.getAssetGroup()));
 
             parentAssetList = dao.findBySearchFilter(assetFilters);
-        }else{
+        } else {
             parentAssetList = new ArrayList<>();
         }
 
-    }
-
-    public void onFunctionGroupChange(){
-        Integer functionGroupId = this.selected.getFunctionGroup();
-        if(functionGroupId != null){
-            I18nMessage functionGroup = i18nDao.getByMsgTypeAndMsgKey("assetFunctionType",functionGroupId.toString());
-            if(functionGroup != null){
-                code68List = i18nDao.getByMsgType(functionGroup.getMsgKey());
-            }
-        }
     }
 
     @Override
@@ -755,15 +773,13 @@ public class AssetInfoController extends JpaCRUDController<AssetInfo> {
         super.prepareEdit();
 
         List<SearchFilter> assetFilters = new ArrayList<>();
-        if(this.selected.getAssetGroup() != null){
+        if (this.selected.getAssetGroup() != null) {
             assetFilters.add(new SearchFilter("assetGroup", SearchFilter.Operator.EQ, this.selected.getAssetGroup()));
 
             parentAssetList = dao.findBySearchFilter(assetFilters);
-        }else{
+        } else {
             parentAssetList = new ArrayList<>();
         }
-
-        this.onFunctionGroupChange();
     }
 
     public List<AssetInfo> getParentAssetList() {
@@ -774,11 +790,4 @@ public class AssetInfoController extends JpaCRUDController<AssetInfo> {
         this.parentAssetList = parentAssetList;
     }
 
-    public List<I18nMessage> getCode68List() {
-        return code68List;
-    }
-
-    public void setCode68List(List<I18nMessage> code68List) {
-        this.code68List = code68List;
-    }
 }

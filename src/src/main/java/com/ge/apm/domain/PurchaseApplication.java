@@ -1,8 +1,10 @@
 package com.ge.apm.domain;
 
 import com.ge.apm.service.utils.TimeUtils;
+import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.Date;
 
@@ -11,15 +13,17 @@ import java.util.Date;
  * @author 121601104
  */
 @Entity
-@Table(name = "account_application")
+@Table(name = "purchase_application")
 public class PurchaseApplication implements Serializable {
 
     private static final long serialVersionUID = 1L;
+
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Basic(optional = false)
-    @Column(name = "id")
-    private Integer id;
+    @GeneratedValue(generator = "uuid")
+    @GenericGenerator(name = "uuid", strategy = "uuid")
+    @Column(columnDefinition = "CHAR(32)")
+    private String id;
+
     @Basic(optional = false)
     @Column(name = "apply_clinical")
     private String applyClinical;
@@ -141,7 +145,11 @@ private String infoSign;
     @Column(name = "leader_advice")
     private String leaderAdvice;
 
+    @Column(name = "site_id")
+    private Integer siteId;
 
+    @Column(name = "hospital_id")
+    private Integer hospitalId;
 
 
 
@@ -200,11 +208,11 @@ private String infoSign;
         this.leaderSignDate = leaderSignDate;
     }
 
-    public Integer getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -427,5 +435,21 @@ private String infoSign;
 
     public void setLeaderSign(String leaderSign) {
         this.leaderSign = leaderSign;
+    }
+
+    public Integer getSiteId() {
+        return siteId;
+    }
+
+    public void setSiteId(Integer siteId) {
+        this.siteId = siteId;
+    }
+
+    public Integer getHospitalId() {
+        return hospitalId;
+    }
+
+    public void setHospitalId(Integer hospitalId) {
+        this.hospitalId = hospitalId;
     }
 }
