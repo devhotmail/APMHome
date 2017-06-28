@@ -9,6 +9,7 @@ import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 import javax.persistence.Basic;
 import javax.persistence.Cacheable;
 import javax.persistence.CascadeType;
@@ -21,6 +22,7 @@ import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
+import javax.persistence.PrePersist;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -70,9 +72,6 @@ public class UserAccount implements Serializable {
     @Column(name = "password")
     private String password;
     @Pattern(regexp="^$|^[a-zA-Z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-zA-Z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?\\.)+[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?", message="Invalid email")//if the field contains email address consider using this annotation to enforce field validation
-    @Basic(optional = false)
-    @NotNull
-    @Size(min = 1, max = 32)
     @Column(name = "email")
     private String email;
     @Size(max = 16)
@@ -145,12 +144,89 @@ public class UserAccount implements Serializable {
     @NotNull
     private Integer orgInfoId;
 
+    @Column(name = "uid")
+    @Size(max=32)
+    private String uid;
+
+    @Column(name = "tenant_uid")
+    @Size(max=32)
+    private String tenantUID;
+
+    @Column(name = "institution_uid")
+    @Size(max=32)
+    private String institutionUID;
+
+    @Column(name = "hospital_uid")
+    @Size(max=32)
+    private String hospitalUID;
+
+    @Column(name = "site_uid")
+    @Size(max=32)
+    private String siteUID;
+    
+    @Column(name = "org_level")
+    private Integer orgLevel;
+
+    @PrePersist
+    public void initializeUid() {
+        if(uid==null)
+            uid = UUID.randomUUID().toString().replace("-", "");
+    }
+    
     public UserAccount() {
         isSuperAdmin = false;
         isSiteAdmin = false;
         isLocalAdmin = false;
         isActive = true;
         isOnline = false;
+    }
+
+    public String getUid() {
+        return uid;
+    }
+
+    public void setUid(String uid) {
+        this.uid = uid;
+    }
+
+    public String getTenantUID() {
+        return tenantUID;
+    }
+
+    public void setTenantUID(String tenantUID) {
+        this.tenantUID = tenantUID;
+    }
+
+    public String getInstitutionUID() {
+        return institutionUID;
+    }
+
+    public void setInstitutionUID(String institutionUID) {
+        this.institutionUID = institutionUID;
+    }
+
+    public String getHospitalUID() {
+        return hospitalUID;
+    }
+
+    public void setHospitalUID(String hospitalUID) {
+        this.hospitalUID = hospitalUID;
+    }
+
+    public String getSiteUID() {
+        return siteUID;
+    }
+
+    public void setSiteUID(String siteUID) {
+        this.siteUID = siteUID;
+    }
+
+    public Integer getOrgLevel() {
+        return orgLevel;
+    }
+
+    public void setOrgLevel(Integer orgLevel) {
+        this.orgLevel = orgLevel;
     }
 
     public Integer getId() {

@@ -20,7 +20,7 @@ public interface OrgInfoRepository extends GenericRepository<OrgInfo> {
     public List<OrgInfo> getHospitalBySiteId(int siteId);
 
     //@QueryHints({ @QueryHint(name = "org.hibernate.cacheable", value ="true") })
-    @Query("select t from OrgInfo t where t.siteId=?1")
+    @Query("select t from OrgInfo t where t.siteId=?1 order by t.orgLevel, t.parentOrg")
     public List<OrgInfo> getFullOrgListBySiteId(int siteId);
     
     public Page<OrgInfo> getByHospitalId(Pageable pageRequest, int hospitalId);

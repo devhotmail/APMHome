@@ -52,7 +52,7 @@
                         <p:ajax event="filter" listener="#{userAccountController.onFilter}" update="createButton editButton viewButton deleteButton roleButton resetPassButton"/>
 
                         <p:column headerText="#{msg.orgId}" sortBy="#{item.orgInfoId}">
-                            <h:outputText value="#{userAccountController.getOrgName(item.orgInfoId, '/')}"/>
+                            <h:outputText value="#{userAccountController.getOrgFullName(item.orgInfoId)}"/>
                         </p:column>
                         <p:column headerText="#{msg.login_name}" sortBy="#{item.loginName}">
                             <h:outputText value="#{item.loginName}"/>

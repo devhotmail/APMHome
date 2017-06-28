@@ -483,7 +483,7 @@ INSERT INTO i18n_message(id,msg_type,msg_key,value_zh, value_en, value_tw, site_
 INSERT INTO i18n_message(id,msg_type,msg_key,value_zh, value_en, value_tw, site_id)  VALUES ('1628', 'label', 'AssetInfoDetail', '设备详细信息', 'Asset Detail Info', null, '-1');
 INSERT INTO i18n_message(id,msg_type,msg_key,value_zh, value_en, value_tw, site_id)  VALUES ('1629', 'label', 'AssetInventoryUnmatchedList', '与实物不符的设备列表', 'Asset Inventory Unmatched List', null, '-1');
 INSERT INTO i18n_message(id,msg_type,msg_key,value_zh, value_en, value_tw, site_id)  VALUES ('1630', 'label', 'AssetInventoryDate', '设备盘点日期', 'Asset Inventory Date', null, '-1');
-INSERT INTO i18n_message(id,msg_type,msg_key,value_zh, value_en, value_tw, site_id)  VALUES ('1631', 'label', 'DefaultHospitalName', '总部/院区', 'Hospital Name', null, '-1');
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh, value_en, value_tw, site_id)  VALUES ('1631', 'label', 'DefaultHospitalName', '总部', 'Hospital Name', null, '-1');
 INSERT INTO i18n_message(id,msg_type,msg_key,value_zh, value_en, value_tw, site_id)  VALUES ('1632', 'label', 'ForeighKeyErrorWithSiteId', '该租户不可删除: 请先删除其下面的组织机构信息', null, null, '-1');
 INSERT INTO i18n_message(id,msg_type,msg_key,value_zh, value_en, value_tw, site_id)  VALUES ('1633', 'label', 'ForeighKeyErrorWithOrgId', '该组织机构不可删除: 请先删除其下面的组织机构或用户信息', null, null, '-1');
 INSERT INTO i18n_message(id,msg_type,msg_key,value_zh, value_en, value_tw, site_id)  VALUES ('1634', 'label', 'TerminateAssetInfoDetail', '报废资产信息', 'terminate Asset Detail Info', null, '-1');
@@ -513,8 +513,9 @@ INSERT INTO i18n_message(id,msg_type,msg_key,value_zh, value_en, value_tw, site_
 INSERT INTO i18n_message(id,msg_type,msg_key,value_zh, value_en, value_tw, site_id)  VALUES ('3011', 'message', 'shouldEarly', '{0}应该早于{1}!', '{0} should be earlier than {1}!', null, '-1');
 INSERT INTO i18n_message(id,msg_type,msg_key,value_zh, value_en, value_tw, site_id)  VALUES ('3012', 'message', 'shouldLate', '{0}应该晚于{1}!', '{0} should be later than {1}!', null, '-1');
 INSERT INTO i18n_message(id,msg_type,msg_key,value_zh, value_en, value_tw, site_id)  VALUES ('3013', 'message', 'todayDate', '当前日期', ' current date', null, '-1');
-INSERT INTO i18n_message(id,msg_type,msg_key,value_zh, value_en, value_tw, site_id)  VALUES ('3014', 'message', 'Hospital', '院区', 'Hospital', null, '-1');
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh, value_en, value_tw, site_id)  VALUES ('3014', 'message', 'Hospital', '医院', 'Hospital', null, '-1');
 INSERT INTO i18n_message(id,msg_type,msg_key,value_zh, value_en, value_tw, site_id)  VALUES ('3015', 'message', 'Department', '科室', 'Department', null, '-1');
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh, value_en, value_tw, site_id)  VALUES ('3016', 'message', 'Site', '院区', 'Department', null, '-1');
 INSERT INTO i18n_message(id,msg_type,msg_key,value_zh, value_en, value_tw, site_id)  VALUES ('3017', 'message', 'invalidSizeMessage', '文件内容不能大于', 'File size must less than ', null, '-1');
 INSERT INTO i18n_message(id,msg_type,msg_key,value_zh, value_en, value_tw, site_id)  VALUES ('3018', 'message', 'remainingCharacters', '还有{0}字', '{0} characters remaining.', null, '-1');
 INSERT INTO i18n_message(id,msg_type,msg_key,value_zh, value_en, value_tw, site_id)  VALUES ('3019', 'message', 'fileTransFail', '文件传输失败', 'File transform Failure', null, '-1');
@@ -541,6 +542,8 @@ INSERT INTO i18n_message(id,msg_type,msg_key,value_zh, value_en, value_tw, site_
 INSERT INTO i18n_message(id,msg_type,msg_key,value_zh, value_en, value_tw, site_id)  VALUES ('3040', 'message', 'WrongHospitalQRCode', '非本院二维码!', 'Not for this Hospital!', null, '-1');
 INSERT INTO i18n_message(id,msg_type,msg_key,value_zh, value_en, value_tw, site_id)  VALUES ('3041', 'message', 'AlreadyUsingQrCode', '已经使用中二维码!', 'Already using Code!', null, '-1');
 INSERT INTO i18n_message(id,msg_type,msg_key,value_zh, value_en, value_tw, site_id)  VALUES ('3042', 'message', 'DeleteAssetConformationMsg', '确认删除设备?', 'Confirm to remove this asset?', null, '-1');
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh, value_en, value_tw, site_id)  VALUES ('3043', 'message', 'Institution', '集团', 'Institution', null, '-1');
+
 INSERT INTO i18n_message(id,msg_type,msg_key,value_zh, value_en, value_tw, site_id)  VALUES ('5000', 'label', 'deviceScanhd', '设备扫描量（次）', 'Scan #', null, '-1');
 INSERT INTO i18n_message(id,msg_type,msg_key,value_zh, value_en, value_tw, site_id)  VALUES ('5001', 'label', 'deviceScanlg', '扫描次数', 'Scan', null, '-1');
 INSERT INTO i18n_message(id,msg_type,msg_key,value_zh, value_en, value_tw, site_id)  VALUES ('5002', 'label', 'deviceExpohd', '设备曝光量（次）', 'Exposure #', null, '-1');
@@ -622,6 +625,12 @@ INSERT INTO i18n_message(id,msg_type,msg_key,value_zh, value_en, value_tw, site_
 INSERT INTO i18n_message(id,msg_type,msg_key,value_zh, value_en, value_tw, site_id)  VALUES ('5081', 'importStatus', 'Failure', '添加失败', 'Fail to add', null, '-1');
 INSERT INTO i18n_message(id,msg_type,msg_key,value_zh, value_en, value_tw, site_id)  VALUES ('5082', 'label', 'InvalidParameter', '错误的参数', 'Fail to add', null, '-1');
 INSERT INTO i18n_message(id,msg_type,msg_key,value_zh, value_en, value_tw, site_id)  VALUES ('5083', 'label', 'ParsingImportFileError', '文件不能解析,请检查模版/数据后重新上传', 'Fail to parse file,please check the tamplate or data!', null, '-1');
+
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh, value_en, value_tw, site_id)  VALUES ('5100', 'contractType', '1', '全保', '全保', null, '-1');
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh, value_en, value_tw, site_id)  VALUES ('5101', 'contractType', '2', '人工保', '全保', null, '-1');
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh, value_en, value_tw, site_id)  VALUES ('5102', 'contractType', '3', '其他', '其他', null, '-1');
+
+
 INSERT INTO i18n_message(id,msg_type,msg_key,value_zh, value_en, value_tw, site_id)  VALUES ('5401', 'label', 'assetHead_status', '设备状态', 'Device Status', null, '-1');
 INSERT INTO i18n_message(id,msg_type,msg_key,value_zh, value_en, value_tw, site_id)  VALUES ('5402', 'label', 'assetHead_tile_maintenance', '维修中', 'In Repairing', null, '-1');
 INSERT INTO i18n_message(id,msg_type,msg_key,value_zh, value_en, value_tw, site_id)  VALUES ('5403', 'label', 'assetHead_tile_off', '停机中', 'Down(Out of Service)', null, '-1');

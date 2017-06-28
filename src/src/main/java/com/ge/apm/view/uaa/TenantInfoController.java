@@ -77,20 +77,22 @@ public class TenantInfoController extends JpaCRUDController<TenantInfo> {
 
         // and create an default org for this site
         String orgUID = UUID.randomUUID().toString().replace("-", "");
-        OrgInfo hospital = new OrgInfo();
-        hospital.setSiteId(site.getId());
+        OrgInfo org = new OrgInfo();
+        org.setSiteId(site.getId());
 
         //for new UUIDs
-        hospital.setUid(orgUID);
-        hospital.setTenantUID(selected.getUid());
-        hospital.setInstitutionUID(orgUID);
-        hospital.setHospitalUID(orgUID);
-        hospital.setSiteUID(orgUID);
+        org.setOrgLevel(1);
+        org.setOrgType(1);
+        org.setUid(orgUID);
+        org.setTenantUID(selected.getUid());
+        org.setInstitutionUID(orgUID);
+        org.setHospitalUID(orgUID);
+        org.setSiteUID(orgUID);
         
-        hospital.setName(WebUtil.getMessage("DefaultHospitalName"));
+        org.setName(WebUtil.getMessage("DefaultHospitalName"));
         
         OrgInfoRepository orgDao = WebUtil.getBean(OrgInfoRepository.class);
-        orgDao.save(hospital);
+        orgDao.save(org);
     }
 
     @Override

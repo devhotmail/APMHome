@@ -45,6 +45,12 @@
                                         <p:outputLabel value="#{orgInfoController.selected.parentOrg}" rendered="#{orgInfoController.selected.parentOrg ne null}"/>
                                         <p:outputLabel value="N/A" rendered="#{orgInfoController.selected.parentOrg eq null}"/>
                                     </h:panelGroup>
+
+                                    <h:panelGroup>
+                                        <label class="label">类型</label>
+                                        <p:outputLabel value="#{orgInfoController.selected.orgTypeName}"/>
+                                    </h:panelGroup>
+                                    
                                     <h:panelGroup>
                                         <label class="label">#{msg.name}*</label>
                                         <p:inputText id="name" value="#{orgInfoController.selected.name}"  required="true" requiredMessage="#{msg.name} #{msg.ValidationRequire}"/>

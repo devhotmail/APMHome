@@ -10,15 +10,30 @@
 
         <p:dialog id="UserAccountEditDlg" widgetVar="UserAccountEditDialog" modal="true" resizable="true" draggable="true"  appendTo="@(body)" header="#{userAccountController.CRUDActionName} #{msg.UserAccount}" >
             <h:form id="UserAccountEditForm">
-                <h:panelGroup id="display">
-                    <p:panelGrid columns="2" layout="grid" styleClass="ui-panelgrid-blank form-group" rendered="#{userAccountController.selected != null}">
+                <h:panelGroup id="display" rendered="#{userAccountController.selected ne null}">
+                    
+                    <p:panelGrid columns="3" layout="grid" styleClass="ui-panelgrid-blank form-group" rendered="#{userAccountController.selected != null}">
+                    </p:panelGrid>
+                    
+                    <p:panelGrid columns="2" layout="grid" styleClass="ui-panelgrid-blank form-group" rendered="#{userAccountController.selected != null}" style="min-width: 500px;">
                         <h:panelGroup>
-                            <label class="label">#{msg.orgId}*</label>
-                            <p:selectOneMenu value="#{userAccountController.selected.orgInfoId}" required="true" requiredMessage="#{msg.orgId} #{msg.ValidationRequire}">
-                                <f:selectItems value="#{userAccountController.orgList}" var="org" itemLabel="#{userAccountController.getOrgName(org.id, '/')}" itemValue="#{org.id}"/>
-                            </p:selectOneMenu>
+                            <label class="label">#{msg.orgId}</label>
+                            <p:inputText id="selectedUserOrgName" value="#{userAccountController.selectedUserOrgName}" readonly="true" required="true" requiredMessage="#{msg.orgId} #{msg.ValidationRequire}"/>
+                            <p:commandButton id="btnOrg4User" process="@this" icon="fa fa-angle-down" style="width: 22px;height: 22px; padding-right: 0px;float: next;"/>
+                            <p:overlayPanel id="panelOrg4User" widgetVar="varPanelOrg4User" for="btnOrg4User" hideEffect="fade" dynamic="false" class="ui-selectonemenu-panel" style="width:300px;" modal="false">
+                                <p:scrollPanel style="height:300px;border: 0" mode="native">
+                                    <p:tree id="orgTree4User" class="tree" style="width:98%;border:0;" value="#{userAccountController.orgTree}" selection="#{userAccountController.selectedNode}" var="node" selectionMode="single">
+                                        <p:ajax process="@this" event="select" update=":UserAccountEditForm:selectedUserOrgName" listener="#{userAccountController.onSelectOrgForUser}" oncomplete="PF('varPanelOrg4User').hide();"/>
+                                        <p:ajax process="@this" event="expand"/>
+                                        <p:ajax process="@this" event="collapse"/>
+
+                                        <p:treeNode type="org">
+                                            <h:outputText value="#{node}"/>
+                                        </p:treeNode>
+                                    </p:tree>
+                                </p:scrollPanel>
+                            </p:overlayPanel>
                         </h:panelGroup>
-                        <p:spacer/>
                         <h:panelGroup>
                             <label class="label">#{msg.login_name}*</label>
                             <p:inputText id="loginName" value="#{userAccountController.selected.loginName}" required="true" requiredMessage="#{msg.login_name} #{msg.ValidationRequire}"/>
@@ -28,8 +43,8 @@
                             <p:inputText id="name" value="#{userAccountController.selected.name}"  required="true" requiredMessage="#{msg.userName} #{msg.ValidationRequire}"/>
                         </h:panelGroup>
                         <h:panelGroup>
-                            <label class="label">#{msg.email}*</label>
-                            <p:inputText id="email" value="#{userAccountController.selected.email}"  required="true" requiredMessage="#{msg.email} #{msg.ValidationRequire}" validatorMessage="#{msg.invalidEmail}"/>
+                            <label class="label">#{msg.email}</label>
+                            <p:inputText id="email" value="#{userAccountController.selected.email}" />
                         </h:panelGroup>
                         <h:panelGroup>
                             <label class="label">#{msg.telephone}</label>

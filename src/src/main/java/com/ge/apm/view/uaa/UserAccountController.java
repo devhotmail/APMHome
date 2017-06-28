@@ -78,16 +78,34 @@ public class UserAccountController extends JpaCRUDController<UserAccount> {
     public List<OrgInfo> getOrgList() {
         return orgList;
     }
-    public String getOrgName(int orgId, String hospitalNameDelimiter){
-        for(OrgInfo org: orgList){
-            if(orgId==org.getId()){
-                if(org.getId().equals(org.getHospitalId()))
-                    return org.getName();
-                else
-                    return org.getHospital()+hospitalNameDelimiter+org.getName();
+
+    public String getOrgFullName(Integer orgId){
+        OrgInfo org = null;
+        for(OrgInfo item: orgList){
+            if(item.getId().equals(orgId)){
+                org = item;
+                break;
             }
         }
-        return "";
+        if(org==null) return "";
+        
+        String name = org.getName();
+        while(org.getParentOrg()!=null){
+            org = org.getParentOrg();
+            name = org.getName()+"/"+name;
+        }
+        
+        return name;
+    }
+     
+    public String getOrgFullName(OrgInfo org){
+        String name = org.getName();
+        while(org.getParentOrg()!=null){
+            org = org.getParentOrg();
+            name = org.getName()+"/"+name;
+        }
+        
+        return name;
     }
     
     public TreeNode buildOrgTree(int siteId, Integer selectedOrgId){
@@ -125,7 +143,7 @@ public class UserAccountController extends JpaCRUDController<UserAccount> {
 
     @Override
     protected Page<UserAccount> loadData(PageRequest pageRequest) {
-        this.selected = null;
+        //this.selected = null;
         if ( selectedOrg == null) {
             return dao.getBySiteId(pageRequest, this.siteId);
         } else {
@@ -202,9 +220,10 @@ public class UserAccountController extends JpaCRUDController<UserAccount> {
     }
 
     public void onSelectTreeNode(NodeSelectEvent event){
+        selected = null;
+
         TreeNode node = event.getTreeNode();
         //node.setExpanded(!node.isExpanded());
-
         selectedOrg = (OrgInfo)node.getData();
     }
 
@@ -232,6 +251,8 @@ public class UserAccountController extends JpaCRUDController<UserAccount> {
     
     @Override
     public void onBeforeSave(UserAccount user){
+        user.setOrgInfoId(selectedUserOrgId);
+        
         //remove space charactors.
         String loginName = user.getLoginName();
         if(loginName==null) return;
@@ -239,19 +260,26 @@ public class UserAccountController extends JpaCRUDController<UserAccount> {
         loginName = loginName.replace(" ", "");
         user.setLoginName(loginName);
         
+        OrgInfo org = selectedOrg;
         if(selected.getOrgInfoId()!=null){
-            for(OrgInfo org: orgList){
-                if(org.getId().equals(selected.getOrgInfoId())){
-                    selected.setHospitalId(org.getHospitalId());
-                    selected.setSiteId(org.getSiteId());
+            for(OrgInfo orgItem: orgList){
+                if(orgItem.getId().equals(selected.getOrgInfoId())){
+                    org = orgItem;
+                    break;
                 }                    
             }
         }
-        else{
-            selected.setSiteId(selectedOrg.getSiteId());
-            selected.setHospitalId(selectedOrg.getHospitalId());
-            selected.setOrgInfoId(selectedOrg.getId());
-        }
+        
+        selected.setOrgInfoId(org.getId());
+
+        selected.setSiteId(org.getSiteId());
+        selected.setHospitalId(org.getHospitalId());
+        
+        selected.setTenantUID(org.getTenantUID());
+        selected.setInstitutionUID(org.getInstitutionUID());
+        selected.setHospitalUID(org.getHospitalUID());
+        selected.setSiteUID(org.getSiteUID());
+        selected.setOrgLevel(org.getOrgLevel());
     }
     
     public void resetPassword() {
@@ -263,5 +291,27 @@ public class UserAccountController extends JpaCRUDController<UserAccount> {
         }
         dao.save(selected);
     }
+
+    @Override
+    public void setSelected(UserAccount selectedUser) {
+        super.setSelected(selectedUser);
+        
+        selectedUserOrgId = selectedUser.getOrgInfoId();
+        selectedUserOrgName = getOrgFullName(selectedUserOrgId);
+    }
+
+    private String selectedUserOrgName;
+    private Integer selectedUserOrgId;
+
+    public String getSelectedUserOrgName() {
+        return selectedUserOrgName;
+    }
     
+    public void onSelectOrgForUser(NodeSelectEvent event){
+        TreeNode node = event.getTreeNode();
+        OrgInfo userOrg = (OrgInfo)node.getData();
+        selectedUserOrgId = userOrg.getId();
+        selectedUserOrgName = getOrgFullName(selectedUserOrgId);
+    }
+
 }

@@ -22,6 +22,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
+import webapp.framework.web.WebUtil;
 
 /**
  *
@@ -59,9 +60,16 @@ public class OrgInfo implements Serializable {
     @Column(name = "site_uid")
     @Size(max=32)
     private String siteUID;
+
+    @Column(name = "parent_uid")
+    @Size(max=32)
+    private String parentUID;
     
     @Column(name = "org_level")
     private Integer orgLevel;
+
+    @Column(name = "org_type")
+    private Integer orgType;
     
     @Basic(optional = false)
     @NotNull
@@ -124,6 +132,14 @@ public class OrgInfo implements Serializable {
 
     public void setSiteUID(String siteUID) {
         this.siteUID = siteUID;
+    }
+
+    public String getParentUID() {
+        return parentUID;
+    }
+
+    public void setParentUID(String parentUID) {
+        this.parentUID = parentUID;
     }
 
     public Integer getOrgLevel() {
@@ -206,6 +222,14 @@ public class OrgInfo implements Serializable {
         this.siteId = siteId;
     }
 
+    public Integer getOrgType() {
+        return orgType;
+    }
+
+    public void setOrgType(Integer orgType) {
+        this.orgType = orgType;
+    }
+
     @Override
     public int hashCode() {
         int hash = 0;
@@ -229,6 +253,16 @@ public class OrgInfo implements Serializable {
     @Override
     public String toString() {
         return name;
+    }
+
+    public String getOrgTypeName(){
+        if(this.orgType == null)  return "";
+        
+        if(this.orgType.equals(1))  return WebUtil.getMessage("Institution");
+        else if(this.orgType.equals(2))  return WebUtil.getMessage("Hospital");
+        else if(this.orgType.equals(3))  return WebUtil.getMessage("Site");
+        else if(this.orgType.equals(4))  return WebUtil.getMessage("Department");
+        else return "";
     }
     
 }

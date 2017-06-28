@@ -20,6 +20,7 @@ import org.primefaces.model.TreeNode;
 import org.springframework.dao.DataIntegrityViolationException;
 import webapp.framework.web.WebUtil;
 import com.ge.apm.dao.TenantInfoRepository;
+import java.util.UUID;
 
 @ManagedBean
 @ViewScoped
@@ -27,6 +28,8 @@ public class OrgInfoController extends JpaCRUDController<OrgInfo> {
 
     OrgInfoRepository dao = null;
     UaaService uaaService;
+
+    private TenantInfo selectedTenant;
 
     @Override
     protected void init() {
@@ -36,8 +39,7 @@ public class OrgInfoController extends JpaCRUDController<OrgInfo> {
         uaaService = WebUtil.getBean(UaaService.class);
         
         UserAccount loginUser = UserContextService.getCurrentUserAccount();
-        setSiteId(loginUser.getSiteId());
-        setHospitalId(loginUser.getHospitalId());
+        setTenantId(loginUser.getSiteId());
         buildOrdTree();
     }
 
@@ -48,52 +50,32 @@ public class OrgInfoController extends JpaCRUDController<OrgInfo> {
 
     @Override
     protected Page<OrgInfo> loadData(PageRequest pageRequest) {
-        selected = null;
-        return dao.getBySiteId(pageRequest, hospitalId);
+        return dao.getBySiteId(pageRequest, tenantId);
     }
 
-    public List<OrgInfo> getHospitalDeptList() {
-        return dao.getByHospitalId(UserContextService.getCurrentUserAccount().getHospitalId());
-    }
+    private int tenantId;
 
-    private int siteId;
-    private int hospitalId;
-    public int getSiteId() {
-        return siteId;
+    public int getTenantId() {
+        return tenantId;
     }
-    public void setSiteId(int siteId) {
-        this.siteId = siteId;
+    public void setTenantId(int tenantId) {
+        this.tenantId = tenantId;
         TenantInfoRepository siteDao = WebUtil.getBean(TenantInfoRepository.class);
-        selectedSite = siteDao.findById(siteId);
+        selectedTenant = siteDao.findById(tenantId);
         
         this.selected = null;
         buildOrdTree();
     }
-    
-    private TenantInfo selectedSite;
 
-    public TenantInfo getSelectedSite() {
-        return selectedSite;
-    }
-
-    public void setSelectedSite(TenantInfo selectedSite) {
-        this.selectedSite = selectedSite;
-    }
-    
-    public int getHospitalId() {
-        return hospitalId;
-    }
-    public void setHospitalId(int hospitalId) {
-        this.hospitalId = hospitalId;
-        buildOrdTree();        
+    public TenantInfo getSelectedTenant() {
+        return selectedTenant;
     }
     
     public void buildOrdTree(){
-        //orgTree = uaaService.getOrgTree(this.hospitalId, true);
         if(selected!=null)
-            orgTree = uaaService.getFullOrgTreeBySiteId(this.siteId, selected.getId());
+            orgTree = uaaService.getFullOrgTreeBySiteId(this.tenantId, selected.getId());
         else
-            orgTree = uaaService.getFullOrgTreeBySiteId(this.siteId, null);
+            orgTree = uaaService.getFullOrgTreeBySiteId(this.tenantId, null);
         
         try{
             this.selectedNode = (TreeNode)orgTree.getData();
@@ -103,7 +85,7 @@ public class OrgInfoController extends JpaCRUDController<OrgInfo> {
     }
 
     public List<OrgInfo> getHospitalListBySiteId(){
-        return uaaService.getHospitalListBySiteId(siteId);
+        return uaaService.getHospitalListBySiteId(tenantId);
     }
     
     private DefaultTreeNode orgTree;
@@ -119,26 +101,86 @@ public class OrgInfoController extends JpaCRUDController<OrgInfo> {
         this.selectedNode = selectedNode;
     }
     
-    public void prepareCreateHospital(){
+    public void prepareCreateInstitution(){
         OrgInfo org = new OrgInfo();
-        org.setSiteId(siteId);
+        org.setSiteId(tenantId);
+
+        //UIDs
+        org.setUid(UUID.randomUUID().toString().replace("-", ""));
+        org.setTenantUID(selectedTenant.getUid());
+       org.setInstitutionUID(org.getUid());
+        org.setHospitalUID(org.getUid());
+        org.setSiteUID(org.getUid());
+        
+        org.setOrgLevel(1);
+        org.setOrgType(1);
+        this.selected = org;
+    }
+
+    public void prepareCreateHospital(){
+        if(selected==null) return;
+        
+        OrgInfo org = new OrgInfo();
+        org.setParentOrg(selected);
+        org.setParentUID(selected.getUid());
+
+        org.setSiteId(selected.getSiteId());
+        org.setHospitalId(selected.getHospitalId());
+
+        //UIDs
+        org.setUid(UUID.randomUUID().toString().replace("-", ""));
+        org.setTenantUID(selectedTenant.getUid());
+        org.setInstitutionUID(selected.getInstitutionUID());
+        org.setHospitalUID(org.getUid());
+        org.setSiteUID(org.getUid());
+        
+        org.setOrgLevel(2);
+        org.setOrgType(2);
+        this.selected = org;
+    }
+        
+    public void prepareCreateSite(){
+        if(selected==null) return;
+        
+        OrgInfo org = new OrgInfo();
+        org.setParentOrg(selected);
+        org.setParentUID(selected.getUid());
+
+        org.setSiteId(selected.getSiteId());
+        org.setHospitalId(selected.getHospitalId());
+
+        //UIDs
+        org.setUid(UUID.randomUUID().toString().replace("-", ""));
+        org.setTenantUID(selectedTenant.getUid());
+        org.setInstitutionUID(selected.getInstitutionUID());
+        org.setHospitalUID(selected.getHospitalUID());
+        org.setSiteUID(org.getUid());
+        
+        org.setOrgLevel(3);
+        org.setOrgType(3);
         this.selected = org;
     }
     
     public void prepareCreateDepartment(){
-        OrgInfo hospital = null;
-        OrgInfo org = this.selected;
-        while( org!=null) {
-            hospital = org;
-            org = org.getParentOrg();
-        }
+        if(selected==null) return;
         
-        OrgInfo newOrg = new OrgInfo();
-        newOrg.setSiteId(siteId);
-        newOrg.setHospitalId(hospitalId);
-        newOrg.setParentOrg(hospital);
+        OrgInfo org = new OrgInfo();
+        org.setParentOrg(selected);
+        org.setParentUID(selected.getUid());
+
+        org.setSiteId(selected.getSiteId());
+        org.setHospitalId(selected.getHospitalId());
+
+        //UIDs
+        org.setUid(UUID.randomUUID().toString().replace("-", ""));
+        org.setTenantUID(selectedTenant.getUid());
+        org.setInstitutionUID(selected.getInstitutionUID());
+        org.setHospitalUID(selected.getHospitalUID());
+        org.setSiteUID(selected.getSiteUID());
         
-        this.selected = newOrg;
+        org.setOrgLevel(selected.getOrgLevel());
+        org.setOrgType(4);
+        this.selected = org;
     }
 
     public void saveSelectedOrg(){
@@ -180,8 +222,6 @@ public class OrgInfoController extends JpaCRUDController<OrgInfo> {
         //node.setExpanded(!node.isExpanded());
         
         selected = (OrgInfo)node.getData();
-        this.siteId = selected.getSiteId();
-        this.hospitalId = selected.getHospitalId();
     }
  
     @Override
@@ -203,4 +243,15 @@ public class OrgInfoController extends JpaCRUDController<OrgInfo> {
                 
         return false;
     }
+    
+    public boolean getIsCreateHospitalDisabled(){
+        return (selected==null) || (selected.getOrgType()==null) || (selected.getOrgType()!=1);
+    }
+    public boolean getIsCreateSiteDisabled(){
+        return (selected==null) || (selected.getOrgType()==null) || (selected.getOrgType()!=2);
+    }
+    public boolean getIsCreateDepartmentDisabled(){
+        return (selected==null) || (selected.getOrgType()==null) || (selected.getOrgType()==4);
+    }
+    
 }

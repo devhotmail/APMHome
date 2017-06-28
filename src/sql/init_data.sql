@@ -25,7 +25,7 @@ INSERT INTO sys_role(id,name,role_desc,home_page) values ('4', 'DeptHead', '科�
 INSERT INTO sys_role(id,name,role_desc,home_page) values ('5', 'ITAdmin', '后台运营管理', '/portal/uaa/userAccount/List.xhtml');
 INSERT INTO sys_role(id,name,role_desc,home_page) values ('6', 'MultiHospital', '多院区管理', '');
 INSERT INTO sys_role(id,name,role_desc,home_page) values ('7', 'ClinicalStaff', '临床科室人员', '/homeAssetStaff.xhtml');
-INSERT INTO sys_role(id,name,role_desc,home_page) values ('8', 'WorkOrderDispatcher', '工单派工人', '/homeAssetStaff.xhtml');
+
 INSERT INTO sys_role(id,name,role_desc,home_page) values ('9', 'Guest', '临时报修帐号', '/homeAssetStaff.xhtml');
 
 

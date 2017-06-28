@@ -266,6 +266,7 @@ public abstract class JpaCRUDController<E> implements Serializable, ServerEventI
         
         Class<E> entityClass = getEntityClass();
         selected = entityClass.newInstance();
+        setSelected(selected);
         
         onBeforeNewObject(selected);
         //return selected;
@@ -285,6 +286,7 @@ public abstract class JpaCRUDController<E> implements Serializable, ServerEventI
     
     public void setSelected(int id) {
         selected = getDAO().findById(id);
+        setSelected(selected);
     }
     
     public void create() {
