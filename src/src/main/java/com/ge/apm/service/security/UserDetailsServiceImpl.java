@@ -102,7 +102,12 @@ public class UserDetailsServiceImpl implements UserDetailsService {
      * @return the account if found
      */
     protected UserAccount obtainAccount(String login) {
-        return accountRepository.getByLoginName(login);
+        UserAccount user = accountRepository.getByLoginName(login);
+        
+        if(!user.getIsActive()) 
+            return null;
+        else
+            return user;
     }
 
     /**

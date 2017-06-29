@@ -98,6 +98,12 @@ INSERT INTO i18n_message VALUES ('95', 'label', 'submitDate', '提交日期', 'S
 INSERT INTO i18n_message VALUES ('96', 'label', 'submitWechatId', '提交人', 'Submit People', null, '-1');
 INSERT INTO i18n_message VALUES ('97', 'label', 'AccountLocked', '帐号被锁定，请24小时后再试!', 'account locked!', null, '-1');
 INSERT INTO i18n_message VALUES ('98', 'label', 'SamePwd', '新老密码不能相同!', 'the new password cannot be the same as the old one', null, '-1');
+INSERT INTO i18n_message VALUES ('99', 'label', 'lockAccount', '锁定帐号', 'Unlock', null, '-1');
+INSERT INTO i18n_message VALUES ('100', 'label', 'lockAccountConfirm', '您确定要锁定此帐号么?', 'Are you sure to unlock this account?', null, '-1');
+INSERT INTO i18n_message VALUES ('101', 'label', 'unlockAccount', '解锁帐号', 'Unlock', null, '-1');
+INSERT INTO i18n_message VALUES ('102', 'label', 'unlockAccountConfirm', '您确定要解锁此帐号么?', 'Are you sure to unlock this account?', null, '-1');
+INSERT INTO i18n_message VALUES ('103', 'label', 'AccountNotActivated', '对不起，此帐号已经被冻结.', 'Sorry this account is not activated.', null, '-1');
+
 INSERT INTO i18n_message VALUES ('200', 'label', 'HomePage', '我的主页', 'Dashboard', null, '-1');
 INSERT INTO i18n_message VALUES ('201', 'label', 'HomePageHospitalHead', '我的主页(院长)', 'Dashboard(Hospital Head)', null, '-1');
 INSERT INTO i18n_message VALUES ('202', 'label', 'HomePageDeptHead', '我的主页(主任)', 'Dashboard(Department Head)', null, '-1');

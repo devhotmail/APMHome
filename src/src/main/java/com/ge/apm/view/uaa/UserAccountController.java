@@ -24,6 +24,7 @@ import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.TreeNode;
 import webapp.framework.web.WebUtil;
 import com.ge.apm.dao.TenantInfoRepository;
+import webapp.framework.util.TimeUtil;
 
 @ManagedBean
 @ViewScoped
@@ -292,6 +293,20 @@ public class UserAccountController extends JpaCRUDController<UserAccount> {
         dao.save(selected);
     }
 
+    public void lockAccount() {
+        selected.setIsActive(false);
+        selected.setIsLocked(true);
+        selected.setLockTime(TimeUtil.timeNow().toDate());
+        dao.save(selected);
+    }
+
+    public void unlockAccount() {
+        selected.setIsActive(true);
+        selected.setIsLocked(false);
+        selected.setPasswordErrorCount(0);
+        dao.save(selected);
+    }
+    
     @Override
     public void setSelected(UserAccount selectedUser) {
         super.setSelected(selectedUser);

@@ -48,8 +48,8 @@
                                  rows="20" emptyMessage="#{msg.noRecordFound}"
                                  rowsPerPageTemplate="10,20,30,90">
 
-                        <p:ajax event="rowSelect" update="createButton editButton viewButton deleteButton roleButton resetPassButton"/>
-                        <p:ajax event="filter" listener="#{userAccountController.onFilter}" update="createButton editButton viewButton deleteButton roleButton resetPassButton"/>
+                        <p:ajax event="rowSelect" update="createButton editButton viewButton deleteButton roleButton resetPassButton lockButton unlockButton"/>
+                        <p:ajax event="filter" listener="#{userAccountController.onFilter}" update="createButton editButton viewButton deleteButton roleButton resetPassButton lockButton unlockButton"/>
 
                         <p:column headerText="#{msg.orgId}" sortBy="#{item.orgInfoId}">
                             <h:outputText value="#{userAccountController.getOrgFullName(item.orgInfoId)}"/>
@@ -69,8 +69,8 @@
                         <p:column rendered="false" headerText="#{msg.isSiteAdmin}" sortBy="#{item.isSiteAdmin}">
                             <h:outputText value="#{item.isSiteAdmin? msg.True2Yes : msg.False2No }"/>
                         </p:column>
-                        <p:column headerText="#{msg.isActive}" sortBy="#{item.isActive}">
-                            <h:outputText value="#{item.isActive? msg.True2Yes : msg.False2No }"/>
+                        <p:column headerText="#{msg.isLocked}" sortBy="#{item.isLocked}">
+                            <h:outputText value="#{item.isLocked? msg.True2Yes : msg.False2No }"/>
                         </p:column>
                         <f:facet name="{Toolbar}">
                             <p:commandButton id="createButton" icon="ui-icon-plus" title="#{msg.Create}" actionListener="#{userAccountController.prepareCreate}" process="@this" update=":UserAccountEditDlg" oncomplete="PF('UserAccountEditDialog').show()"/>
@@ -82,6 +82,12 @@
                             <p:commandButton id="roleButton" icon="ui-icon-people" process="@this" title="#{msg.AssignRole}" actionListener="#{userAccountController.prepareRoleData}" update=":RoleEditDlg" oncomplete="PF('RoleEditDialog').show()" disabled="#{empty userAccountController.selected}"/>
                             <p:commandButton id="resetPassButton" icon="ui-icon-repeat" process="@this" title="#{msg.resetPassword}" actionListener="#{userAccountController.resetPassword}" update="datalist" disabled="#{empty userAccountController.selected}">
                                 <p:confirm header="#{msg.ResetConformation}" message="#{msg.ResetConformationMsg}" icon="ui-icon-alert"/>
+                            </p:commandButton>
+                            <p:commandButton id="lockButton" icon="ui-icon-lock-outline" process="@this" title="#{msg.lockAccount}" actionListener="#{userAccountController.lockAccount}" update="datalist" disabled="#{empty userAccountController.selected}">
+                                <p:confirm header="#{msg.lockAccount}" message="#{msg.lockAccountConfirm}" icon="ui-icon-alert"/>
+                            </p:commandButton>
+                            <p:commandButton id="unlockButton" icon="ui-icon-lock-open" process="@this" title="#{msg.unlockAccount}" actionListener="#{userAccountController.unlockAccount}" update="datalist" disabled="#{empty userAccountController.selected}">
+                                <p:confirm header="#{msg.unlockAccount}" message="#{msg.unlockAccountConfirm}" icon="ui-icon-alert"/>
                             </p:commandButton>
                             <p:commandButton title="#{msg.exportToXLS}" icon="ui-icon-arrowstop-1-s" class="btn btn-sm btn-gray" ajax="false">
                                 <p:dataExporter type="xls" target="datalist" fileName="UserAccount_export"/>

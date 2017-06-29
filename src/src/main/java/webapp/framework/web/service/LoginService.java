@@ -274,6 +274,10 @@ public class LoginService implements Serializable, ApplicationEventPublisherAwar
 			logger.error("can't find user by loginName:{}", userName);
 			return;
 		}
+                if(!user.getIsActive()){
+                    messageUtil.error("AccountNotActivated");
+                    return;
+                }
                 if(user.getIsLocked()!=null && user.getIsLocked().booleanValue()==true){
                     messageUtil.error("AccountLocked");
                     return;
