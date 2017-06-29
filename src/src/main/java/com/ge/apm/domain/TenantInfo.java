@@ -36,8 +36,7 @@ public class TenantInfo implements Serializable {
     @Column(name = "id")
     private Integer id;
 
-    @Column(name = "uid")
-    @Size(max=32)
+    @Column(columnDefinition = "CHAR(32)")
     private String uid;
     
     @Basic(optional = false)

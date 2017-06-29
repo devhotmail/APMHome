@@ -148,20 +148,17 @@ public class UserAccount implements Serializable {
     @Size(max=32)
     private String uid;
 
-    @Column(name = "tenant_uid")
+    @Column(name = "tenant_uid", columnDefinition = "CHAR(32)")
     @Size(max=32)
     private String tenantUID;
 
-    @Column(name = "institution_uid")
-    @Size(max=32)
+    @Column(name = "institution_uid", columnDefinition = "CHAR(32)")
     private String institutionUID;
 
-    @Column(name = "hospital_uid")
-    @Size(max=32)
+    @Column(name = "hospital_uid", columnDefinition = "CHAR(32)")
     private String hospitalUID;
 
-    @Column(name = "site_uid")
-    @Size(max=32)
+    @Column(name = "site_uid", columnDefinition = "CHAR(32)")
     private String siteUID;
     
     @Column(name = "org_level")

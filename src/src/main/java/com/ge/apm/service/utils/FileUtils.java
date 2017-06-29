@@ -1,5 +1,6 @@
 package com.ge.apm.service.utils;
 
+import com.ge.apm.service.asset.AttachmentFileService;
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -7,15 +8,18 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.List;
+import java.util.logging.Level;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 import java.util.zip.ZipOutputStream;
 import org.apache.log4j.Logger;
+import webapp.framework.web.WebUtil;
 //import java.io.ByteArrayOutputStream;
 //import sun.misc.BASE64Encoder;
 
@@ -330,6 +334,18 @@ public class FileUtils {
             in.close();
             out.close();
         }
+    }
+    
+    
+    public static String getUploadedFileName(String rowName) {
+        String fileName = "";
+        try {
+            fileName = new String(rowName.getBytes(), "utf-8");
+        } catch (UnsupportedEncodingException ex) {
+            WebUtil.addErrorMessage(WebUtil.getMessage("fileTransFail"));
+            java.util.logging.Logger.getLogger(AttachmentFileService.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return rowName;
     }
 
     public static void main(String args[]) {

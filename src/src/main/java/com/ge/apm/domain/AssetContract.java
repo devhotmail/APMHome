@@ -4,6 +4,7 @@ package com.ge.apm.domain;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.UUID;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -12,6 +13,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.PrePersist;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -34,6 +36,8 @@ public class AssetContract implements Serializable {
     @Basic(optional = false)
     @Column(name = "id")
     private Integer id;
+    @Column(columnDefinition = "CHAR(32)")
+    private String uid;
     @Basic(optional = false)
     @NotNull
     @Column(name = "site_id")
@@ -70,6 +74,11 @@ public class AssetContract implements Serializable {
 
     @Column(name = "contract_type")
     private Integer contractType;
+    
+    
+    @Basic(optional = true)
+    @Column(name = "object_id")
+    private String objectId;
 
     public Integer getHospitalId() {
         return hospitalId;
@@ -98,6 +107,21 @@ public class AssetContract implements Serializable {
         this.contractAmount = contractAmount;
     }
 
+    
+    @PrePersist
+    public void initializeUid() {
+        if(uid==null)
+            uid = UUID.randomUUID().toString().replace("-", "");
+    }
+    
+    public String getUid() {
+        return uid;
+    }
+
+    public void setUid(String uid) {
+        this.uid = uid;
+    }
+    
     public Integer getId() {
         return id;
     }
@@ -168,6 +192,14 @@ public class AssetContract implements Serializable {
 
     public void setContractType(Integer contractType) {
         this.contractType = contractType;
+    }
+
+    public String getObjectId() {
+        return objectId;
+    }
+
+    public void setObjectId(String objectId) {
+        this.objectId = objectId;
     }
 
     @Override

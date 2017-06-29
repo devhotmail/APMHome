@@ -2,6 +2,7 @@ package com.ge.apm.view.asset;
 
 import com.ge.apm.dao.AssetContractRepository;
 import com.ge.apm.dao.AssetDepreciationRepository;
+import com.ge.apm.dao.BlobObjectRepository;
 import java.util.List;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
@@ -13,8 +14,10 @@ import webapp.framework.web.mvc.JpaCRUDController;
 import com.ge.apm.domain.AssetContract;
 import com.ge.apm.domain.AssetDepreciation;
 import com.ge.apm.domain.AssetInfo;
+import com.ge.apm.domain.V2_BlobObject;
 import com.ge.apm.service.asset.AssetInfoService;
 import com.ge.apm.service.asset.AttachmentFileService;
+import com.ge.apm.service.asset.BlobFileService;
 import com.ge.apm.view.sysutil.UrlEncryptController;
 import com.ge.apm.view.sysutil.UserContextService;
 import java.text.MessageFormat;
@@ -34,25 +37,32 @@ public class AssetContractController extends JpaCRUDController<AssetContract> {
     AssetContractRepository dao = null;
 
     AssetDepreciationRepository depredao = null;
+    
+    BlobObjectRepository blobDao;
 
-    AttachmentFileService fileService;
-
+//    AttachmentFileService fileService;
     AssetInfo selectedAsset;
 
     private PmOrderService pmOrderService;
+
+    private BlobFileService blobService;
 
     private AssetInfoService assetService;
 
     private String fileName;
 
     private Integer pmCount;
+    
+    private V2_BlobObject blobObject;
 
     @Override
     protected void init() {
 
         dao = WebUtil.getBean(AssetContractRepository.class);
         depredao = WebUtil.getBean(AssetDepreciationRepository.class);
-        fileService = WebUtil.getBean(AttachmentFileService.class);
+        blobDao = WebUtil.getBean(BlobObjectRepository.class);
+        blobService = WebUtil.getBean(BlobFileService.class);
+//        fileService = WebUtil.getBean(AttachmentFileService.class);
         assetService = WebUtil.getBean(AssetInfoService.class);
         pmOrderService = WebUtil.getBean(PmOrderService.class);
 
@@ -121,15 +131,19 @@ public class AssetContractController extends JpaCRUDController<AssetContract> {
             WebUtil.addErrorMessage(MessageFormat.format(WebUtil.getMessage("shouldEarly"), WebUtil.getMessage("startTime"), WebUtil.getMessage("endTime")));
         } else if (null == selectedAsset) {
             WebUtil.addErrorMessage(WebUtil.getMessage("assetName") + WebUtil.getMessage("ValidationRequire"));
-        } else if (null == selected.getFileId()) {
+        } else if (null == selected.getObjectId()) {
             WebUtil.addErrorMessage(WebUtil.getMessage("SelectUploadFile"));
         } else {
             selected.setAssetId(selectedAsset.getId());
             super.save();
+            blobObject.setBoId(selected.getId());
+            blobObject.setBoType(V2_BlobObject.BO_TYPE_AssetContract);
+            blobObject.setBoUuid(selected.getUid());
+            blobDao.save(blobObject);
             saveDepreciation();
-            if(this.selected.getContractType() == 5){
-                pmOrderService.savePmOrder(selectedAsset, this.selected.getStartDate(), this.selected.getEndDate(), pmCount, null);
-            }
+//            if (this.selected.getContractType() == 5) {
+//                pmOrderService.savePmOrder(selectedAsset, this.selected.getStartDate(), this.selected.getEndDate(), pmCount, null);
+//            }
             cancel();
         }
     }
@@ -180,24 +194,30 @@ public class AssetContractController extends JpaCRUDController<AssetContract> {
 
     @Override
     public void delete() {
-        fileService.deleteAttachment(selected.getFileId());
-        List<AssetDepreciation> depreList = depredao.getByContractId(selected.getId());
-        depredao.delete(depreList);
-        dao.delete(selected);
+        if (blobService.deleteBlobFileByStorageId(selected.getObjectId())) {
+            List<AssetDepreciation> depreList = depredao.getByContractId(selected.getId());
+            depredao.delete(depreList);
+            dao.delete(selected);
+        }
         this.selected = null;
     }
 
     public void handleFileUpload(FileUploadEvent event) {
-        fileName = fileService.getFileName(event.getFile());
-        Integer id = fileService.uploadFile(event.getFile());
-        selected.setFileId(id);
+        blobObject = blobService.uploadFile(event);
+        if (null != blobObject) {
+            fileName = blobObject.getObjectName();
+            selected.setObjectId(blobObject.getObjectStorageId());
+        } else {
+            WebUtil.addErrorMessage("fail to upload file");
+        }
     }
 
-    public void removeAttachment(Integer fileId) {
-        fileService.deleteAttachment(fileId);
-        selected.setName(null);
-        selected.setFileId(null);
-        this.fileName = "";
+    public void removeAttachment(String objectId) {
+        if (blobService.deleteBlobFileByStorageId(objectId)) {
+            selected.setName(null);
+            selected.setObjectId(null);
+            this.fileName = "";
+        }
     }
 
     public void onAssetSelected(SelectEvent event) {
@@ -221,7 +241,8 @@ public class AssetContractController extends JpaCRUDController<AssetContract> {
 
     public void onSelectedChange() {
         selectedAsset = assetService.getAssetInfo(selected.getAssetId());
-        fileName = fileService.getFileNameById(selected.getFileId());
+        V2_BlobObject fileObject = blobService.getBlobObjectByStorageId(selected.getObjectId());
+        fileName = fileObject==null?"":fileObject.getObjectName();
         crudActionName = "Edit";
     }
 
