@@ -56,6 +56,7 @@ public class AssetFileImportController {
 
             importOrgMap = aiService.getOrgInfoMapFromTemplate(doc);
             importAssetMap = aiService.getAssetMapFromTemplate(doc);
+            importUserMap = aiService.getUserMapFromTemplate(doc);
 
         } catch (IOException ex) {
             WebUtil.addErrorMessage("File can not be read!");
@@ -71,11 +72,11 @@ public class AssetFileImportController {
             aiService.importData(importOrgMap, importAssetMap);
             isImported = true;
 
-//            InputStream stream = FacesContext.getCurrentInstance().getExternalContext().getResourceAsStream("/portal/asset/assetImport/APM_Asset_Template.xlsx");
             try {
-                InputStream stream = this.file.getInputstream();
+                InputStream stream = FacesContext.getCurrentInstance().getExternalContext().getResourceAsStream("/portal/asset/assetImport/APM_Asset_Template.xlsx");
+//                InputStream stream = this.file.getInputstream();
                 ExcelDocument doc = new ExcelDocument(stream, ExcelDocument.ExcelType.XLSX);
-                hasExportData = aiService.exportFailData(doc, importOrgMap, importAssetMap);
+                hasExportData = aiService.exportFailData(doc, importOrgMap, importAssetMap,importUserMap);
                 exportFile = new DefaultStreamedContent(doc.getStream(), "application/vnd.ms-excel", "failedData.xlsx");
             } catch (IOException ex) {
                 Logger.getLogger(AssetFileImportController.class.getName()).log(Level.SEVERE, null, ex);

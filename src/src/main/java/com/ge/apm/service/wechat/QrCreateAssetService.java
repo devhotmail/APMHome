@@ -1,10 +1,12 @@
 package com.ge.apm.service.wechat;
 
+import com.ge.apm.dao.BlobObjectRepository;
 import com.ge.apm.dao.OrgInfoRepository;
 import com.ge.apm.dao.QrCodeAttachmentRepository;
 import com.ge.apm.dao.QrCodeLibRepository;
 import com.ge.apm.dao.UserAccountRepository;
 import com.ge.apm.domain.*;
+import com.ge.apm.service.asset.BlobFileService;
 import me.chanjar.weixin.common.exception.WxErrorException;
 import me.chanjar.weixin.mp.api.WxMpService;
 import org.joda.time.DateTime;
@@ -46,28 +48,34 @@ public class QrCreateAssetService {
     @Autowired
     OrgInfoRepository orgInfoRepository;
 
+    @Autowired
+    protected BlobFileService blobService;
+
+    @Autowired
+    BlobObjectRepository blobDao;
+
     @Transactional
     public Boolean createAsset(String openId, String qrCode, String voiceServerId, String imageServerIds, String uploaderFileBase64, String comment, String assetName, String assetGroupSelect, String orgSelect, String userSelect) throws WxErrorException {
 
         QrCodeLib qrCodeLib = qrCodeLibRepository.findByQrCode(qrCode);
 
-        if(qrCodeLib == null || qrCodeLib.getStatus() == 3){
+        if (qrCodeLib == null || qrCodeLib.getStatus() == 3) {
             Logger.getLogger(QrCreateAssetService.class.getName()).log(Level.SEVERE, "error qrcode or error qrCode status", "");
             return Boolean.FALSE;
         }
 
         qrCodeLib.setAssetName(assetName);
-        if(assetGroupSelect != null && !assetGroupSelect.equals("")){
+        if (assetGroupSelect != null && !assetGroupSelect.equals("")) {
             qrCodeLib.setAssetGroup(Integer.valueOf(assetGroupSelect));
         }
-        if(orgSelect != null && !orgSelect.equals("")){
+        if (orgSelect != null && !orgSelect.equals("")) {
             qrCodeLib.setOrgId(Integer.valueOf(orgSelect));
-        }else{
+        } else {
             qrCodeLib.setOrgId(null);
         }
-        if(userSelect != null && !userSelect.equals("")){
+        if (userSelect != null && !userSelect.equals("")) {
             qrCodeLib.setUserId(Integer.valueOf(userSelect));
-        }else{
+        } else {
             qrCodeLib.setUserId(null);
         }
         qrCodeLib.setSubmitDate(new Date());
@@ -78,19 +86,19 @@ public class QrCreateAssetService {
         String dtStr = dt.toString("yyyyMMdd HH:mm:ss");
 
         String tempComment = null;
-        if(comment != null && !comment.trim().equals("")){
+        if (comment != null && !comment.trim().equals("")) {
             tempComment = dtStr + " " + comment;
         }
         qrCodeLib.setComment(qrCodeLib.getComment() == null ? tempComment : qrCodeLib.getComment() + "|" + tempComment);
 
         QrCodeLib tempQrCodeLib = qrCodeLibRepository.save(qrCodeLib);
 
-        if(tempQrCodeLib == null){
+        if (tempQrCodeLib == null) {
             return Boolean.FALSE;
         }
 
         /* 处理图片 */
-        if(imageServerIds != null && !imageServerIds.isEmpty()){
+        if (imageServerIds != null && !imageServerIds.isEmpty()) {
 
             JSONObject data = new JSONObject(imageServerIds);
             JSONArray fileList = data.getJSONArray("imageServerIds");
@@ -99,66 +107,93 @@ public class QrCreateAssetService {
                 String imageServerId = item.getString("imageServerId");
 
                 File file = wxMpService.getMaterialService().mediaDownload(imageServerId);
-                Integer fileId = coreService.uploadFile(file);
+//                Integer fileId = coreService.uploadFile(file);
 
-                QrCodeAttachment qrCodeAttachment = new QrCodeAttachment();
-                qrCodeAttachment.setFileId(fileId);
-                qrCodeAttachment.setQrCodeId(qrCodeLib.getId());
+                V2_BlobObject blobObject = blobService.uploadWxFile(openId, file);
+                if (null != blobObject) {
+                    blobObject.setBoId(qrCodeLib.getId());
+                    blobObject.setBoSubType("1");
+                    blobObject.setBoType(V2_BlobObject.BO_TYPE_QRCodeLib);
+                    blobObject.setBoUuid(qrCodeLib.getUid());
+                    blobDao.save(blobObject);
+                    QrCodeAttachment qrCodeAttachment = new QrCodeAttachment();
+                    qrCodeAttachment.setQrCodeId(qrCodeLib.getId());
+                    qrCodeAttachment.setFileType(1);
+                    qrCodeAttachment.setObjectId(blobObject.getObjectStorageId());
+                    qrCodeAttachmentRepository.save(qrCodeAttachment);
+                }
+
+//                QrCodeAttachment qrCodeAttachment = new QrCodeAttachment();
+//                qrCodeAttachment.setFileId(fileId);
+//                qrCodeAttachment.setQrCodeId(qrCodeLib.getId());
                 /*-- 1:照片 / 2: 语音*/
-                qrCodeAttachment.setFileType(1);
-                qrCodeAttachmentRepository.save(qrCodeAttachment);
-
+//                qrCodeAttachment.setFileType(1);
+//                qrCodeAttachmentRepository.save(qrCodeAttachment);
             }
 
         }
 
         /* 处理语音 */
-        if(voiceServerId != null && !voiceServerId.isEmpty()){
+        if (voiceServerId != null && !voiceServerId.isEmpty()) {
 
             File file = wxMpService.getMaterialService().mediaDownload(voiceServerId);
-            Integer fileId = coreService.uploadFile(file);
+            V2_BlobObject blobObject = blobService.uploadWxFile(openId, file);
+            if (null != blobObject) {
+                blobObject.setBoId(qrCodeLib.getId());
+                blobObject.setBoSubType("2");
+                blobObject.setBoType(V2_BlobObject.BO_TYPE_QRCodeLib);
+                blobObject.setBoUuid(qrCodeLib.getUid());
+                blobDao.save(blobObject);
+                QrCodeAttachment qrCodeAttachment = new QrCodeAttachment();
+                qrCodeAttachment.setQrCodeId(qrCodeLib.getId());
+                qrCodeAttachment.setFileType(2);
+                qrCodeAttachment.setObjectId(blobObject.getObjectStorageId());
+                qrCodeAttachmentRepository.save(qrCodeAttachment);
+            }
 
-            QrCodeAttachment qrCodeAttachment = new QrCodeAttachment();
-            qrCodeAttachment.setFileId(fileId);
-            qrCodeAttachment.setQrCodeId(qrCodeLib.getId());
-            /*-- 1:照片 / 2: 语音*/
-            qrCodeAttachment.setFileType(2);
-            qrCodeAttachmentRepository.save(qrCodeAttachment);
+//            Integer fileId = coreService.uploadFile(file);
+//
+//            QrCodeAttachment qrCodeAttachment = new QrCodeAttachment();
+//            qrCodeAttachment.setFileId(fileId);
+//            qrCodeAttachment.setQrCodeId(qrCodeLib.getId());
+//            /*-- 1:照片 / 2: 语音*/
+//            qrCodeAttachment.setFileType(2);
+//            qrCodeAttachmentRepository.save(qrCodeAttachment);
 
         }
 
         return Boolean.TRUE;
     }
 
-    public String validateQrCode(String openId, String qrCode){
+    public String validateQrCode(String openId, String qrCode) {
 
         QrCodeLib qrCodeLib = qrCodeLibRepository.findByQrCode(qrCode);
 
-        if(qrCodeLib != null){
-            if(qrCodeLib.getStatus() == 3){
+        if (qrCodeLib != null) {
+            if (qrCodeLib.getStatus() == 3) {
                 UserAccount userAccount = userAccountRepository.getByWeChatId(openId);
-                if(userAccount == null){
+                if (userAccount == null) {
                     //qrcode已经关联设备，但扫码用户未绑定
                     return "3";
-                }else{
+                } else {
                     //qrcode已经关联设备，但扫码用户已绑定
                     return "2";
                 }
-            }else if(qrCodeLib.getStatus() == 2){
+            } else if (qrCodeLib.getStatus() == 2) {
                 //qrcode已经有上传资料但还没建档关联设备
                 return "4";
-            }else{
+            } else {
                 //qrcode还未关联设备
                 return "1";
             }
 
-        }else{
+        } else {
             //不是系统生成的qrcode
             return "9";
         }
     }
 
-    public Boolean createQrCode(int count, int siteId, int hospitalId){
+    public Boolean createQrCode(int count, int siteId, int hospitalId) {
 
         Set<String> tempSet = new HashSet<String>(count);
 
@@ -166,13 +201,13 @@ public class QrCreateAssetService {
         String dtStr = dt.toString("yyMMdd");
 
         int i = 1;
-        while (true){
-            String qrCode = dtStr + Long.valueOf((long)((Math.random()*9+1)*1000000000L));
+        while (true) {
+            String qrCode = dtStr + Long.valueOf((long) ((Math.random() * 9 + 1) * 1000000000L));
 
-            if(!tempSet.contains(qrCode)){
+            if (!tempSet.contains(qrCode)) {
 
                 QrCodeLib qrCodeLib = qrCodeLibRepository.findByQrCode(qrCode);
-                if(null == qrCodeLib){
+                if (null == qrCodeLib) {
                     qrCodeLib = new QrCodeLib();
                     qrCodeLib.setSiteId(siteId);
                     qrCodeLib.setHospitalId(hospitalId);
@@ -187,32 +222,32 @@ public class QrCreateAssetService {
                     i++;
                 }
 
-            }else{
+            } else {
                 System.out.println("重复" + qrCode);
             }
 
-            if (i > count){
+            if (i > count) {
                 return Boolean.TRUE;
             }
         }
     }
 
-    public List<I18nMessage> getMsg(String msgType){
+    public List<I18nMessage> getMsg(String msgType) {
         return coreService.getMsg(msgType);
     }
 
-    public List<OrgInfo> getOrgList(String qrCode){
+    public List<OrgInfo> getOrgList(String qrCode) {
         QrCodeLib qrCodeLib = qrCodeLibRepository.findByQrCode(qrCode);
 
-        if(qrCodeLib != null){
+        if (qrCodeLib != null) {
             return orgInfoRepository.getByHospitalId(qrCodeLib.getHospitalId());
-        }else{
+        } else {
             return null;
         }
 
     }
 
-    public List<UserAccount> getUserList(int orgInfoId){
+    public List<UserAccount> getUserList(int orgInfoId) {
         return userAccountRepository.getByOrgInfoId(orgInfoId);
     }
 
@@ -222,6 +257,5 @@ public class QrCreateAssetService {
         //t.createQrCode(10);
 
     }
-
 
 }

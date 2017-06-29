@@ -7,14 +7,15 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import webapp.framework.web.mvc.JpaCRUDController;
 import com.ge.apm.dao.AssetFileAttachmentRepository;
+import com.ge.apm.dao.BlobObjectRepository;
 import com.ge.apm.domain.AssetFileAttachment;
 import com.ge.apm.domain.AssetInfo;
 import com.ge.apm.domain.UserAccount;
+import com.ge.apm.domain.V2_BlobObject;
 import com.ge.apm.service.asset.AssetInfoService;
-import com.ge.apm.service.asset.AttachmentFileService;
+import com.ge.apm.service.asset.BlobFileService;
+import com.ge.apm.service.utils.MicroServiceUtil;
 import com.ge.apm.view.sysutil.UserContextService;
-import javax.faces.application.FacesMessage;
-import javax.faces.context.FacesContext;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.event.SelectEvent;
 import webapp.framework.web.WebUtil;
@@ -25,21 +26,31 @@ public class AssetFileAttachmentController extends JpaCRUDController<AssetFileAt
 
     AssetFileAttachmentRepository dao = null;
 
-    AttachmentFileService fileService;
+    BlobObjectRepository blobDao;
+
+    BlobFileService blobFileService;
 
     UserAccount currentUser;
 
     List<AssetInfo> assetList;
 
+    V2_BlobObject blobObject;
+
     AssetInfo selectedAsset;
 
     private AssetInfoService assetService;
+    private BlobFileService blobService;
+
+    MicroServiceUtil microService = WebUtil.getBean(MicroServiceUtil.class);
 
     @Override
     protected void init() {
         dao = WebUtil.getBean(AssetFileAttachmentRepository.class);
+        microService = WebUtil.getBean(MicroServiceUtil.class);
+        blobDao = WebUtil.getBean(BlobObjectRepository.class);
         assetService = WebUtil.getBean(AssetInfoService.class);
-        fileService = WebUtil.getBean(AttachmentFileService.class);
+        blobService = WebUtil.getBean(BlobFileService.class);
+        blobFileService = WebUtil.getBean(BlobFileService.class);
         currentUser = UserContextService.getCurrentUserAccount();
         UserContextService userContextService = WebUtil.getBean(UserContextService.class);
         this.filterBySite = true;
@@ -59,7 +70,6 @@ public class AssetFileAttachmentController extends JpaCRUDController<AssetFileAt
 
     @Override
     protected Page<AssetFileAttachment> loadData(PageRequest pageRequest) {
-        this.selected = null;
         if (this.searchFilters == null) {
             return dao.findAll(pageRequest);
         } else {
@@ -76,6 +86,7 @@ public class AssetFileAttachmentController extends JpaCRUDController<AssetFileAt
     public void onBeforeNewObject(AssetFileAttachment object) {
         object.setSiteId(currentUser.getSiteId());
         this.selectedAsset = null;
+
     }
 
     public List<AssetInfo> getAssetList() {
@@ -98,19 +109,20 @@ public class AssetFileAttachmentController extends JpaCRUDController<AssetFileAt
     public void save() {
         if (null == selectedAsset) {
             WebUtil.addErrorMessage(WebUtil.getMessage("assetName") + WebUtil.getMessage("ValidationRequire"));
-        } 
-        else if (null == selected.getFileType() || selected.getFileType().isEmpty()) {
+        } else if (null == selected.getFileType() || selected.getFileType().isEmpty()) {
             WebUtil.addErrorMessage(WebUtil.getMessage("fileType") + WebUtil.getMessage("ValidationRequire"));
-        } 
-        else if (null == selected.getName() || selected.getName().isEmpty()) {
+        } else if (null == selected.getName() || selected.getName().isEmpty()) {
             WebUtil.addErrorMessage(WebUtil.getMessage("SelectUploadFile"));
-        } 
-        else if(selected.getFileType().equals("1") && !selected.getName().matches("^.*?\\.(jpg|jpeg|bmp|gif|png)$")){
+        } else if (selected.getFileType().equals("1") && !selected.getName().matches("^.*?\\.(jpg|jpeg|bmp|gif|png)$")) {
             WebUtil.addErrorMessage(WebUtil.getMessage("InvalidPictureFileType"));
-        }
-        else{
+        } else {
             selected.setAssetId(selectedAsset.getId());
+            blobObject.setBoType(V2_BlobObject.BO_TYPE_AssetInfo);
+            blobObject.setBoId(selectedAsset.getId());
+            blobObject.setBoUuid(selectedAsset.getUid());
+            blobObject.setBoSubType(selected.getFileType());
             dao.save(selected);
+            blobDao.save(blobObject);
             cancel();
         }
     }
@@ -118,26 +130,37 @@ public class AssetFileAttachmentController extends JpaCRUDController<AssetFileAt
     public void cancel() {
         this.selected = null;
         this.selectedAsset = null;
+        this.blobObject = null;
     }
 
     @Override
     public void delete() {
-        if (fileService.deleteAttachment(selected.getFileId())) {
+
+        if (blobService.deleteBlobFile(blobObject)) {
             dao.delete(selected);
-            cancel();
         }
+        cancel();
     }
 
     public void handleFileUpload(FileUploadEvent event) {
-        String fileName = fileService.getFileName(event.getFile());
-        selected.setName(fileName);
-        Integer id = fileService.uploadFile(event.getFile());
-        selected.setFileId(id);
+
+        blobObject = blobService.uploadFile(event);
+        if (null != blobObject) {
+            selected.setName(blobObject.getObjectName());
+            selected.setFileUrl(blobObject.getObjectStorageId());
+        } else {
+            WebUtil.addErrorMessage("fail to upload file");
+        }
+
     }
-    
-    public void removeAttachment(Integer fileId){
-        fileService.deleteAttachment(fileId);
-        selected.setName(null);
+
+    public void removeAttachment(Integer fileId) {
+
+        if (blobService.deleteBlobFile(blobObject)) {
+            selected.setName(null);
+            selected.setFileUrl(null);
+        }
+        
     }
 
     public void onAssetSelected(SelectEvent event) {
@@ -161,6 +184,7 @@ public class AssetFileAttachmentController extends JpaCRUDController<AssetFileAt
 
     public void onSelectedChange() {
         selectedAsset = assetService.getAssetInfo(selected.getAssetId());
+        blobObject = blobService.getBlobObjectByStorageId(selected.getFileUrl());
         crudActionName = "Edit";
     }
 

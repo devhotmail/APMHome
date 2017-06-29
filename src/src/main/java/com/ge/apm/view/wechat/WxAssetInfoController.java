@@ -265,7 +265,7 @@ public class WxAssetInfoController extends JpaCRUDController<AssetInfo> {
             String[] removeList = removedPicStr.split(",");
 
             for (String item : removeList) {
-                acService.removeAttachment(assetInfo.getId(), Integer.parseInt(item));
+                acService.removeAttachment(assetInfo.getId(),item);
             }
             removedPicStr = "";
         }

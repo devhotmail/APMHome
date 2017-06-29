@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <ui:composition xmlns="http://www.w3.org/1999/xhtml"
                 xmlns:h="http://java.sun.com/jsf/html"
                 xmlns:f="http://java.sun.com/jsf/core"
@@ -61,9 +62,10 @@
                             <p:inputNumber value="#{item.contractAmount}" readonly="true"> </p:inputNumber>
                         </p:column>
                         <p:column headerText="#{msg.AssetContractAttachment}" exportable="false">
-                            <p:commandButton value="#{msg.download}" ajax="false" onclick="PrimeFaces.monitorDownload(start, stop);" icon="ui-icon-file-download" rendered="#{item.fileId > 0}">
+                            <p:link href="#{fileDownloadService.getFileUrl(item.objectId)}">下载</p:link>
+<!--                            <p:commandButton value="#{msg.download}" ajax="false" onclick="PrimeFaces.monitorDownload(start, stop);" icon="ui-icon-file-download" rendered="#{item.fileId > 0}">
                                 <p:fileDownload value="#{attachmentFileService.getFile(item.fileId)}" />
-                            </p:commandButton>
+                            </p:commandButton>-->
                         </p:column>
                         
 <!--                        <p:column headerText="#{msg.assetName}" sortBy="#{item.assetId}" >
