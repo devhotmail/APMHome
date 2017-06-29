@@ -186,13 +186,6 @@
                                     <f:selectItems value="#{fieldMsg.getFieldValueList('ownAssetGroup')}" var="item" itemLabel="#{item.value}" itemValue="#{item.msgKey}"/>
                                 </p:selectOneMenu>-->
                             </h:panelGroup>
-                            <h:panelGroup>
-                                <label class="label">#{msg.functionGrade}</label>
-                                <p:selectOneMenu id="functionGrade" value="#{assetInfoController.selected.functionGrade}">
-                                    <f:selectItem itemLabel="#{msg.selectOneMessage}"/>
-                                    <f:selectItems value="#{fieldMsg.getFieldValueList('assetFunctionGrade')}" var="item" itemLabel="#{item.value}" itemValue="#{item.msgKey}"/>
-                                </p:selectOneMenu>
-                            </h:panelGroup>
                             <h:panelGroup >
                                 <label class="label">医疗器械分类</label>
                                 <p:selectOneMenu id="functionGroup" value="#{assetInfoController.selected.functionGroup}" style="width: 100%">
@@ -206,6 +199,13 @@
                                 <p:selectOneMenu id="assetCode68" value="#{assetInfoController.selected.assetCode68}" style="width: 100%">
                                     <f:selectItem itemLabel="#{msg.selectOneMessage}"/>
                                     <f:selectItems value="#{assetInfoController.code68List}" var="item" itemLabel="#{item.value}" itemValue="#{item.msgKey}"/>
+                                </p:selectOneMenu>
+                            </h:panelGroup>
+                            <h:panelGroup>
+                                <label class="label">#{msg.functionGrade}</label>
+                                <p:selectOneMenu id="functionGrade" value="#{assetInfoController.selected.functionGrade}">
+                                    <f:selectItem itemLabel="#{msg.selectOneMessage}"/>
+                                    <f:selectItems value="#{fieldMsg.getFieldValueList('assetFunctionGrade')}" var="item" itemLabel="#{item.value}" itemValue="#{item.msgKey}"/>
                                 </p:selectOneMenu>
                             </h:panelGroup>
                             <h:panelGroup>

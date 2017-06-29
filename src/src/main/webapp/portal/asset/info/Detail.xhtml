@@ -92,13 +92,18 @@
                         <label class="label">#{msg.assetGroup}</label>
                         <p:inputText id="assetGroup" value="#{fieldMsg.fieldValue('assetGroup', assetInfoController.selected.assetGroup)}" readonly="true"/>
                     </h:panelGroup>
+
+                    <h:panelGroup>
+                        <label class="label">医疗器械分类</label>
+                        <p:inputText id="functionGroup" value="#{fieldMsg.fieldValue('assetFunctionType', assetInfoController.selected.functionGroup)}" readonly="true"/>
+                    </h:panelGroup>
+                    <h:panelGroup>
+                        <label class="label">医疗器械子分类</label>
+                        <p:inputText id="assetCode68" value="#{fieldMsg.fieldValue(assetInfoController.selected.functionGroup, assetInfoController.selected.assetCode68)}" readonly="true"/>
+                    </h:panelGroup>
                     <h:panelGroup>
                         <label class="label">#{msg.functionGrade}</label>
                         <p:inputText id="functionGrade" value="#{fieldMsg.fieldValue('assetFunctionGrade', assetInfoController.selected.functionGrade)}" readonly="true"/>
-                    </h:panelGroup>
-                    <h:panelGroup>
-                        <label class="label">#{msg.functionGroup}</label>
-                        <p:inputText id="functionGroup" value="#{fieldMsg.fieldValue('assetFunctionType', assetInfoController.selected.functionGroup)}" readonly="true"/>
                     </h:panelGroup>
 
                     <h:panelGroup>
