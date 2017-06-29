@@ -12,7 +12,6 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.List;
-import org.primefaces.json.JSONObject;
 import org.primefaces.model.DefaultStreamedContent;
 import org.primefaces.model.StreamedContent;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +21,7 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.util.LinkedMultiValueMap;
@@ -68,7 +68,8 @@ public class MicroServiceUtil {
 
     public Boolean deleteFileObject(String token, String objectId) {
         HttpHeaders headers = new HttpHeaders();
-        headers.add("Content-Type", "application/json; charset=utf-8");
+        MediaType type = MediaType.parseMediaType("application/json; charset=UTF-8");
+        headers.setContentType(type);
         headers.add("Authorization", token);
         HttpEntity<String> requestEntity = new HttpEntity<String>(headers);
 
@@ -79,9 +80,9 @@ public class MicroServiceUtil {
 
     public Map<String, Object> uploadSingleFile(String token, File file) {
         HttpHeaders headers = new HttpHeaders();
-        headers.add("Content-Type", "multipart/form-data");
+        MediaType type = MediaType.parseMediaType("multipart/form-data; charset=UTF-8");
+        headers.setContentType(type);
         headers.add("Authorization", token);
-
         MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
         FileSystemResource resource = new FileSystemResource(file);
         body.add("file", resource);
@@ -99,14 +100,14 @@ public class MicroServiceUtil {
 
     public Map<String, Object> uploadSingleFileByUrl(String token, String url, String fileName) {
         HttpHeaders headers = new HttpHeaders();
-        headers.add("Content-Type", "application/json; charset=utf-8");
+        MediaType type = MediaType.parseMediaType("application/json; charset=UTF-8");
+        headers.setContentType(type);
         headers.add("Authorization", token);
 
         Map<String, String> postParameters = new HashMap<String, String>();
         postParameters.put("urlFile", url);
         postParameters.put("fileName", fileName);
-        String requestBody = JSONObject.valueToString(postParameters);
-        HttpEntity<String> requestEntity = new HttpEntity<String>(requestBody, headers);
+        HttpEntity<Map> requestEntity = new HttpEntity<Map>(postParameters, headers);
         ResponseEntity<? extends LinkedHashMap<String, Object>> response = template.postForEntity(url_uploadSingleFileByUrl, requestEntity, LinkedHashMap.class);
         if (isOkay(response)) {
             LinkedHashMap<String, Object> responseMap = (LinkedHashMap<String, Object>) response.getBody();
@@ -128,15 +129,13 @@ public class MicroServiceUtil {
 
     public String getAuthenticateByOpenId(String code, String weChatId) {
         HttpHeaders headers = new HttpHeaders();
-        headers.add("Content-Type", "application/json; charset=utf-8");
-
+        MediaType type = MediaType.parseMediaType("application/json; charset=UTF-8");
+        headers.setContentType(type);
         Map<String, String> postParameters = new HashMap<String, String>();
         postParameters.put("code", code);
         postParameters.put("weChatId", weChatId);
-        String requestBody = JSONObject.valueToString(postParameters);
-
-        HttpEntity<String> requestEntity = new HttpEntity<String>(
-                requestBody, headers);
+        HttpEntity<Map> requestEntity = new HttpEntity<Map>(
+                postParameters, headers);
 
         ResponseEntity<? extends LinkedHashMap<String, Object>> response = template.postForEntity(url_getAuthenticateByOpenId, requestEntity, LinkedHashMap.class);
 
@@ -157,15 +156,15 @@ public class MicroServiceUtil {
 
     public String getAuthenticateByUserPassword(String userName, String password) {
         HttpHeaders headers = new HttpHeaders();
-        headers.add("Content-Type", "application/json; charset=utf-8");
+        MediaType type = MediaType.parseMediaType("application/json; charset=UTF-8");
+        headers.setContentType(type);
 
         Map<String, String> postParameters = new HashMap<String, String>();
         postParameters.put("loginName", userName);
         postParameters.put("password", password);
-        String requestBody = JSONObject.valueToString(postParameters);
 
-        HttpEntity<String> requestEntity = new HttpEntity<String>(
-                requestBody, headers);
+        HttpEntity<Map> requestEntity = new HttpEntity<Map>(
+                postParameters, headers);
 
         ResponseEntity<? extends LinkedHashMap<String, Object>> response = template.postForEntity(url_getAuthenticateByUserPassword, requestEntity, LinkedHashMap.class);
 

@@ -1,6 +1,5 @@
 package com.ge.apm.service.utils;
 
-import com.ge.apm.service.asset.AttachmentFileService;
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -337,15 +336,15 @@ public class FileUtils {
     }
     
     
-    public static String getUploadedFileName(String rowName) {
+    public static String getUploadedFileName(String rawName) {
         String fileName = "";
         try {
-            fileName = new String(rowName.getBytes(), "utf-8");
+            fileName = new String(rawName.getBytes(), "utf-8");
         } catch (UnsupportedEncodingException ex) {
             WebUtil.addErrorMessage(WebUtil.getMessage("fileTransFail"));
-            java.util.logging.Logger.getLogger(AttachmentFileService.class.getName()).log(Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(FileUtils.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return rowName;
+        return fileName;
     }
 
     public static void main(String args[]) {
