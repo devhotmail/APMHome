@@ -43,9 +43,9 @@
                         </div>
                         <div class="ui-g-2"> <p:outputLabel value="是否需要专用耗品:"/></div>
                         <div class="ui-g-4" style="padding-left: -10px">
-                            <p:selectOneRadio id="console" value="#{applicationController.needCost}">
-                                <f:selectItem itemLabel="是" itemValue="yes" />
-                                <f:selectItem itemLabel="否" itemValue="no" />
+                            <p:selectOneRadio id="console"  required="true" value="#{applicationController.selected.needy}">
+                                <f:selectItem itemLabel="是" itemValue="true" />
+                                <f:selectItem itemLabel="否" itemValue="false" />
                             </p:selectOneRadio>
                         </div>
 

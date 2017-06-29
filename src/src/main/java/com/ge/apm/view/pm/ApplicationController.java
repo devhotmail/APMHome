@@ -88,7 +88,6 @@ public class ApplicationController extends GenericCRUDUUIDController<PurchaseApp
         } else if ("Delete".equalsIgnoreCase(actionName)) {
             prepareDelete();
         }
-
         this.filterBySite=true;
         this.filterByHospital=true;
     }

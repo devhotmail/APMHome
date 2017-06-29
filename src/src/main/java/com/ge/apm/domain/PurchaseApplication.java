@@ -164,9 +164,7 @@ private String infoSign;
     public PurchaseApplication() {
     }
 
-    public boolean isNeedy() {
-        return needy;
-    }
+
 
     public String getApplyReason() {
         return applyReason;
