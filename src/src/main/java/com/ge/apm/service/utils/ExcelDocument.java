@@ -127,6 +127,22 @@ public class ExcelDocument {
         }
     }
 
+    
+    static public String getCellStringValue(Object value) {
+        if (value == null) {
+            return null;
+        }
+        if (value instanceof String) {
+            return (String) value;
+        }
+        if (value instanceof Integer) {
+            return ((Integer) value).toString();
+        }
+        if (value instanceof Double) {
+            return ((Double) value).toString();
+        }
+        return value.toString();
+    }
     static public Integer getCellIntegerValue(Object value) {
         if (value == null) {
             return null;

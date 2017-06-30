@@ -63,15 +63,15 @@
                         </h:panelGroup>
 
                         <p:panel id="upload" styleClass="ui-panelgrid-blank" style=" border: 0">
-                            <h:panelGroup rendered="#{assetContractController.isCreatAction() and assetContractController.selected.fileId==null}">
+                            <h:panelGroup rendered="#{assetContractController.isCreatAction() and assetContractController.selected.objectId==null}">
                                 <p:fileUpload fileUploadListener="#{assetContractController.handleFileUpload}" mode="advanced" dragDropSupport="false" style="width:100%" process="@this"
                                               multiple="false" sizeLimit="10000000" update=":AssetContractEditForm:upload" auto="true"  invalidSizeMessage="#{msg.invalidSizeMessage}10M"  label="#{msg.Add}" />
                                 <p:growl id="messages" showDetail="true" />
                             </h:panelGroup>
-                            <h:panelGroup id="namepanel" rendered="#{assetContractController.selected.fileId!=null}">
+                            <h:panelGroup id="namepanel" rendered="#{assetContractController.selected.objectId!=null}">
                                 <label class="label">#{msg.AssetContractAttachment}*</label>
                                 <p:inputText id="name" value="#{assetContractController.fileName}"  required="true" requiredMessage="#{msg.name} #{msg.ValidationRequire}" readonly="true"/>
-                                <p:commandButton actionListener="#{assetContractController.removeAttachment(assetContractController.selected.fileId)}" id="iconOnly" update=":AssetContractEditForm:upload" icon="ui-icon-clear" title="#{msg.Delete}" class="popupIconButton" process="@this" rendered="#{assetContractController.isCreatAction()}">
+                                <p:commandButton actionListener="#{assetContractController.removeAttachment(assetContractController.selected.objectId)}" id="iconOnly" update=":AssetContractEditForm:upload" icon="ui-icon-clear" title="#{msg.Delete}" class="popupIconButton" process="@this" rendered="#{assetContractController.isCreatAction()}">
                                     <p:confirm header="#{msg.DeleteConformation}" message="#{msg.DeleteConformationMsg}" icon="ui-icon-warning"/>
                                 </p:commandButton>
                             </h:panelGroup>

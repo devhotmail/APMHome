@@ -465,7 +465,7 @@ INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id)
 INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (1532,'attachmentType','2','用户手册','User Manual',null,-1);
 INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (1533,'attachmentType','3','培训资料','Material for training',null,-1);
 
-INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (1535,'assetFunctionType','2', '6801基础外科手术器械',null,null,-1);
+/*INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (1535,'assetFunctionType','2', '6801基础外科手术器械',null,null,-1);
 INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (1536,'assetFunctionType','3', '6802显微外科手术器械',null,null,-1);
 INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (1537,'assetFunctionType','4', '6803神经外科手术器械',null,null,-1);
 INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (1538,'assetFunctionType','5', '6804眼科手术器械',null,null,-1);
@@ -508,7 +508,7 @@ INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id)
 INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (1574,'assetFunctionType','41', '6865医用缝合材料及粘合剂',null,null,-1);
 INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (1575,'assetFunctionType','42', '6866医用高分子材料及制品',null,null,-1);
 INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (1576,'assetFunctionType','43', '6870软件',null,null,-1);
-INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (1577,'assetFunctionType','44', '6877介入器材',null,null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (1577,'assetFunctionType','44', '6877介入器材',null,null,-1);*/
 
 /*
 INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (1580,'caseType','1', '设备老化',null,null,-1);
@@ -573,6 +573,14 @@ INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id)
 --work_order repairType
 INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (1709,'repairType','1', '上门维修','OnSiteRepair',null,-1);
 INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (1710,'repairType','2', '送到维修中心','ToTheServiceCenter',null,-1);
+
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (1711,'alertType','1', '压缩机状态报警(常开报警)','t1',null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (1712,'alertType','2', '压缩机报警状态报警(常开报警)','t2',null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (1713,'alertType','3', '水浸状态报警(常闭报警)','t3',null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (1714,'alertType','101', '水冷温度报警','t101',null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (1715,'alertType','102', '机房湿度报警','t102',null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (1716,'alertType','104', '机房温度报警','t103',null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (1717,'alertType','4', '压缩机状态报警(常闭报警)','t4',null,-1);
 
 -- module's messages  (id from 3000)
 INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (3000,'message','DeleteConformation', '删除确认','Delete Confirmation',null,-1);
@@ -843,3 +851,348 @@ INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id)
 INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (9100,'focusOption','0',  '所有工单流程消息','all workorder msg',null,-1);
 INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (9101,'focusOption','1',  '仅工单创建和关单消息','only create and shutdown msg',null,-1);
 INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (9102,'focusOption','2',  '不推送工单消息','no need push workorder msg',null,-1);
+
+
+--68码--
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (2001,'assetFunctionType','6801', '6801基础外科手术器械',null,null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (2002,'assetFunctionType','6802', '6802显微外科手术器械',null,null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (2003,'assetFunctionType','6803', '6803神经外科手术器械',null,null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (2004,'assetFunctionType','6804', '6804眼科手术器械',null,null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (2005,'assetFunctionType','6805', '6805耳鼻喉科手术器械',null,null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (2006,'assetFunctionType','6806', '6806口腔科手术器械',null,null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (2007,'assetFunctionType','6807', '6807胸腔心血管外科手术器械',null,null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (2008,'assetFunctionType','6808', '6808腹部外科手术器械',null,null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (2009,'assetFunctionType','6809', '6809泌尿肛肠外科手术器械',null,null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (2010,'assetFunctionType','6810', '6810矫形外科（骨科）手术器械',null,null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (2012,'assetFunctionType','6812', '6812妇产科用手术器械',null,null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (2013,'assetFunctionType','6813', '6813计划生育手术器械',null,null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (2015,'assetFunctionType','6815', '6815注射穿刺器械',null,null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (2016,'assetFunctionType','6816', '6816烧伤(整形)科手术器械',null,null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (2020,'assetFunctionType','6820', '6820普通诊察器械',null,null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (2021,'assetFunctionType','6821', '6821医用电子仪器设备',null,null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (2022,'assetFunctionType','6822', '6822医用光学器具、仪器及内窥镜设备',null,null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (2023,'assetFunctionType','6823', '6823医用超声仪器及有关设备',null,null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (2024,'assetFunctionType','6824', '6824医用激光仪器设备',null,null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (2025,'assetFunctionType','6825', '6825医用高频仪器设备',null,null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (2026,'assetFunctionType','6826', '6826物理治疗及康复设备',null,null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (2027,'assetFunctionType','6827', '6827中医器械',null,null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (2028,'assetFunctionType','6828', '6828医用磁共振设备',null,null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (2030,'assetFunctionType','6830', '6830医用X射线设备',null,null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (2031,'assetFunctionType','6831', '6831医用X射线附属设备及部件',null,null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (2032,'assetFunctionType','6832', '6832医用高能射线设备',null,null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (2033,'assetFunctionType','6833', '6833医用核素设备',null,null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (2034,'assetFunctionType','6834', '6834医用射线防护用品、装置',null,null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (2040,'assetFunctionType','6840', '6840临床检验分析仪器',null,null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (2041,'assetFunctionType','6841', '6841医用化验和基础设备器具',null,null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (2045,'assetFunctionType','6845', '6845体外循环及血液处理设备',null,null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (2046,'assetFunctionType','6846', '6846植入材料和人工器官',null,null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (2054,'assetFunctionType','6854', '6854手术室、急救室、诊疗室设备及器具',null,null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (2055,'assetFunctionType','6855', '6855口腔科设备及器具',null,null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (2056,'assetFunctionType','6856', '6856病房护理设备及器具',null,null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (2057,'assetFunctionType','6857', '6857消毒和灭菌设备及器具',null,null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (2058,'assetFunctionType','6858', '6858医用冷疗、低温、冷藏设备及器具',null,null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (2063,'assetFunctionType','6863', '6863口腔科材料',null,null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (2064,'assetFunctionType','6864', '6864医用卫生材料及敷料',null,null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (2065,'assetFunctionType','6865', '6865医用缝合材料及粘合剂',null,null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (2066,'assetFunctionType','6866', '6866医用高分子材料及制品',null,null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (2070,'assetFunctionType','6870', '6870软件',null,null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (2077,'assetFunctionType','6877', '6877介入器材',null,null,-1);
+
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (20001,'6801','1', '医用缝合针(不带线)',null,null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (20002,'6801','2', '基础外科用刀',null,null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (20003,'6801','3', '基础外科用剪',null,null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (20004,'6801','4', '基础外科用钳',null,null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (20005,'6801','5', '基础外科用镊夹',null,null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (20006,'6801','6', '基础外科用针、钩',null,null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (20007,'6801','7', '基础外科其它器械',null,null,-1);
+
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (20011,'6802','1', '显微外科用刀、凿',null,null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (20012,'6802','2', '显微外科用剪',null,null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (20013,'6802','3', '显微外科用钳',null,null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (20014,'6802','4', '显微外科用镊、夹',null,null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (20015,'6802','5', '显微外科用针、钩',null,null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (20016,'6802','6', '显微外科用其他器械',null,null,-1);
+
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (20021,'6803','1', '神经外科脑内用刀',null,null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (20022,'6803','2', '神经外科脑内用钳',null,null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (20023,'6803','3', '神经外科脑内用镊',null,null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (20024,'6803','4', '神经外科脑内用钩、刮',null,null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (20025,'6803','5', '神经外科脑内用其他器械',null,null,-1);
+
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (20031,'6804','2', '眼科手术用剪',null,null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (20032,'6804','3', '眼科手术用钳',null,null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (20033,'6804','4', '眼科手术用镊、夹',null,null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (20034,'6804','5', '眼科手术用钩、针',null,null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (20035,'6804','6', '眼科手术用其他器械',null,null,-1);
+
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (20041,'6805','1', '耳鼻喉科用刀、凿',null,null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (20042,'6805','2', '耳鼻喉科用剪',null,null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (20043,'6805','3', '耳鼻喉科用钳',null,null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (20044,'6805','4', '耳鼻喉科用镊、夹',null,null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (20045,'6805','5', '耳鼻喉科用钩、针',null,null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (20046,'6805','6', '耳鼻喉科用其他器械',null,null,-1);
+
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (20051,'6806','1', '口腔用刀、凿',null,null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (20052,'6806','2', '口腔用剪',null,null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (20053,'6806','3', '口腔用钳',null,null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (20054,'6806','4', '口腔用镊、夹',null,null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (20055,'6806','5', '口腔用钩、针',null,null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (20056,'6806','6', '口腔用其它器械',null,null,-1);
+
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (20061,'6807','1', '胸腔心血管外科用刀',null,null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (20062,'6807','2', '胸腔心血管外科用剪',null,null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (20063,'6807','3', '胸腔心血管外科用钳',null,null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (20064,'6807','4', '胸腔心血管外科用镊、夹',null,null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (20065,'6807','5', '胸腔心血管外科用钩、针',null,null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (20066,'6807','6', '胸腔心血管外科用其他器械',null,null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (20067,'6807','7', '胸腔心血管外科用吸引器',null,null,-1);
+
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (20071,'6808','2', '腹部外科用剪',null,null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (20072,'6808','3', '腹部外科用钳',null,null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (20073,'6808','4', '腹部外科用钩、针',null,null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (20074,'6808','6', '腹部外科用其他器械',null,null,-1);
+
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (20081,'6809','2', '泌尿肛肠科用剪',null,null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (20082,'6809','3', '泌尿肛肠科用钳',null,null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (20083,'6809','5', '泌尿肛肠科用钩、针',null,null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (20084,'6809','6', '泌尿肛肠科用其他器械',null,null,-1);
+
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (20091,'6810','1', '矫形（骨科）外科用刀、锥',null,null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (20092,'6810','2', '矫形（骨科）外科用剪',null,null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (20093,'6810','3', '矫形（骨科）外科用钳',null,null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (20094,'6810','4', '矫形（骨科）外科用锯、凿、锉',null,null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (20095,'6810','5', '矫形（骨科）外科用钩、针',null,null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (20096,'6810','6', '矫形（骨科）外科用刮',null,null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (20097,'6810','7', '矫形（骨科）外科用有源器械',null,null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (20098,'6810','8', '矫形（骨科）外科用其它器械',null,null,-1);
+
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (20101,'6812','1', '妇产科用刀',null,null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (20102,'6812','2', '妇产科用剪',null,null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (20103,'6812','3', '妇产科用钳',null,null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (20104,'6812','4', '妇产科用镊、夹',null,null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (20105,'6812','5', '妇产科用钩、针',null,null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (20106,'6812','6', '妇产科用其他器械',null,null,-1);
+
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (20111,'6813','3', '计划生育用钳',null,null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (20112,'6813','6', '计划生育用其他器械',null,null,-1);
+
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (20131,'6816','1', '烧伤（整形）用刀、凿',null,null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (20132,'6816','3', '烧伤（整形）用钳',null,null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (20133,'6816','4', '烧伤（整形）用镊、夹',null,null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (20134,'6816','6', '烧伤（整形）用其他器械',null,null,-1);
+
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (20141,'6820','1', '体温计',null,null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (20142,'6820','2', '血压计',null,null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (20143,'6820','3', '肺量计',null,null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (20144,'6820','4', '听诊器（无电能）',null,null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (20145,'6820','5', '叩诊锤（无电能）',null,null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (20146,'6820','6', '反光器具',null,null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (20147,'6820','7', '视力诊察器具',null,null,-1);
+
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (20151,'6821','1', '用于心脏的治疗、急救装置',null,null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (20152,'6821','2', '有创式电生理仪器及创新电生理仪器',null,null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (20153,'6821','3', '有创医用传感器&无创医用传感器',null,null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (20154,'6821','4', '心电诊断仪器',null,null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (20155,'6821','5', '脑电诊断仪器',null,null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (20156,'6821','6', '肌电诊断仪器',null,null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (20157,'6821','7', '其他生物电诊断仪器',null,null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (20158,'6821','8', '电声诊断仪器',null,null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (20159,'6821','9', '无创监护仪器',null,null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (20160,'6821','10', '呼吸功能及气体分析测定装置',null,null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (20161,'6821','11', '医用刺激器',null,null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (20162,'6821','12', '血流量、容量测定装置',null,null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (20163,'6821','13', '电子压力测定装置',null,null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (20164,'6821','14', '生理研究实验仪器',null,null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (20165,'6821','15', '光谱诊断设备',null,null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (20166,'6821','16', '体外反搏及其辅助循环装置',null,null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (20167,'6821','17', '睡眠呼吸治疗系统',null,null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (20168,'6821','18', '心电电极',null,null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (20169,'6821','20', '心电导联线',null,null,-1);
+
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (20181,'6822','1', '植入体内或长期接触体内的眼科光学器具',null,null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (20182,'6822','2', '心及血管、有创、腔内手术用内窥镜',null,null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (20183,'6822','3', '电子内窥镜',null,null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (20184,'6822','4', '眼科光学仪器',null,null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (20185,'6822','5', '光学内窥镜及冷光源',null,null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (20186,'6822','6', '医用手术及诊断用显微设备',null,null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (20187,'6822','7', '医用放大镜',null,null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (20188,'6822','8', '医用光学仪器配件及附件',null,null,-1);
+
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (20191,'6823','1', '超声手术及聚焦治疗设备',null,null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (20192,'6823','2', '彩色超声成像设备及超声介入/腔内诊断设备',null,null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (20193,'6823','3', '超声母婴监护设备',null,null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (20194,'6823','4', '超声换能器',null,null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (20195,'6823','5', '便携式超声诊断设备',null,null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (20196,'6823','6', '超声理疗设备',null,null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (20197,'6823','7', '超声辅助材料',null,null,-1);
+
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (20201,'6824','1', '激光手术和治疗设备',null,null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (20202,'6824','2', '激光诊断仪器',null,null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (20203,'6824','3', '介入式激光诊治仪器',null,null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (20204,'6824','4', '激光手术器械',null,null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (20205,'6824','5', '弱激光体外治疗仪器',null,null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (20206,'6824','6', '干色激光打印机',null,null,-1);
+
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (20211,'6825','1', '高频手术和电凝设备',null,null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (20212,'6825','2', '高频电熨设备',null,null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (20213,'6825','3', '微波治疗设备',null,null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (20214,'6825','4', '射频治疗设备',null,null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (20215,'6825','5', '高频电极',null,null,-1);
+
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (20221,'6826','1', '高压氧治疗设备',null,null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (20222,'6826','2', '电疗仪器',null,null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (20223,'6826','3', '光谱辐射治疗仪器',null,null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (20224,'6826','4', '高压电位治疗设备',null,null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (20225,'6826','5', '理疗康复仪器',null,null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (20226,'6826','6', '生物反馈仪',null,null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (20227,'6826','7', '磁疗仪器',null,null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (20228,'6826','8', '眼科康复治疗仪器',null,null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (20229,'6826','9', '理疗用电极',null,null,-1);
+
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (20231,'6827','1', '诊断仪器',null,null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (20232,'6827','2', '治疗仪器',null,null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (20233,'6827','3', '中医器具',null,null,-1);
+
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (20241,'6828','1', '医用磁共振成像设备(MRI)',null,null,-1);
+
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (20251,'6830','1', 'X射线治疗设备',null,null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (20252,'6830','2', 'X射线诊断设备及高压发生装置',null,null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (20253,'6830','3', 'X射线手术影像设备',null,null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (20254,'6830','4', 'X射线计算机断层摄影设备（CT）',null,null,-1);
+
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (20261,'6831','1', '医用X射线管、管组件或源组件',null,null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (20262,'6831','2', '医用X线影像系统及成像器件',null,null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (20263,'6831','3', 'X线机配套用患者或部件支撑装置（电动）',null,null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (20264,'6831','4', 'X射线透视、摄影附加装置',null,null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (20265,'6831','5', 'X射线机用限速器',null,null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (20266,'6831','6', '医用X线胶片处理装置',null,null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (20267,'6831','7', '医用X线机配套用非电动床、椅等用具',null,null,-1);
+
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (20271,'6832','1', '医用高能射线治疗设备',null,null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (20272,'6832','2', '高能射线治疗定位设备',null,null,-1);
+
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (20281,'6833','1', '放射性核素治疗设备',null,null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (20282,'6833','2', '放射性核素诊断设备',null,null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (20283,'6833','3', '核素标本测定装置',null,null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (20284,'6833','4', '核素设备用准直装置',null,null,-1);
+
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (20291,'6834','1', '医用射线防护用品',null,null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (20292,'6834','2', '医用射线防护装置',null,null,-1);
+
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (20301,'6840','1', '血液分析系统',null,null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (20302,'6840','2', '生化分析系统',null,null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (20303,'6840','3', '免疫分析系统',null,null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (20304,'6840','4', '细菌分析系统',null,null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (20305,'6840','5', '尿液分析系统',null,null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (20306,'6840','6', '生物分离系统',null,null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (20307,'6840','7', '血气分析系统',null,null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (20308,'6840','8', '基因和生命科学仪器',null,null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (20309,'6840','10', '临床医学检验辅助设备',null,null,-1);
+
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (20321,'6841','1', '医用培养箱',null,null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (20322,'6841','2', '医用离心机',null,null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (20323,'6841','3', '病理分析前处理设备',null,null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (20324,'6841','4', '血液化验设备和器具',null,null,-1);
+
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (20331,'6845','1', '人工心肺设备',null,null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (20332,'6845','2', '氧合器',null,null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (20333,'6845','3', '人工心肺设备辅助装置',null,null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (20334,'6845','4', '血液净化设备和血液净化器具',null,null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (20335,'6845','5', '血液净化设备辅助装置',null,null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (20336,'6845','6', '体液处理设备',null,null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (20337,'6845','7', '透析粉、透析液',null,null,-1);
+
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (20341,'6846','1', '植入器材',null,null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (20342,'6846','2', '植入性人工器官',null,null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (20343,'6846','3', '接触式人工器官',null,null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (20344,'6846','4', '支架',null,null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (20345,'6846','5', '器官辅助装置',null,null,-1);
+
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (20351,'6854','1', '手术及急救装置',null,null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (20352,'6854','2', '呼吸设备',null,null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (20353,'6854','3', '呼吸麻醉设备及附件',null,null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (20354,'6854','4', '婴儿保育设备',null,null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (20355,'6854','5', '输液辅助装置',null,null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (20356,'6854','6', '负压吸引装置',null,null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (20357,'6854','7', '呼吸设备配件',null,null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (20358,'6854','8', '医用制气设备',null,null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (20359,'6854','9', '电动、液压手术台',null,null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (20360,'6854','10', '冲洗、通气、减压器具',null,null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (20361,'6854','11', '诊察治疗设备',null,null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (20362,'6854','13', '手术灯',null,null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (20363,'6854','14', '手动手术台床',null,null,-1);
+
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (20371,'6855','1', '口腔综合治疗设备',null,null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (20372,'6855','2', '牙钻机及配件',null,null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (20373,'6855','3', '牙科椅',null,null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (20374,'6855','4', '牙科手机',null,null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (20375,'6855','5', '洁牙、补牙设备',null,null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (20376,'6855','6', '车针',null,null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (20377,'6855','7', '口腔综合治疗设备配件',null,null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (20378,'6855','8', '口腔灯',null,null,-1);
+
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (20381,'6856','1', '供氧系统',null,null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (20382,'6856','2', '病床',null,null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (20383,'6856','4', '医用供气、输气装置',null,null,-1);
+
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (20391,'6857','1', '辐射灭菌设备',null,null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (20392,'6857','2', '压力蒸汽灭菌设备',null,null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (20393,'6857','3', '气体灭菌设备',null,null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (20394,'6857','4', '干热灭菌设备',null,null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (20395,'6857','5', '高压电离灭菌设备',null,null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (20396,'6857','6', '专用消毒设备',null,null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (20397,'6857','8', '煮沸灭菌器具',null,null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (20398,'6857','9', '煮沸消毒设备',null,null,-1);
+
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (20411,'6858','1', '低温治疗仪器',null,null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (20412,'6858','2', '医用低温设备',null,null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (20413,'6858','3', '医用冷藏设备',null,null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (20414,'6858','4', '医用冷冻设备',null,null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (20415,'6858','5', '冷敷器具',null,null,-1);
+
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (20421,'6863','1', '高分子义齿材料',null,null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (20422,'6863','2', '齿科植入材料',null,null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (20423,'6863','3', '根管充填材料',null,null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (20424,'6863','4', '牙周塞治剂',null,null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (20425,'6863','5', '颌面部修复材料',null,null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (20426,'6863','6', '永久性充填材料及有关材料',null,null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (20427,'6863','7', '暂封性充填材料及有关材料',null,null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (20428,'6863','8', '金属、陶瓷类义齿材料',null,null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (20429,'6863','9', '齿科预防保健材料',null,null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (20430,'6863','10', '充填辅助材料',null,null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (20431,'6863','11', '正畸材料',null,null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (20432,'6863','12', '印模材料',null,null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (20433,'6863','13', '铸造包埋材料',null,null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (20434,'6863','14', '模型材料',null,null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (20435,'6863','15', '齿科辅助材料',null,null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (20436,'6863','16', '研磨材料',null,null,-1);
+
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (20441,'6864','1', '可吸收性止血、防粘连材料',null,null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (20442,'6864','2', '敷料、护创材料',null,null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (20443,'6864','3', '手术用品',null,null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (20444,'6864','4', '粘贴材料',null,null,-1);
+
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (20451,'6865','1', '医用可吸收缝合线（带针/不带针）',null,null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (20452,'6865','2', '不可吸收缝合线（带针/不带针）',null,null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (20453,'6865','3', '医用粘合剂',null,null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (20454,'6865','4', '表面缝合材料',null,null,-1);
+
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (20461,'6866','1', '输液、输血器具及管路',null,null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (20462,'6866','2', '妇科检查器械',null,null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (20463,'6866','3', '避孕器械',null,null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (20464,'6866','4', '导管、引流管',null,null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (20465,'6866','5', '呼吸麻醉或通气用气管插管',null,null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (20466,'6866','6', '肠道插管',null,null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (20467,'6866','7', '手术手套',null,null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (20468,'6866','8', '引流容器',null,null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (20469,'6866','9', '一般医疗用品',null,null,-1);
+
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (20481,'6870','1', '功能程序化软件',null,null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (20482,'6870','2', '诊断图象处理软件',null,null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (20483,'6870','3', '诊断数据处理软件',null,null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (20484,'6870','4', '影象档案传输、处理系统软件',null,null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (20485,'6870','5', '人体解剖学测量软件',null,null,-1);
+
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (20491,'6877','1', '血管内导管',null,null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (20492,'6877','2', '导丝和管鞘',null,null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (20493,'6877','3', '栓塞器材',null,null,-1);

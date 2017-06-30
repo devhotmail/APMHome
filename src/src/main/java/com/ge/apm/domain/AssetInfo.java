@@ -206,6 +206,11 @@ public class AssetInfo implements Serializable {
     private Boolean isDeleted;
     @Column(name = "parent_asset_id")
     private Integer parentAssetId;
+
+    @Column(name = "inventory_status")
+    private Integer inventoryStatus;
+    @Column(name = "asset_code68")
+    private String assetCode68;
     
     @Column(name = "hospital_id")
     @Basic(optional = false)
@@ -773,6 +778,22 @@ public class AssetInfo implements Serializable {
 
     public void setParentAssetId(Integer parentAssetId) {
         this.parentAssetId = parentAssetId;
+    }
+
+    public Integer getInventoryStatus() {
+        return inventoryStatus;
+    }
+
+    public void setInventoryStatus(Integer inventoryStatus) {
+        this.inventoryStatus = inventoryStatus;
+    }
+
+    public String getAssetCode68() {
+        return assetCode68;
+    }
+
+    public void setAssetCode68(String assetCode68) {
+        this.assetCode68 = assetCode68;
     }
 
     @Override
