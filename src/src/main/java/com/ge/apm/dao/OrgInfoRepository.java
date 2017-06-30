@@ -25,5 +25,8 @@ public interface OrgInfoRepository extends GenericRepository<OrgInfo> {
     
     public Page<OrgInfo> getByHospitalId(Pageable pageRequest, int hospitalId);
     public Page<OrgInfo> getBySiteId(Pageable pageRequest, int siteId);
+
+    @Query(value = "select name from org_info where id=?1",nativeQuery = true)
+    public String getDepName(int id);
     
 }

@@ -41,11 +41,15 @@ public class ApplicationController extends GenericCRUDUUIDController<PurchaseApp
     private List<String> selectedIntention2;
     private String needCost;
     private UserAccount currentUser;
+    private UserContextService userContextService =null;
+private OrgInfoRepository orgInfoRepository =null;
     @Override
     protected void init() {
+        userContextService = (UserContextService) WebUtil.getBean(UserContextService.class);
         currentUser = UserContextService.getCurrentUserAccount();
         this.filterBySite=false;
         dao=WebUtil.getBean(PurchaseApplicationRepository.class);
+        orgInfoRepository=WebUtil.getBean(OrgInfoRepository.class);
         selectedIntention1=new ArrayList<Integer>();
         selectedIntention2 = new ArrayList<String>();
         HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
@@ -88,7 +92,6 @@ public class ApplicationController extends GenericCRUDUUIDController<PurchaseApp
         } else if ("Delete".equalsIgnoreCase(actionName)) {
             prepareDelete();
         }
-
         this.filterBySite=true;
         this.filterByHospital=true;
     }
@@ -139,9 +142,19 @@ public class ApplicationController extends GenericCRUDUUIDController<PurchaseApp
     @Override
     public void prepareCreate() throws InstantiationException, IllegalAccessException {
         super.prepareCreate();
-
+        String depName = orgInfoRepository.getDepName(userContextService.getLoginUserOrgInfoId());
+        this.selected.setApplyClinical(depName);
         this.selected.setHospitalId(currentUser.getHospitalId());
         this.selected.setSiteId(currentUser.getSiteId());
+        this.selected.setClinicalResponser(currentUser.getName());
+    }
+
+    @Override
+    public void prepareEdit() {
+        super.prepareEdit();
+        if(userContextService.hasRole("AssetHead")){
+            this.selected.setDevSign(currentUser.getName());
+        }
     }
 
     @Override
