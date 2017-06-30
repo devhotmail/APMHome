@@ -10,23 +10,23 @@
 
                     <div class="ui-g">
                         <div class="ui-g-2"> <p:outputLabel value="申请科室:"/></div>
-                        <div class="ui-g-4"> <p:inputText id="applyClinical" required="false" value="#{applicationController.selected.applyClinical}"/></div>
+                        <div class="ui-g-4"> <p:inputText id="applyClinical" required="true" value="#{applicationController.selected.applyClinical}" requiredMessage="申请科室 #{msg.ValidationRequire}"/></div>
                         <div class="ui-g-2"><p:outputLabel value="填表日期:"/></div>
                         <div class="ui-g-4">
-                            <p:calendar timeZone="GMT+8" id="fillDate" pattern="yyyy/MM/dd"  value="#{applicationController.selected.fillDate}" showOn="button" showButtonPanel="true" navigator="true" readonlyInput="false" locale= "zh" required="true"></p:calendar>
+                            <p:calendar timeZone="GMT+8" id="fillDate" pattern="yyyy/MM/dd"  value="#{applicationController.selected.fillDate}" showOn="button" showButtonPanel="true" navigator="true" readonlyInput="false" locale= "zh" required="true" requiredMessage="填表日期 #{msg.ValidationRequire}"></p:calendar>
                         </div>
                     </div>
                     <div class="ui-g">
                         <div class="ui-g-2"><p:outputLabel value="科室联系人:"/></div>
-                        <div class="ui-g-4"><p:inputText id="clinicalContact" required="false" value="#{applicationController.selected.clinicalContact}"/></div>
+                        <div class="ui-g-4"><p:inputText id="clinicalContact" required="true" value="#{applicationController.selected.clinicalContact}" requiredMessage="科室联系人 #{msg.ValidationRequire}"/></div>
                         <div class="ui-g-2"><p:outputLabel value="联系电话:"/></div>
-                        <div class="ui-g-4"><p:inputText  id="lianxidianhua" required="false" value="#{applicationController.selected.telephone}"/></div>
+                        <div class="ui-g-4"><p:inputText  id="lianxidianhua" required="true" value="#{applicationController.selected.telephone}" requiredMessage="联系电话 #{msg.ValidationRequire}"/></div>
                     </div>
                     <div class="ui-g">
                         <div class="ui-g-2"><p:outputLabel value="设备名称:"/></div>
-                        <div class="ui-g-3"><p:inputText id="shebeimingcheng" required="false"  value="#{applicationController.selected.device}"/></div>
+                        <div class="ui-g-3"><p:inputText id="shebeimingcheng" required="true"  value="#{applicationController.selected.device}" requiredMessage="设备名称 #{msg.ValidationRequire}"/></div>
                         <div class="ui-g-1"><p:outputLabel value="数量:"/></div>
-                        <div class="ui-g-2"><p:inputText  id="quantity"  required="true" value="#{applicationController.selected.quantity}"/></div>
+                        <div class="ui-g-2"><p:inputText  id="quantity"  required="true" value="#{applicationController.selected.quantity}" requiredMessage="数量 #{msg.ValidationRequire}"/></div>
                         <div class="ui-g-1"><p:outputLabel value="预估单价:"/></div>
                         <div class="ui-g-3"><p:inputText id="yugudanjia" size="10"  required="false"  value="#{applicationController.selected.predicatePrice}"/></div>
                     </div>
@@ -34,7 +34,7 @@
                     <div class="ui-g">
                         <div class="ui-g-2"><p:outputLabel value="申购性质:"/></div>
                         <div class="ui-g-3">
-                            <p:selectOneRadio id="applyfeature" required="true"  value="#{applicationController.selected.applyFeature}">
+                            <p:selectOneRadio id="applyfeature" required="true"  value="#{applicationController.selected.applyFeature}" requiredMessage="申请性质 #{msg.ValidationRequire}">
                                 <f:selectItem itemLabel="新购" itemValue="1" />
                                 <f:selectItem itemLabel="更新" itemValue="2" />
                                 <f:selectItem itemLabel="补充" itemValue="3" />
@@ -43,7 +43,7 @@
                         </div>
                         <div class="ui-g-2"> <p:outputLabel value="是否需要专用耗品:"/></div>
                         <div class="ui-g-4" style="padding-left: -10px">
-                            <p:selectOneRadio id="console"  required="true" value="#{applicationController.selected.needy}">
+                            <p:selectOneRadio id="console"  required="true" value="#{applicationController.selected.needy} " requiredMessage="是否需要专用耗品 #{msg.ValidationRequire}">
                                 <f:selectItem itemLabel="是" itemValue="true" />
                                 <f:selectItem itemLabel="否" itemValue="false" />
                             </p:selectOneRadio>
@@ -53,7 +53,7 @@
                     <div class="ui-g">
                         <div class="ui-g-2"><p:outputLabel value="资金来源:"/></div>
                         <div class="ui-g-4">
-                            <p:selectOneRadio id="fundingResource" required="true" value="#{applicationController.selected.fundingResource}">
+                            <p:selectOneRadio id="fundingResource" required="true" value="#{applicationController.selected.fundingResource}" requiredMessage="资金来源 #{msg.ValidationRequire}">
                                 <p:ajax  update=":PurchaseApplicationForm:other" event="change"></p:ajax>
                                 <f:selectItem itemLabel="医院自筹" itemValue="1" />
                                 <f:selectItem itemLabel="经费/基金" itemValue="2" />
@@ -113,7 +113,7 @@
                         <div class="ui-g-12">
                             <p:fieldset legend="申请科室负责人(签字)" >
                                 <p:outputLabel value="签字"/>
-                                <p:inputText value="#{applicationController.selected.clinicalResponser}" rows="1"  cols="40"  queryDelay="750" minQueryLength="4"/>
+                                <p:inputText value="#{applicationController.selected.clinicalResponser}" rows="1" readonly="true" cols="40"  queryDelay="750" minQueryLength="4"/>
                             </p:fieldset>
                         </div>
                     </div>
@@ -136,7 +136,7 @@
                                 <p:outputLabel value="意见"/>
                                 <p:inputTextarea value="#{applicationController.selected.devAdvice}" rows="3"  cols="40"  queryDelay="750" minQueryLength="4"/>
                                 <p:outputLabel value="签字"/>
-                                <p:inputTextarea value="#{applicationController.selected.devSign}" rows="1"  cols="15"  queryDelay="750" minQueryLength="4"/>
+                                <p:inputTextarea value="#{applicationController.selected.devSign}" rows="1"  cols="15" readonly="true"  queryDelay="750" minQueryLength="4"/>
                                 <p:outputLabel value="日期"/>
                                 <p:calendar timeZone="GMT+8" id="devSignDate" pattern="yyyy/MM/dd"  value="#{applicationController.selected.devSignDate}" showOn="button" showButtonPanel="true" required="true" navigator="true" locale="zh"></p:calendar>
                             </p:fieldset>

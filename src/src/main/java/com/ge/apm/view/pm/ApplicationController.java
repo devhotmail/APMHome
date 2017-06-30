@@ -141,6 +141,16 @@ public class ApplicationController extends GenericCRUDUUIDController<PurchaseApp
 
         this.selected.setHospitalId(currentUser.getHospitalId());
         this.selected.setSiteId(currentUser.getSiteId());
+        this.selected.setClinicalResponser(currentUser.getName());
+    }
+
+    @Override
+    public void prepareEdit() {
+        super.prepareEdit();
+        UserContextService userContextService = (UserContextService) WebUtil.getBean(UserContextService.class);
+        if(userContextService.hasRole("AssetHead")){
+            this.selected.setDevSign(currentUser.getName());
+        }
     }
 
     @Override

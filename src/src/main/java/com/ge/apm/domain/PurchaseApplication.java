@@ -25,27 +25,33 @@ public class PurchaseApplication implements Serializable {
     private String id;
 
     @Basic(optional = false)
+    @NotNull
     @Column(name = "apply_clinical")
     private String applyClinical;
 
     @Basic(optional = false)
     @Column(name = "fill_date")
+    @NotNull
     @Temporal(TemporalType.DATE)
     private Date fillDate;
 
     @Basic(optional = false)
+    @NotNull
     @Column(name = "clinical_contact")
     private String clinicalContact;
 
     @Basic(optional = false)
     @Column(name = "telephone")
+    @NotNull
     private String telephone;
 
     @Basic(optional = false)
+    @NotNull
     @Column(name = "device")
     private String device;
 
     @Basic(optional = false)
+    @NotNull
     @Column(name = "quantity")
     private Integer quantity;
 
@@ -58,10 +64,12 @@ public class PurchaseApplication implements Serializable {
     private Double predicatePrice;
 
     @Basic(optional = false)
+    @NotNull
     @Column(name = "needy")
     private boolean needy;
 
     @Basic(optional = false)
+    @NotNull
     @Column(name = "apply_feature")
     private int applyFeature;
 
