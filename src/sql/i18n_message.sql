@@ -579,8 +579,9 @@ INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id)
 INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (1713,'alertType','3', '水浸状态报警(常闭报警)','t3',null,-1);
 INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (1714,'alertType','101', '水冷温度报警','t101',null,-1);
 INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (1715,'alertType','102', '机房湿度报警','t102',null,-1);
-INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (1716,'alertType','104', '机房温度报警','t103',null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (1716,'alertType','103', '机房温度报警','t103',null,-1);
 INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (1717,'alertType','4', '压缩机状态报警(常闭报警)','t4',null,-1);
+INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (1718,'alertType','104', '水冷机冷却液温度报警','t104',null,-1);
 
 -- module's messages  (id from 3000)
 INSERT INTO i18n_message(id,msg_type,msg_key,value_zh,value_en,value_tw,site_id) VALUES (3000,'message','DeleteConformation', '删除确认','Delete Confirmation',null,-1);
