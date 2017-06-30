@@ -2,7 +2,7 @@ DROP TABLE IF EXISTS i18n_message CASCADE;
 DROP TABLE IF EXISTS chart_config CASCADE;
 DROP TABLE IF EXISTS data_table_config CASCADE;
 
-DROP TABLE IF EXISTS site_info CASCADE;
+DROP TABLE IF EXISTS tenant_info CASCADE;
 DROP TABLE IF EXISTS org_info CASCADE;
 DROP TABLE IF EXISTS sys_role CASCADE;
 DROP TABLE IF EXISTS user_account CASCADE;
@@ -116,7 +116,7 @@ CREATE TABLE chart_config (
 );
 
 
-CREATE TABLE "site_info" (
+CREATE TABLE "tenant_info" (
 "id" serial NOT NULL,
 "name" varchar(64) COLLATE "default" DEFAULT NULL::character varying,
 "name_en" varchar(64) COLLATE "default" DEFAULT NULL::character varying,
@@ -228,7 +228,7 @@ create table asset_file_attachment(
 id serial not null,
 site_id int not null,
 asset_id int not null,
-name varchar(64) not null,
+name varchar(128) not null,
 file_type varchar(64) not null,
 file_url varchar(128),
 file_id int
@@ -486,7 +486,7 @@ ALTER TABLE work_order_step ADD PRIMARY KEY (id);
 ALTER TABLE work_order_step_detail ADD PRIMARY KEY (id);
 ALTER TABLE asset_clinical_record ADD PRIMARY KEY (id);
 ALTER TABLE supplier ADD PRIMARY KEY (id);
-ALTER TABLE site_info ADD PRIMARY KEY (id);
+ALTER TABLE tenant_info ADD PRIMARY KEY (id);
 ALTER TABLE org_info ADD PRIMARY KEY (id);
 ALTER TABLE sys_role ADD PRIMARY KEY (id);
 ALTER TABLE user_account ADD PRIMARY KEY (id);
@@ -503,7 +503,7 @@ ALTER TABLE asset_contract ADD PRIMARY KEY (id);
 
 ALTER TABLE "user_account" ADD CONSTRAINT "uk_user_account_login_name" UNIQUE ("login_name");
 
-ALTER TABLE org_info ADD FOREIGN KEY (site_id) REFERENCES site_info (id) ON DELETE NO ACTION ON UPDATE NO ACTION;
+ALTER TABLE org_info ADD FOREIGN KEY (site_id) REFERENCES tenant_info (id) ON DELETE NO ACTION ON UPDATE NO ACTION;
 ALTER TABLE org_info ADD FOREIGN KEY (parent_id) REFERENCES org_info (id) ON DELETE NO ACTION ON UPDATE NO ACTION;
 ALTER TABLE user_account ADD FOREIGN KEY (org_id) REFERENCES org_info (id) ON DELETE NO ACTION ON UPDATE NO ACTION;
 ALTER TABLE user_role ADD FOREIGN KEY (user_id) REFERENCES user_account (id) ON DELETE NO ACTION ON UPDATE NO ACTION;

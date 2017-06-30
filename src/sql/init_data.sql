@@ -1,4 +1,4 @@
-truncate table site_info cascade;
+truncate table tenant_info cascade;
 truncate table org_info cascade;
 truncate table sys_role cascade;
 truncate table user_account cascade;
@@ -8,8 +8,8 @@ truncate table data_table_config cascade;
 truncate table field_code_type cascade;
 
 
-INSERT INTO site_info(id,name,name_en,alias_name,site_description,contact_person,contact_phone,contact_email,location,location_en,time_zone,default_lang,is_enabled,wf_auto_step2,wf_auto_step3,wf_auto_step4,wf_auto_step5,wf_auto_step6, manhour_price) VALUES ('1', 'GE', 'GE', 'GE', 'GE', null, null, null, null, null, null, null, true, false,false, false, false,false, 1000);
-INSERT INTO site_info(id,name,name_en,alias_name,site_description,contact_person,contact_phone,contact_email,location,location_en,time_zone,default_lang,is_enabled,wf_auto_step2,wf_auto_step3,wf_auto_step4,wf_auto_step5,wf_auto_step6, manhour_price) VALUES ('2', 'Demo医联体', 'DemoHospitalGrup', '医联体', '医联体', null, null, null, null, null, null, null, true, false,false, false, false,false, 1000);
+INSERT INTO tenant_info(id,name,name_en,alias_name,site_description,contact_person,contact_phone,contact_email,location,location_en,time_zone,default_lang,is_enabled,wf_auto_step2,wf_auto_step3,wf_auto_step4,wf_auto_step5,wf_auto_step6, manhour_price) VALUES ('1', 'GE', 'GE', 'GE', 'GE', null, null, null, null, null, null, null, true, false,false, false, false,false, 1000);
+INSERT INTO tenant_info(id,name,name_en,alias_name,site_description,contact_person,contact_phone,contact_email,location,location_en,time_zone,default_lang,is_enabled,wf_auto_step2,wf_auto_step3,wf_auto_step4,wf_auto_step5,wf_auto_step6, manhour_price) VALUES ('2', 'Demo医联体', 'DemoHospitalGrup', '医联体', '医联体', null, null, null, null, null, null, null, true, false,false, false, false,false, 1000);
 
 INSERT INTO org_info(id,site_id,hospital_id,name,name_en,parent_id) values ('1', '1', null, 'Digital Healthcare', 'Digital Healthcare', null);
 INSERT INTO org_info(id,site_id,hospital_id,name,name_en,parent_id) values ('2', '2', null, '医院本部', 'Hospital Headquarter', null);
@@ -50,7 +50,7 @@ INSERT INTO user_role(id,user_id,role_id) VALUES ('7', '7', '2');
 INSERT INTO user_role(id,user_id,role_id) VALUES ('8', '8', '4');
 
 
-SELECT setval('"site_info_id_seq"', 3, false);
+SELECT setval('"tenant_info_id_seq"', 3, false);
 SELECT setval('"org_info_id_seq"', 7, false);
 SELECT setval('"sys_role_id_seq"', 7, false);
 SELECT setval('"user_account_id_seq"', 9, false);

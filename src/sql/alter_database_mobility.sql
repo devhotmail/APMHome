@@ -314,7 +314,7 @@ CONSTRAINT v2_work_order_step_pkey PRIMARY KEY (id)
 );
 
 
-Alter table site_info add column password_lifetime int;  --密码有效天数
+Alter table tenant_info add column password_lifetime int;  --密码有效天数
 Alter table user_account add column password_update_date date; --上次密码修改时间
 Alter table user_account add column password_error_count int; --密码连续错误次数
 Alter table user_account add column is_locked bool;	--帐号是否锁定

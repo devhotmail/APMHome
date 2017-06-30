@@ -81,12 +81,18 @@ public class AssetCreateService {
 
     public String getTenantName(Integer siteId) {
         TenantInfo si = tenantDao.findById(siteId);
-        return si.getName();
+        if(si!=null)
+            return si.getName();
+        else
+            return siteId.toString();
     }
 
     public String getHospitalName(Integer hospitalId) {
         OrgInfo org = orgDao.findById(hospitalId);
-        return org.getName();
+        if(org!=null)
+            return org.getName();
+        else
+            return hospitalId.toString();
     }
 
     public QrCodeLib getCreateRequest(String qrCode) {
