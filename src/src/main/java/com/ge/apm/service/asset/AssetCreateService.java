@@ -55,6 +55,7 @@ public class AssetCreateService {
     protected WxMpService wxMpService;
     @Autowired
     private TenantInfoRepository tenantDao;
+    @Autowired
     protected BlobFileService blobService;
     @Autowired
     private OrgInfoRepository orgDao;

@@ -59,7 +59,6 @@ public class PurchaseApplication implements Serializable {
     @Column(name = "intent")
     private Integer intent;
 
-    @Basic(optional = false)
     @Column(name = "predicate_price")
     private Double predicatePrice;
 
@@ -73,83 +72,60 @@ public class PurchaseApplication implements Serializable {
     @Column(name = "apply_feature")
     private int applyFeature;
 
-    @Basic(optional = false)
     @Column(name = "clinical_responser")
     private String clinicalResponser;
-    @Basic(optional = false)
     @Column(name = "funding_resource")
     private int fundingResource;
-    @Basic(optional = false)
     @Column(name = "recom_ad1")
     private String recomAd1;
-    @Basic(optional = false)
     @Column(name = "recom_ad1_tel")
     private String recomAd1Tel;
-    @Basic(optional = false)
     @Column(name = "recom_ad2")
     private String recomAd2;
-    @Basic(optional = false)
     @Column(name = "recom_ad2_tel")
     private String recomAd2Tel;
-    @Basic(optional = false)
     @Column(name = "recom_ad3")
     private String recomAd3;
-    @Basic(optional = false)
     @Column(name = "recom_ad3_tel")
     private String recomAd3Tel;
 
-    @Basic(optional = false)
     @Column(name = "info_sign_date")
     @Temporal(TemporalType.DATE)
     private Date infoSignDate;
 
-    @Basic(optional = false)
     @Column(name = "dev_sign_date")
     @Temporal(TemporalType.DATE)
     private Date devSignDate;
 
-
-    @Basic(optional = false)
     @Column(name = "leader_sign_date")
     @Temporal(TemporalType.DATE)
     private Date leaderSignDate;
 
 
-    @Basic(optional = false)
     @Column(name = "apply_reason")
     private String applyReason;
 
-    @Basic(optional = false)
     @Column(name = "special_requirement")
     private String specialRequirement;
 
-    @Basic(optional = false)
     @Column(name = "funding_resource_others")
     private String fundingResourceOthers;
 
-////
-@Basic(optional = false)
-@Column(name = "info_sign")
-private String infoSign;
+    @Column(name = "info_sign")
+    private String infoSign;
 
-    @Basic(optional = false)
     @Column(name = "dev_sign")
     private String devSign;
 
-    @Basic(optional = false)
     @Column(name = "leader_sign")
     private String leaderSign;
 
-
-    @Basic(optional = false)
     @Column(name = "info_advice")
     private String infoAdvice;
 
-    @Basic(optional = false)
     @Column(name = "dev_advice")
     private String devAdvice;
 
-    @Basic(optional = false)
     @Column(name = "leader_advice")
     private String leaderAdvice;
 
