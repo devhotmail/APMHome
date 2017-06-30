@@ -49,7 +49,7 @@
                             <p:menuitem id="um083" value="#{msg.Create}#{msg.BuildAsset}" outcome="/portal/asset/createAsset/RequestsList.xhtml"/>
                             <p:menuitem id="um085" value="#{msg.AssetTagMsgSubscriber}" outcome="/portal/asset/assetTag/TagSubscribeList.xhtml"/>
 
-                            <p:menuitem id="um086" value="采购申请" outcome="/portal/asset/ApplicationList.xhtml"/>
+                            <p:menuitem id="um086" value="采购申请" outcome="/portal/asset/ApplicationList.xhtml" rendered="#{userContextService.hasRole('AssetHead') or userContextService.hasRole('DeptHead')}"/>
                             
                              <p:menuitem id="um087" value="#{msg.ImportAssetDataFile}" outcome="/portal/asset/assetImport/assetImport.xhtml"/>
 
