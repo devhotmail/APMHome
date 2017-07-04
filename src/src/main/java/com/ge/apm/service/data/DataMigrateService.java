@@ -5,11 +5,13 @@
  */
 package com.ge.apm.service.data;
 
+import com.ge.apm.dao.AssetContractRepository;
 import com.ge.apm.dao.AssetFileAttachmentRepository;
 import com.ge.apm.dao.AssetInfoRepository;
 import com.ge.apm.dao.BlobObjectRepository;
 import com.ge.apm.dao.QrCodeAttachmentRepository;
 import com.ge.apm.dao.QrCodeLibRepository;
+import com.ge.apm.domain.AssetContract;
 import com.ge.apm.domain.AssetFileAttachment;
 import com.ge.apm.domain.AssetInfo;
 import com.ge.apm.domain.QrCodeAttachment;
@@ -43,6 +45,8 @@ public class DataMigrateService {
     private QrCodeLibRepository qrLibDao;
     @Autowired
     private QrCodeAttachmentRepository qrCodeAttachDao;
+    @Autowired
+    private AssetContractRepository contractDao;
     
     private AttachmentFileService fileService = WebUtil.getBean(AttachmentFileService.class);
 
@@ -98,6 +102,30 @@ public class DataMigrateService {
         
         item.setObjectId(blobObject.getObjectStorageId());
         qrCodeAttachDao.save(item);
+        return blobObject.getId() != null;
+    }
+
+    public Boolean migrateAssetContract(AssetContract item, String token) {
+        
+        String fileName = fileService.getFileNameById(item.getFileId());
+        Map<String, Object> docMap = msService.uploadSingleFileByUrl(token, url_localFileUrl.concat("/").concat(String.valueOf(item.getFileId())), fileName);
+        if (null == docMap) {
+            return false;
+        }
+        
+        V2_BlobObject blobObject = new V2_BlobObject();
+        blobObject.setBoId(item.getId());
+        blobObject.setBoType(V2_BlobObject.BO_TYPE_AssetContract);
+        blobObject.setBoSubType(String.valueOf(item.getContractType()));
+        blobObject.setBoUuid(item.getUid());
+        blobObject.setObjectName((String) docMap.get("objectName"));
+        blobObject.setObjectSize(Long.parseLong(String.valueOf(docMap.get("objectSize"))));
+        blobObject.setObjectStorageId((String) docMap.get("objectId"));
+        blobObject.setObjectType((String) docMap.get("objectType"));
+        boDao.save(blobObject);
+        
+        item.setObjectId(blobObject.getObjectStorageId());
+        contractDao.save(item);
         return blobObject.getId() != null;
     }
 

@@ -5,10 +5,12 @@
  */
 package com.ge.apm.view.sysutil;
 
+import com.ge.apm.dao.AssetContractRepository;
 import com.ge.apm.dao.AssetFileAttachmentRepository;
 import com.ge.apm.dao.AssetInfoRepository;
 import com.ge.apm.dao.QrCodeAttachmentRepository;
 import com.ge.apm.dao.QrCodeLibRepository;
+import com.ge.apm.domain.AssetContract;
 import com.ge.apm.domain.AssetFileAttachment;
 import com.ge.apm.domain.QrCodeAttachment;
 import java.util.List;
@@ -32,11 +34,13 @@ public class DataMigrateController {
 
     private List<AssetFileAttachment> assetAttachmentList;
     private List<QrCodeAttachment> qrAttachList;
+    private List<AssetContract> contractList;
 
     private AssetFileAttachmentRepository attchDao;
     private AssetInfoRepository assetDao;
     private QrCodeAttachmentRepository qrattachDao;
     private QrCodeLibRepository qrLibDao;
+    private AssetContractRepository contractDao;
 
     private AssetCreateService acService;
     private DataMigrateService dmService;
@@ -50,9 +54,11 @@ public class DataMigrateController {
         assetDao = WebUtil.getBean(AssetInfoRepository.class);
         qrattachDao = WebUtil.getBean(QrCodeAttachmentRepository.class);
         qrLibDao = WebUtil.getBean(QrCodeLibRepository.class);
+        contractDao = WebUtil.getBean(AssetContractRepository.class);
 
         assetAttachmentList = getAttachementList();
         qrAttachList = getQrAttachmentList();
+        contractList = getAssetContractList();
     }
 
     public List<QrCodeAttachment> getQrAttachmentList() {
@@ -63,6 +69,10 @@ public class DataMigrateController {
         List<AssetFileAttachment> alllist = attchDao.find();
         return alllist.stream().filter(item -> item.getFileUrl() == null || item.getFileUrl().isEmpty()).collect(Collectors.toList());
     }
+    public List<AssetContract> getAssetContractList() {
+        
+        return contractDao.find().stream().filter(item -> item.getObjectId()== null || item.getObjectId().isEmpty()).collect(Collectors.toList());
+    }
 
     public String getHospitalName(Integer hospitalId) {
         return acService.getHospitalName(hospitalId);
@@ -72,6 +82,20 @@ public class DataMigrateController {
         return acService.getTenantName(siteId);
     }
 
+    public void migrateAssetContractData() {
+
+        String token = UserContextService.getAccessToken();
+        if (token == null || token.isEmpty()) {
+            WebUtil.addErrorMessage("do not have premission");
+            return;
+        }
+
+        contractList.stream().forEach(item -> {
+            dmService.migrateAssetContract(item, token);
+        });
+
+    }
+    
     public void migrateAssetAttachData() {
 
         String token = UserContextService.getAccessToken();
@@ -112,11 +136,20 @@ public class DataMigrateController {
     public Integer getCountOfQrLibEntity() {
         return qrLibDao.find().stream().filter(item -> item.getUid() == null).collect(Collectors.toList()).size();
     }
+    public Integer getCountOfContractEntity() {
+        return contractDao.find().stream().filter(item -> item.getUid() == null).collect(Collectors.toList()).size();
+    }
 
     public void updateQrLibEntity() {
         qrLibDao.find().stream().filter(item -> item.getUid() == null).forEach(item -> {
             item.setUid(UUID.randomUUID().toString().replace("-", ""));
             qrLibDao.save(item);
+        });
+    }
+    public void updateContractEntity() {
+        contractDao.find().stream().filter(item -> item.getUid() == null).forEach(item -> {
+            item.setUid(UUID.randomUUID().toString().replace("-", ""));
+            contractDao.save(item);
         });
     }
 
@@ -127,4 +160,10 @@ public class DataMigrateController {
     public List<AssetFileAttachment> getAssetAttachmentList() {
         return assetAttachmentList;
     }
+
+    public List<AssetContract> getContractList() {
+        return contractList;
+    }
+
+    
 }
