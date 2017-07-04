@@ -70,13 +70,13 @@
                         <p:fieldset legend="推荐品牌,规格型号和联系电话" >
                             <div class="ui-g-2"><p:outputLabel value="(如果有的话)"/></div>
                             <div class="ui-g-10 ui-g-nopad">
-                                <div class="ui-g-6"><p:inputText size="55" value="#{applicationController.selected.recomAd1}"/></div>
+                                <div class="ui-g-6">1. <p:inputText size="55" value="#{applicationController.selected.recomAd1}"/></div>
                                 <div class="ui-g-1"><p:outputLabel value="电话"/></div>
                                 <div class="ui-g-3"><p:inputText  value="#{applicationController.selected.recomAd1Tel}"/></div>
-                                <div class="ui-g-6"><p:inputText size="55" value="#{applicationController.selected.recomAd2}"/></div>
+                                <div class="ui-g-6">2.<p:inputText size="55" value="#{applicationController.selected.recomAd2}"/></div>
                                 <div class="ui-g-1"><p:outputLabel value="电话"/></div>
                                 <div class="ui-g-3"><p:inputText   value="#{applicationController.selected.recomAd2Tel}"/></div>
-                                <div class="ui-g-6"><p:inputText size="55" value="#{applicationController.selected.recomAd3}"/></div>
+                                <div class="ui-g-6">3.<p:inputText size="55" value="#{applicationController.selected.recomAd3}"/></div>
                                 <div class="ui-g-1"><p:outputLabel value="电话"/></div>
                                 <div class="ui-g-3"><p:inputText  value="#{applicationController.selected.recomAd3Tel}"/></div>
                             </div>
@@ -95,7 +95,7 @@
                                 </p:selectManyCheckbox>
                             </div>
                             <div class="ui-g-10 ui-g-nopad" >
-                                <p:outputLabel value="理由及依据(阐述):该科室常规进行CTTR治疗，同时心脏手术患者较多,均需反复检测ACT,以调整治疗"/>
+                                <p:outputLabel value="理由及依据(阐述):"/>
                                 <p:inputTextarea rows="10"  cols="70"  queryDelay="750" minQueryLength="4" value="#{applicationController.selected.applyReason}"/>
                             </div>
                         </p:fieldset>
@@ -103,7 +103,7 @@
                     <div class="ui-g">
                         <div class="ui-g-12">
                             <p:fieldset legend="对产品性能有无特殊要求" >
-                                <p:outputLabel value="快速(即时报告结果),简便,易于操作,可与医院HIS系统连接"/>
+                                <p:outputLabel value=""/>
                                 <br></br>
                                 <p:inputTextarea rows="5"  cols="70"  queryDelay="750" minQueryLength="4" value="#{applicationController.selected.specialRequirement}" />
                             </p:fieldset>

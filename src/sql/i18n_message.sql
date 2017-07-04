@@ -396,13 +396,16 @@ INSERT INTO "public"."i18n_message" VALUES ('1411', 'assetGroup', '12', '硬式�
 INSERT INTO "public"."i18n_message" VALUES ('1412', 'assetGroup', '13', '血液净化类', '血液净化类', null, '-1');
 INSERT INTO "public"."i18n_message" VALUES ('1413', 'assetGroup', '14', '电刀、超声刀', '电刀、超声刀', null, '-1');
 INSERT INTO "public"."i18n_message" VALUES ('1414', 'assetGroup', '15', '医用激光类', '医用激光类', null, '-1');
-INSERT INTO "public"."i18n_message" VALUES ('1415', 'assetGroup', '16', '输注泵类', '输注泵类', null, '-1');
 INSERT INTO "public"."i18n_message" VALUES ('1416', 'assetGroup', '17', '手术室设备类', '手术室设备类', null, '-1');
 INSERT INTO "public"."i18n_message" VALUES ('1417', 'assetGroup', '18', '消毒设备类', '消毒设备类', null, '-1');
 INSERT INTO "public"."i18n_message" VALUES ('1418', 'assetGroup', '19', '检验室设备类', '检验室设备类', null, '-1');
 INSERT INTO "public"."i18n_message" VALUES ('1419', 'assetGroup', '20', '病理类', '病理类', null, '-1');
 INSERT INTO "public"."i18n_message" VALUES ('1420', 'assetGroup', '21', '口腔科设备类', '口腔科设备类', null, '-1');
-INSERT INTO "public"."i18n_message" VALUES ('1421', 'assetGroup', '22', '其它', '其它', null, '-1');
+INSERT INTO "public"."i18n_message" VALUES ('1422', 'assetGroup', '23', '注射泵类', '注射泵类', null, '-1');
+INSERT INTO "public"."i18n_message" VALUES ('1423', 'assetGroup', '24', '输液泵类', '输液泵类', null, '-1');
+INSERT INTO "public"."i18n_message" VALUES ('1424', 'assetGroup', '25', '除颤仪类', '除颤仪类', null, '-1');
+INSERT INTO "public"."i18n_message" VALUES ('1499', 'assetGroup', '99', '其它', '其它', null, '-1');
+
 INSERT INTO "public"."i18n_message" VALUES ('1510', 'woSteps', '1', '报修', 'Create', null, '-1');
 INSERT INTO "public"."i18n_message" VALUES ('1511', 'woSteps', '2', '待派工', 'Assign', null, '-1');
 INSERT INTO "public"."i18n_message" VALUES ('1512', 'woSteps', '3', '待接单', 'Accept', null, '-1');
