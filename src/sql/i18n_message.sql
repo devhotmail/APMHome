@@ -640,6 +640,7 @@ INSERT INTO "public"."i18n_message" VALUES ('5078', 'importStatus', 'New', '待�
 INSERT INTO "public"."i18n_message" VALUES ('5079', 'importStatus', 'Exist', '已经存在', 'Already Exist', null, '-1');
 INSERT INTO "public"."i18n_message" VALUES ('5080', 'importStatus', 'Created', '成功添加', 'Added', null, '-1');
 INSERT INTO "public"."i18n_message" VALUES ('5081', 'importStatus', 'Failure', '添加失败', 'Fail to add', null, '-1');
+INSERT INTO "public"."i18n_message" VALUES ('5084', 'importStatus', 'CheckFail', '数据错误', 'Fail to add', null, '-1');
 INSERT INTO "public"."i18n_message" VALUES ('5082', 'label', 'InvalidParameter', '错误的参数', 'Fail to add', null, '-1');
 INSERT INTO "public"."i18n_message" VALUES ('5083', 'label', 'ParsingImportFileError', '文件不能解析,请检查模版/数据后重新上传', 'Fail to parse file,please check the tamplate or data!', null, '-1');
 INSERT INTO "public"."i18n_message" VALUES ('5100', 'contractType', '1', '全保', '全保', null, '-1');
