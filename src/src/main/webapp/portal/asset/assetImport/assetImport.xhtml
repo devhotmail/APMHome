@@ -68,7 +68,7 @@
                                 <p:column headerText="#{msg.vendor}"  >
                                     <h:outputText value="#{item.get('asset').vendor}"/>
                                 </p:column>
-                                <p:column headerText="#{msg.importStatus}" >
+                                <p:column headerText="#{assetFileImportController.isImported? msg.importStatus : '检查结果'}" >
                                     <h:outputText value="#{fieldMsg.fieldValue('importStatus',item.get('status'))}"/><br/>
                                     <h:outputText value="#{item.get('errmsg')}"/>
                                 </p:column>
@@ -79,7 +79,7 @@
                                 <p:column headerText="#{msg.Department}" >
                                     <h:outputText value="#{item.get('org').name}"/>
                                 </p:column>
-                                <p:column headerText="#{msg.importStatus}" >
+                                <p:column headerText="#{assetFileImportController.isImported? msg.importStatus : '检查结果'}" >
                                     <h:outputText value="#{fieldMsg.fieldValue('importStatus',item.get('status'))}"/>
                                     <h:outputText value="#{item.get('errmsg')}"/>
                                 </p:column>
@@ -111,7 +111,7 @@
                     <p:panelGrid columns="2" layout="grid" styleClass="ui-panelgrid-blank form-group" >
 
                         <h:panelGroup>
-                            <p:commandButton validateClient="true" actionListener="#{assetFileImportController.importData()}" value="#{msg.Import}" update=":importDataForm :growl" icon="ui-icon-check" disabled="#{assetFileImportController.isImported}"/>
+                            <p:commandButton validateClient="true" actionListener="#{assetFileImportController.importData()}" value="#{msg.Import}" update=":importDataForm :growl" icon="ui-icon-check" disabled="#{!assetFileImportController.canbeImported}"/>
                             <p:commandButton validateClient="true"  ajax="false" value="#{msg.Export}" update=" :growl" icon="ui-icon-arrowthick-1-s" onclick="PrimeFaces.monitorDownload(start, stop);" disabled="#{!assetFileImportController.isImported}" rendered="#{assetFileImportController.hasExportData}">
                                 <p:fileDownload value="#{assetFileImportController.exportFile}" />
                             </p:commandButton>

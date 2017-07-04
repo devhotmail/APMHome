@@ -22,6 +22,7 @@ import com.ge.apm.view.sysutil.UserContextService;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,7 +43,7 @@ public class AssetFileImportService {
     private static final String SHEET_USER = "User List";
 
     public static enum ImportStatus {
-        New, Exist, Created, Failure
+        New, Exist, Created, Failure,CheckFail
     }
 
     private Integer siteId = UserContextService.getCurrentUserAccount().getSiteId();
@@ -373,6 +374,51 @@ public class AssetFileImportService {
         supplierFilters.add(new SearchFilter("siteId", SearchFilter.Operator.EQ, siteId));
         supplierFilters.add(new SearchFilter("name", SearchFilter.Operator.EQ, supplierName));
         return supplierDao.findBySearchFilter(supplierFilters);
+    }
+    
+    public Boolean checkData(Map<String, Map<String, Object>> importOrgMap, Map<String, Map<String, Object>> importAssetMap, Map<String, Map<String, Object>> importUserMap) {
+        
+        HashSet<Boolean> result = new HashSet<>();
+        importOrgMap.values().forEach(item -> {
+            List<OrgInfo> orgs = getOrgInfoByName((OrgInfo) item.get("org"));
+            if (null == orgs || orgs.isEmpty()) {
+                item.put("status", ImportStatus.New);
+            } else if (orgs.size() > 1) {
+                item.put("status", ImportStatus.CheckFail);
+                addErrMessage(item, "Error:" + WebUtil.getMessage("InvalidParameter") + WebUtil.getMessage("OrgIngo") + ((OrgInfo) item.get("org")).getName());
+                result.add(Boolean.FALSE);
+            } else {
+                item.put("org", orgs.get(0));
+                item.put("status", ImportStatus.Exist);
+            }
+        });
+        
+        importAssetMap.values().forEach(item -> {
+            AssetInfo newAsset = (AssetInfo) item.get("asset");
+
+            
+            List<AssetInfo> assetList = getAssetInfos(newAsset);
+            if (null == assetList || assetList.isEmpty()) {
+                String qrCode = newAsset.getQrCode();
+                if (isAvailableQrcode(qrCode, item)) {
+                    item.put("status", ImportStatus.New);
+                } else {
+                    item.put("status", ImportStatus.CheckFail);
+                    result.add(Boolean.FALSE);
+//                    addErrMessage(item, WebUtil.getMessage("InvalidParameter") +WebUtil.getMessage("qrCode")+ qrCode);
+                }
+
+            } else if (assetList.size() > 1) {
+                item.put("status", ImportStatus.CheckFail);
+                result.add(Boolean.FALSE);
+                addErrMessage(item, "Error:" + WebUtil.getMessage("InvalidParameter") + WebUtil.getMessage("AssetInfo") + newAsset.getName() + "/" + newAsset.getDepartNum() + "/" + newAsset.getFinancingNum());
+            } else {
+                item.put("asset", assetList.get(0));
+                item.put("status", ImportStatus.Exist);
+            }
+
+        });
+        return result.isEmpty();
     }
 
 }

@@ -40,6 +40,8 @@ public class AssetFileImportController {
 
     private Boolean isImported = false;
     private Boolean hasExportData = false;
+    
+    private Boolean canbeImported = false;
 
     private StreamedContent exportFile;
 
@@ -57,6 +59,8 @@ public class AssetFileImportController {
             importOrgMap = aiService.getOrgInfoMapFromTemplate(doc);
             importAssetMap = aiService.getAssetMapFromTemplate(doc);
             importUserMap = aiService.getUserMapFromTemplate(doc);
+            
+            canbeImported = aiService.checkData(importOrgMap,importAssetMap,importUserMap);
 
         } catch (IOException ex) {
             WebUtil.addErrorMessage("File can not be read!");
@@ -122,4 +126,8 @@ public class AssetFileImportController {
         return exportFile;
     }
 
+    public Boolean getCanbeImported() {
+        return canbeImported;
+    }
+    
 }
