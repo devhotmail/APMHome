@@ -29,7 +29,7 @@ public class AssetExamController {
     @ResponseBody
     public String excute() {
 
-        assetExamDataAggregator.aggregateExamData();
+      //  assetExamDataAggregator.aggregateExamData();
         return "success";
     }
 

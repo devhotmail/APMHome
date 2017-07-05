@@ -59,7 +59,17 @@ public interface AssetClinicalRecordRepository extends GenericRepository<AssetCl
 
 }
 
-
+/*navtive sql for getAssetExamDataAggregatorByDate
+* select site_Id as siteIds,hospital_Id as hospitalIds,asset_Id as assetIds, exam_Date as examDate,
+            count(exam_Duration) as examCount,
+            sum(exam_Duration) as examDurations ,
+            sum(price_Amount) as priceAmounts ,
+            sum(inject_Count) as injectsCounts ,
+            sum(expose_Count) as exposeCounts,
+            sum(film_Count) as filmCounts
+            from Asset_Clinical_Record  acr
+            GROUP BY acr.exam_Date,acr.site_Id,acr.hospital_Id,acr.asset_Id
+            having exam_date = '2017-07-06'*/
 
 //    @Query("select asm from AssetSummit asm where asm.siteId = :siteId and " +
 //            "asm.hospitalId = :hospitalId and asm.assetId = :assetId")

@@ -27,7 +27,7 @@ public class AssetExamDataService {
     public String assetExamAggregator(){
 
         try {
-            assetExamDataAggregator.aggregateExamData();
+           // assetExamDataAggregator.aggregateExamData();
         } catch (Exception e) {
             logger.error("assetExamDataAggregator failed ",e.getMessage());
             return "failure";

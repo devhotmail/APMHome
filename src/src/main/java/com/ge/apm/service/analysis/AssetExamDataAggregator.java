@@ -75,12 +75,12 @@ public class AssetExamDataAggregator {
     }
 
 
-    public String aggregateExamData(){
+   /* public String aggregateExamData(){
             List<AssetClinicalRecordPojo> acrpList = assetClinicalRecordRepository.getAssetExamDataAggregator();
             logger.info("Asset Clinical Record size {}",acrpList.size());
             operatorAggregator(acrpList);
         return "success";
-    }
+    }*/
 
     public void aggregateExamDataByAssetId(int assetId){
     }
