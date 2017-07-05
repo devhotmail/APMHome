@@ -58,9 +58,6 @@ and open the template in the editor.
                     </div>
                 <div class="weui-cell weui-cells_checkbox">
                     <div class="weui-cell__bd">
-                        状态
-                    </div>
-                    <div class="weui-cell__bd">
                         <h:selectBooleanCheckbox id="running"  class="weui-check" value="#{wxAssetInfoController.searchStatRun}" onchange="search()"/>
                         <i class="weui-icon-checked"></i>
                         <label class="weui-check__label" for="assetList:running" style="">正常</label>
@@ -73,7 +70,7 @@ and open the template in the editor.
                     <div class="weui-cell__bd">
                         <h:selectBooleanCheckbox id="partial" class="weui-check" value="#{wxAssetInfoController.searchStatPartial}" onchange="search()"/>
                         <i class="weui-icon-checked"></i>
-                        <label class="weui-check__label" for="assetList:partial">异常</label>
+                        <label class="weui-check__label" for="assetList:partial">尚可使用</label>
                     </div>
                 </div>
                 <p:remoteCommand name="search" actionListener="#{wxAssetInfoController.onSearch}" update="dataList" />
@@ -106,7 +103,7 @@ and open the template in the editor.
                      </p>
                 </div>
                 <div class="weui-media-box__ft">
-                    <p  style="height: 60px">#{asset.status==1?"运行":""}#{asset.status==2?"停机":""}#{asset.status==3?"异常":""}</p>
+                    <p  style="height: 60px">#{asset.status==1?"运行":""}#{asset.status==2?"停机":""}#{asset.status==3?"尚可使用":""}</p>
                 </div>
             </h:link>
             <p:separator ></p:separator>
