@@ -561,6 +561,7 @@ INSERT INTO "public"."i18n_message" VALUES ('3040', 'message', 'WrongHospitalQRC
 INSERT INTO "public"."i18n_message" VALUES ('3041', 'message', 'AlreadyUsingQrCode', '已经使用中二维码!', 'Already using Code!', null, '-1');
 INSERT INTO "public"."i18n_message" VALUES ('3042', 'message', 'DeleteAssetConformationMsg', '确认删除设备?', 'Confirm to remove this asset?', null, '-1');
 INSERT INTO "public"."i18n_message" VALUES ('3043', 'message', 'Institution', '集团', 'Institution', null, '-1');
+INSERT INTO "public"."i18n_message" VALUES ('3044', 'message', 'ExistsUnfinishedWorkOrders', '当前设备存在未完成工单，不能报废！', 'The asset has unfinished workOrders', null, '-1');
 INSERT INTO "public"."i18n_message" VALUES ('5000', 'label', 'deviceScanhd', '设备扫描量（次）', 'Scan #', null, '-1');
 INSERT INTO "public"."i18n_message" VALUES ('5001', 'label', 'deviceScanlg', '扫描次数', 'Scan', null, '-1');
 INSERT INTO "public"."i18n_message" VALUES ('5002', 'label', 'deviceExpohd', '设备曝光量（次）', 'Exposure #', null, '-1');

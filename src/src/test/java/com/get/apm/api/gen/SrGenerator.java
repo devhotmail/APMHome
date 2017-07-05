@@ -63,37 +63,37 @@ public class SrGenerator extends AbstractDbTest {
   }
 
 
-  @Test
-  public void genSr() {
-    db.select(new SQL().SELECT("id", "install_date").FROM("asset_info").ORDER_BY("id").toString()).getAs(Integer.class, Date.class)
-      .flatMap(t -> Observable.from(javaslang.collection.List.fill(ThreadLocalRandom.current().nextInt((int) MONTHS.between(t._2().toLocalDate(), LocalDate.now()) / 2, (int) MONTHS.between(t._2().toLocalDate(), LocalDate.now())), () -> t._2().toLocalDate().plusDays(ThreadLocalRandom.current().nextInt(1, (int) DAYS.between(t._2().toLocalDate(), LocalDate.now())))).map(v -> Tuple.of(t._1(), v))))
-      .map(t -> Tuple.of(t._1, t._2, t._2.atTime(9 + ThreadLocalRandom.current().nextInt(0, 3), 0), t._2.atTime(ThreadLocalRandom.current().nextInt(12, 24), 0), ThreadLocalRandom.current().nextInt(0, 99), ThreadLocalRandom.current().nextInt(0, users.size()), ThreadLocalRandom.current().nextInt(4, 9)))
-      .sorted((l, r) -> l._3.compareTo(r._3))
-      .subscribe(t ->
-        db.update(sql)
-          .parameter("id", UUID.randomUUID().toString().replaceAll("-", ""))
-          .parameter("site_id", 1)
-          .parameter("hospital_id", 1)
-          .parameter("hospital_name", "")
-          .parameter("asset_id", t._1)
-          .parameter("asset_name", "")
-          .parameter("created_date", t._3.toLocalDate())
-          .parameter("case_priority", 1)
-          .parameter("request_reason", "")
-          .parameter("requestor_id", users.get(t._6)._1())
-          .parameter("requestor_name", users.get(t._6)._2())
-          .parameter("status", 2)
-          .parameter("request_time", Timestamp.valueOf(t._3))
-          .parameter("confirmed_down_time", Timestamp.valueOf(t._3))
-          .parameter("confirmed_up_time", Timestamp.valueOf(t._4))
-          .parameter("estimated_close_time", Timestamp.valueOf(t._4.plusDays(2)))
-          .parameter("from_dept_id", t._7)
-          .parameter("from_dept_name", orgs.getOrDefault(t._7, ""))
-          .parameter("close_time", Timestamp.valueOf(t._4.plusDays(3)))
-          .parameter("nearest_sr_days", t._5)
-          .parameter("nearest_sr_id", "")
-          .returnGeneratedKeys()
-          .getAs(String.class).toBlocking().single());
-  }
+//  @Test
+//  public void genSr() {
+//    db.select(new SQL().SELECT("id", "install_date").FROM("asset_info").ORDER_BY("id").toString()).getAs(Integer.class, Date.class)
+//      .flatMap(t -> Observable.from(javaslang.collection.List.fill(ThreadLocalRandom.current().nextInt((int) MONTHS.between(t._2().toLocalDate(), LocalDate.now()) / 2, (int) MONTHS.between(t._2().toLocalDate(), LocalDate.now())), () -> t._2().toLocalDate().plusDays(ThreadLocalRandom.current().nextInt(1, (int) DAYS.between(t._2().toLocalDate(), LocalDate.now())))).map(v -> Tuple.of(t._1(), v))))
+//      .map(t -> Tuple.of(t._1, t._2, t._2.atTime(9 + ThreadLocalRandom.current().nextInt(0, 3), 0), t._2.atTime(ThreadLocalRandom.current().nextInt(12, 24), 0), ThreadLocalRandom.current().nextInt(0, 99), ThreadLocalRandom.current().nextInt(0, users.size()), ThreadLocalRandom.current().nextInt(4, 9)))
+//      .sorted((l, r) -> l._3.compareTo(r._3))
+//      .subscribe(t ->
+//        db.update(sql)
+//          .parameter("id", UUID.randomUUID().toString().replaceAll("-", ""))
+//          .parameter("site_id", 1)
+//          .parameter("hospital_id", 1)
+//          .parameter("hospital_name", "")
+//          .parameter("asset_id", t._1)
+//          .parameter("asset_name", "")
+//          .parameter("created_date", t._3.toLocalDate())
+//          .parameter("case_priority", 1)
+//          .parameter("request_reason", "")
+//          .parameter("requestor_id", users.get(t._6)._1())
+//          .parameter("requestor_name", users.get(t._6)._2())
+//          .parameter("status", 2)
+//          .parameter("request_time", Timestamp.valueOf(t._3))
+//          .parameter("confirmed_down_time", Timestamp.valueOf(t._3))
+//          .parameter("confirmed_up_time", Timestamp.valueOf(t._4))
+//          .parameter("estimated_close_time", Timestamp.valueOf(t._4.plusDays(2)))
+//          .parameter("from_dept_id", t._7)
+//          .parameter("from_dept_name", orgs.getOrDefault(t._7, ""))
+//          .parameter("close_time", Timestamp.valueOf(t._4.plusDays(3)))
+//          .parameter("nearest_sr_days", t._5)
+//          .parameter("nearest_sr_id", "")
+//          .returnGeneratedKeys()
+//          .getAs(String.class).toBlocking().single());
+//  }
 
 }

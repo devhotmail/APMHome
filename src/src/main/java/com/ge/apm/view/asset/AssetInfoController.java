@@ -364,8 +364,14 @@ public class AssetInfoController extends JpaCRUDController<AssetInfo> {
             this.selected.setIsValid(true);
             this.selected.setTerminateDate(null);
         } else {
-            this.selected.setIsValid(false);
-            this.selected.setTerminateDate(new Date());
+        	Integer workOrdersNum = dao.fetchCurrentWorkOrders(selected.getId());
+        	if(workOrdersNum > 0){
+        		WebUtil.addErrorMessage("当前设备存在未完成工单，不能报废！");
+        		return null;
+        	}else{
+        		this.selected.setIsValid(false);
+        		this.selected.setTerminateDate(new Date());
+        	}
         }
         update();
         return "List?faces-redirect=true" + (terminate ? "&terminate=true" : "");

@@ -74,7 +74,7 @@ public class MicroServiceUtil {
         HttpEntity<String> requestEntity = new HttpEntity<String>(headers);
 
         String url = url_deleteFile.concat("/").concat(objectId);
-        ResponseEntity<? extends LinkedHashMap<String, Object>> response = template.exchange(url_deleteFile.concat("/").concat(objectId), HttpMethod.DELETE, requestEntity, LinkedHashMap.class);
+        ResponseEntity<? extends LinkedHashMap<String, Object>> response = (ResponseEntity<? extends LinkedHashMap<String, Object>>) template.exchange(url_deleteFile.concat("/").concat(objectId), HttpMethod.DELETE, requestEntity, LinkedHashMap.class);
         return isOkay(response);
     }
 
@@ -88,7 +88,7 @@ public class MicroServiceUtil {
         body.add("file", resource);
 
         HttpEntity<Map> requestEntity = new HttpEntity<Map>(body, headers);
-        ResponseEntity<? extends LinkedHashMap<String, Object>> response = template.postForEntity(url_uploadSingleFile, requestEntity, LinkedHashMap.class);
+        ResponseEntity<? extends LinkedHashMap<String, Object>> response = (ResponseEntity<? extends LinkedHashMap<String, Object>>) template.postForEntity(url_uploadSingleFile, requestEntity, LinkedHashMap.class);
         if (isOkay(response)) {
             LinkedHashMap<String, Object> responseMap = (LinkedHashMap<String, Object>) response.getBody();
             LinkedHashMap<String, Object> data = (LinkedHashMap<String, Object>) responseMap.get("data");
@@ -108,7 +108,7 @@ public class MicroServiceUtil {
         postParameters.put("urlFile", url);
         postParameters.put("fileName", fileName);
         HttpEntity<Map> requestEntity = new HttpEntity<Map>(postParameters, headers);
-        ResponseEntity<? extends LinkedHashMap<String, Object>> response = template.postForEntity(url_uploadSingleFileByUrl, requestEntity, LinkedHashMap.class);
+        ResponseEntity<? extends LinkedHashMap<String, Object>> response = (ResponseEntity<? extends LinkedHashMap<String, Object>>) template.postForEntity(url_uploadSingleFileByUrl, requestEntity, LinkedHashMap.class);
         if (isOkay(response)) {
             LinkedHashMap<String, Object> responseMap = (LinkedHashMap<String, Object>) response.getBody();
             LinkedHashMap<String, Object> data = (LinkedHashMap<String, Object>) responseMap.get("data");
@@ -137,7 +137,7 @@ public class MicroServiceUtil {
         HttpEntity<Map> requestEntity = new HttpEntity<Map>(
                 postParameters, headers);
 
-        ResponseEntity<? extends LinkedHashMap<String, Object>> response = template.postForEntity(url_getAuthenticateByOpenId, requestEntity, LinkedHashMap.class);
+        ResponseEntity<? extends LinkedHashMap<String, Object>> response = (ResponseEntity<? extends LinkedHashMap<String, Object>>) template.postForEntity(url_getAuthenticateByOpenId, requestEntity, LinkedHashMap.class);
 
         if (isOkay(response)) {
             LinkedHashMap<String, Object> responseMap = (LinkedHashMap<String, Object>) response.getBody();
@@ -166,7 +166,7 @@ public class MicroServiceUtil {
         HttpEntity<Map> requestEntity = new HttpEntity<Map>(
                 postParameters, headers);
 
-        ResponseEntity<? extends LinkedHashMap<String, Object>> response = template.postForEntity(url_getAuthenticateByUserPassword, requestEntity, LinkedHashMap.class);
+        ResponseEntity<? extends LinkedHashMap<String, Object>> response = (ResponseEntity<? extends LinkedHashMap<String, Object>>) template.postForEntity(url_getAuthenticateByUserPassword, requestEntity, LinkedHashMap.class);
 
         if (isOkay(response)) {
             LinkedHashMap<String, Object> responseMap = (LinkedHashMap<String, Object>) response.getBody();
