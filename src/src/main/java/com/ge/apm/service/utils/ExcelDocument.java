@@ -97,6 +97,11 @@ public class ExcelDocument {
         String[] rowKey = getKeyRow(sheetName, keyRowNum);
         return getDataRowMap(sheetName, rowKey, dataRowNum);
     }
+    
+    public Map<String, Object> getDataRowMap(Integer keyRowNum, Integer dataRowNum) {
+        String sheetName = workBook.getSheetName(0);
+        return getDataRowMap(sheetName, keyRowNum, dataRowNum);
+    }
 
     public List<Map<String, Object>> getDataMaps(String sheetName, Integer keyRowNum, Integer firstData, Integer lastData) {
         List<Map<String, Object>> res = new ArrayList();

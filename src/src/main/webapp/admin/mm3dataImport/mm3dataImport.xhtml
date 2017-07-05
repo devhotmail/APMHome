@@ -1,0 +1,108 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/WEB-INF/template.xhtml"
+                xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+
+
+    <ui:define name="content">
+        <div class="ui-g">
+            <div class="ui-g-12 card cardTitle">
+                <p:outputLabel class="pageTitle" value="#{msg.Import}#{msg.MM3DataRecord}"/>
+            </div>
+            <div class="ui-g-12 card">
+                <h:form id="importForm">
+                    <p:fieldset  legend="上传数据文件" id="uploaderContainer">
+
+                        <p:panelGrid columns="1" layout="grid" styleClass="ui-panelgrid-blank form-group" >
+
+                            <h:panelGroup>
+                                <label class="label">#{msg.choseFileToUpload}</label>
+                                <h:outputText   value="#{mM3DataReportController.file.fileName}"  rendered="#{not empty mM3DataReportController.file}"/>
+                                <p:fileUpload  fileUploadListener="#{mM3DataReportController.uploadDataFile}" value="#{mM3DataReportController.file}" mode="advanced" dragDropSupport="false" style="width:100%" process="@this"
+                                               multiple="false" sizeLimit="10000000" update="uploaderContainer :importDataForm" auto="true"  invalidSizeMessage="#{msg.invalidSizeMessage}10M"  allowTypes="/(\.|\/)(xls|xlsx)$/" label="#{msg.Add}" rendered="#{empty mM3DataReportController.file}" />
+
+                            </h:panelGroup>
+                            <h:panelGroup>
+                                <p>说明</p>
+                                <p>上传文件后展示数据,点击按钮后导入</p>
+
+                            </h:panelGroup>
+                        </p:panelGrid>
+                    </p:fieldset>
+                </h:form>
+            </div>
+            <div class="ui-g-12 card ">
+                <h:form id="importDataForm">
+                    <p:tabView>
+                        <p:tab title="数据导入">
+                            <p:dataTable id="assetTable" value="#{mM3DataReportController.importMM3DataMap.values()}" var="item" rows="10" paginator="true"
+                                         paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                         rowsPerPageTemplate="5,10,15" >
+                                <p:column headerText="#{msg.assetName}" >
+                                    <h:outputText value="#{item.get('asset').name}"/>
+                                </p:column>
+                                <p:column headerText="#{msg.SiteInfo}" >
+                                    <h:outputText value="#{mM3DataReportController.getTenantName(item.get('asset'))}"/>
+                                </p:column>
+                                <p:column headerText="#{msg.systemId}"  >
+                                    <h:outputText value="#{item.get('record').systemId}"/>
+                                </p:column>
+                                <p:column headerText="#{msg.chineseName}"  >
+                                    <h:outputText value="#{item.get('record').chineseName}"/>
+                                </p:column>
+                                <p:column headerText="#{msg.product}"  >
+                                    <h:outputText value="#{item.get('record').product}"/>
+                                </p:column>
+                                <p:column headerText="#{msg.coldheadRuO}"  >
+                                    <h:outputText value="#{item.get('record').coldheadRuO}"/>
+                                </p:column>
+                                <p:column headerText="#{msg.hePressure}"  >
+                                    <h:outputText value="#{item.get('record').hePressure}"/>
+                                </p:column>
+                                <p:column headerText="#{msg.reportTime}"  >
+                                    <h:outputText value="#{item.get('record').reportTime}"/>
+                                </p:column>
+                                <p:column headerText="#{msg.heLevel}"  >
+                                    <h:outputText value="#{item.get('record').heLevel}"/>
+                                </p:column>
+                                <p:column headerText="#{msg.shieldTemp}"  >
+                                    <h:outputText value="#{item.get('record').shieldTemp}"/>
+                                </p:column>
+                                <p:column headerText="#{msg.reconRuO}"  >
+                                    <h:outputText value="#{item.get('record').reconRuO}"/>
+                                </p:column>
+                                <p:column headerText="#{msg.heaterDutyCycle}"  >
+                                    <h:outputText value="#{item.get('record').heaterDutyCycle}"/>
+                                </p:column>
+                                <p:column headerText="#{msg.heaterOffPressure}"  >
+                                    <h:outputText value="#{item.get('record').heaterOffPressure}"/>
+                                </p:column>
+                                <p:column headerText="#{msg.heaterOnPressure}"  >
+                                    <h:outputText value="#{item.get('record').heaterOnPressure}"/>
+                                </p:column>
+                                <p:column headerText="#{mM3DataReportController.isImported? msg.importStatus : '检查结果'}" >
+                                    <h:outputText value="#{fieldMsg.fieldValue('importStatus',item.get('status'))}"/><br/>
+                                    <h:outputText value="#{item.get('errmsg')}"/>
+                                </p:column>
+                            </p:dataTable>
+                        </p:tab>
+                    </p:tabView>
+
+                    <p:panelGrid columns="2" layout="grid" styleClass="ui-panelgrid-blank form-group" >
+
+                        <h:panelGroup>
+                            <p:commandButton validateClient="true" actionListener="#{mM3DataReportController.importData()}" value="#{msg.Import}" update=":importDataForm :growl" icon="ui-icon-check" disabled="#{mM3DataReportController.isImported}"/>
+                            <p:commandButton immediate="true" value="#{msg.Cancel}" icon="ui-icon-arrow-back" action="mm3dataImport?faces-redirect=true"  update=":growl"/>
+                        </h:panelGroup>
+                    </p:panelGrid>
+                </h:form>
+            </div>
+
+        </div>
+
+    </ui:define>
+
+</ui:composition>
