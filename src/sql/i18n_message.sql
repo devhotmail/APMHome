@@ -203,6 +203,8 @@ INSERT INTO "public"."i18n_message" VALUES ('421', 'label', 'MetrologyMonitor', 
 INSERT INTO "public"."i18n_message" VALUES ('422', 'label', 'saveOrder', '保存顺序', 'Save sequence', null, '-1');
 INSERT INTO "public"."i18n_message" VALUES ('423', 'label', 'I18nMessage', '编码类型配置', 'I18nMessage', null, '-1');
 INSERT INTO "public"."i18n_message" VALUES ('424', 'label', 'AssetTagMsgSubscriber', '维修事件消息订阅', 'AssetTagMsgSubscriber', null, '-1');
+INSERT INTO "public"."i18n_message" VALUES ('425', 'label', 'MM3Import', '冷头报警数据导入', 'MM3 Data Import', null, '-1');
+
 INSERT INTO "public"."i18n_message" VALUES ('600', 'field_name', 'accessory', '备件', 'Accessory', null, '-1');
 INSERT INTO "public"."i18n_message" VALUES ('601', 'field_name', 'accessoryPrice', '单价(元)', 'Accessory Price', null, '-1');
 INSERT INTO "public"."i18n_message" VALUES ('602', 'field_name', 'accessoryQuantity', '数量', 'Accessory Quantity', null, '-1');
