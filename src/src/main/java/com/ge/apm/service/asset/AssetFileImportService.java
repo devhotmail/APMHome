@@ -43,7 +43,7 @@ public class AssetFileImportService {
     private static final String SHEET_USER = "User List";
 
     public static enum ImportStatus {
-        New, Exist, Created, Failure,CheckFail
+        New, Exist, Created, Failure, CheckFail
     }
 
     private Integer siteId = UserContextService.getCurrentUserAccount().getSiteId();
@@ -335,10 +335,12 @@ public class AssetFileImportService {
     @Transactional
     private void createAsset(AssetInfo asset) {
         assetDao.save(asset);
-        if (null != asset.getQrCode() || !asset.getQrCode().isEmpty()) {
+        if (null != asset.getQrCode() && !asset.getQrCode().isEmpty()) {
             QrCodeLib qrCodeLib = qrcodeDao.findByQrCode(asset.getQrCode());
-            qrCodeLib.setStatus(3);
-            qrcodeDao.save(qrCodeLib);
+            if (qrCodeLib != null) {
+                qrCodeLib.setStatus(3);
+                qrcodeDao.save(qrCodeLib);
+            }
         }
         assetDepreciationService.saveAssetDerpeciation(asset);
     }
@@ -375,9 +377,9 @@ public class AssetFileImportService {
         supplierFilters.add(new SearchFilter("name", SearchFilter.Operator.EQ, supplierName));
         return supplierDao.findBySearchFilter(supplierFilters);
     }
-    
+
     public Boolean checkData(Map<String, Map<String, Object>> importOrgMap, Map<String, Map<String, Object>> importAssetMap, Map<String, Map<String, Object>> importUserMap) {
-        
+
         HashSet<Boolean> result = new HashSet<>();
         importOrgMap.values().forEach(item -> {
             List<OrgInfo> orgs = getOrgInfoByName((OrgInfo) item.get("org"));
@@ -392,11 +394,10 @@ public class AssetFileImportService {
                 item.put("status", ImportStatus.Exist);
             }
         });
-        
+
         importAssetMap.values().forEach(item -> {
             AssetInfo newAsset = (AssetInfo) item.get("asset");
 
-            
             List<AssetInfo> assetList = getAssetInfos(newAsset);
             if (null == assetList || assetList.isEmpty()) {
                 String qrCode = newAsset.getQrCode();
