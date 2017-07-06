@@ -222,7 +222,7 @@
 
   <util:properties id="wxProperties" location="classpath:/wx.properties"/>
   <util:properties id="urlProperties" location="classpath:/url.properties"/>
-  <util:properties id="ratingProperties" location="classpath:/rating.properties”/>
+  <util:properties id="ratingProperties" location="classpath:/rating.properties"/>
 
 
   <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
