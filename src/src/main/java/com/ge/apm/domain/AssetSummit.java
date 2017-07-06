@@ -59,7 +59,7 @@ public class AssetSummit implements Serializable {
     @Column(name = "work_order_count")
     private Integer workOrderCount;
     @Column(name = "rating")
-    private Integer rating;
+    private Double rating;
     @Column(name = "created")
     @Temporal(TemporalType.DATE)
     private Date created;
@@ -209,11 +209,11 @@ public class AssetSummit implements Serializable {
         this.workOrderCount = workOrderCount;
     }
 
-    public Integer getRating() {
+    public Double getRating() {
         return rating;
     }
 
-    public void setRating(Integer rating) {
+    public void setRating(Double rating) {
         this.rating = rating;
     }
 
