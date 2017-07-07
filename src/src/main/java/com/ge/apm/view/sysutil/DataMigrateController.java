@@ -66,8 +66,9 @@ public class DataMigrateController {
     }
 
     public List<AssetFileAttachment> getAttachementList() {
-        List<AssetFileAttachment> alllist = attchDao.find();
-        return alllist.stream().filter(item -> item.getFileUrl() == null || item.getFileUrl().isEmpty()).collect(Collectors.toList());
+//        List<AssetFileAttachment> alllist = attchDao.getNeedMigrateAttachments();
+        return attchDao.getNeedMigrateAttachments();
+//        return alllist.stream().filter(item -> item.getFileUrl() == null || item.getFileUrl().isEmpty()).collect(Collectors.toList());
     }
     public List<AssetContract> getAssetContractList() {
         
@@ -123,25 +124,25 @@ public class DataMigrateController {
     }
 
     public Integer getCountOfAssetEntity() {
-        return assetDao.find().stream().filter(item -> item.getUid() == null).collect(Collectors.toList()).size();
+        return assetDao.getNeedUpdateUidAssets().stream().filter(item -> item.getUid() == null).collect(Collectors.toList()).size();
     }
 
     public void updateAssetEntity() {
-        assetDao.find().stream().filter(item -> item.getUid() == null).forEach(item -> {
+        assetDao.getNeedUpdateUidAssets().stream().filter(item -> item.getUid() == null).forEach(item -> {
             item.setUid(UUID.randomUUID().toString().replace("-", ""));
             assetDao.save(item);
         });
     }
 
     public Integer getCountOfQrLibEntity() {
-        return qrLibDao.find().stream().filter(item -> item.getUid() == null).collect(Collectors.toList()).size();
+        return qrLibDao.getNeedUpdateUidEntity().stream().filter(item -> item.getUid() == null).collect(Collectors.toList()).size();
     }
     public Integer getCountOfContractEntity() {
         return contractDao.find().stream().filter(item -> item.getUid() == null).collect(Collectors.toList()).size();
     }
 
     public void updateQrLibEntity() {
-        qrLibDao.find().stream().filter(item -> item.getUid() == null).forEach(item -> {
+        qrLibDao.getNeedUpdateUidEntity().stream().filter(item -> item.getUid() == null).forEach(item -> {
             item.setUid(UUID.randomUUID().toString().replace("-", ""));
             qrLibDao.save(item);
         });
