@@ -53,7 +53,7 @@ public class AssetExamTest extends BaseJunit4Test{
     @Rollback(false)
     public void testAggregateExamDataByDay()throws Exception{
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-        Date date = sdf.parse("2017-01-20");
+        Date date = sdf.parse("2017-01-06");
         assetExamDataAggregator.aggregateExamDataByDay(date);
 
     }
