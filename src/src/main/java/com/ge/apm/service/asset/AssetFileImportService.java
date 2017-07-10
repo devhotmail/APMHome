@@ -150,6 +150,7 @@ public class AssetFileImportService {
             String assetGroupName = ExcelDocument.getCellStringValue(rowMap.get("设备类型"));
             asset.setAssetGroup(getI18nMsgKey(assetGroup, assetGroupName));
             asset.setFunctionGrade(ExcelDocument.getCellIntegerValue(rowMap.get("功能等级")));
+            asset.setFunctionType(ExcelDocument.getCellStringValue(rowMap.get("设备型号")));
             asset.setSerialNum(ExcelDocument.getCellStringValue(rowMap.get("制造商序列号")));
             asset.setSystemId(ExcelDocument.getCellStringValue(rowMap.get("SystemID/厂商报修ID")));
             asset.setBarcode(ExcelDocument.getCellStringValue(rowMap.get("条码")));

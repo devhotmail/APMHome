@@ -123,6 +123,7 @@
             <to uri="direct:aggregateAssetCostData"/>
         </route>
 
+        <!--http://localhost:8087/geapm/ws/aggregateAssetExamData-->
         <route>
             <from uri="quartz://quartzAssetExamDataAggregation?cron=0+0+*/1+*+*+?"/>
             <to uri="direct:aggregateAssetExamData"/>
@@ -170,7 +171,7 @@
             <from uri="servlet:///aggregateAssetExamDataByAssetId?servletName=MyServlet"/>
             <to uri="direct:initAssetAggregationDataByAssetId"/>
             <log message="call bean: b=${body}, h=${headers}" loggingLevel="ERROR"/>
-            <bean ref="assetExamDataAggregator" method="aggregateExamDataByAssetId"/>
+            <bean ref="assetExamDataAggregator" method="aggregateExamData"/>
         </route>
         <!-- end of aggregate asset cost and exam data by assetId !-->
 

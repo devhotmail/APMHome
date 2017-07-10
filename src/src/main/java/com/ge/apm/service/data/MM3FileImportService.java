@@ -74,6 +74,7 @@ public class MM3FileImportService {
             record.setHeaterDutyCycle(ExcelDocument.getCellDoubleValue(rowMap.get("Heater Duty Cycle")));
             record.setHeaterOffPressure(getDoubleValue(ExcelDocument.getCellStringValue(rowMap.get("Heater Off Pressure")), PATTERN_Pressure));
             record.setHeaterOnPressure(getDoubleValue(ExcelDocument.getCellStringValue(rowMap.get("Heater On Pressure")), PATTERN_Pressure));
+            record.setStatus(MM3DataRecord.Status.New.toString());
 
             Map<String, Object> map = new HashMap();
             map.put("record", record);

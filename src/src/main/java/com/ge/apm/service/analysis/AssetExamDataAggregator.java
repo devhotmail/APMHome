@@ -31,99 +31,71 @@ public class AssetExamDataAggregator {
     @Autowired
     AssetSummitRepository assetSummitRepository;
 
-    public String aggregateExamData(){
+    /*该方法会由route id=aggregationAssetExamData来调用*/
+    public String aggregateExamData() throws Exception{
         List<AssetClinicalRecordPojo> acrpList = assetClinicalRecordRepository.getAssetExamDataAggregator();
-        logger.info("Asset Clinical Record size {}",acrpList.size());
-
+        Date currentDate = new Date();
+        aggregateExamDataByDay(currentDate);
         return "success";
     }
 
-    public void aggregateExamDataByAssetId(int assetId){
-    }
     @Transactional
     public String aggregateExamDataByDay(Date date) throws Exception {
         List<AssetClinicalRecordPojo> acrpList = assetClinicalRecordRepository.getAssetExamDataAggregatorByDate(date);
-        /*if(CollectionUtils.isEmpty(acrpList)){
-            logger.error("acrpList is empty,today is {}",new DateTime());
-            return "failure";
-        }*/
-        logger.info("gl: records from assetclincialRecords --->"+acrpList.size());
-        List<AssetSummit> asmNewList= new ArrayList<AssetSummit>();
-        List<AssetSummit> asmUpdateList= new ArrayList<AssetSummit>();
+        logger.info("Asset Clinical Record Aggregator records size-->",acrpList.size());
+         List<AssetSummit> asmList= new ArrayList<AssetSummit>();
+        List<AssetSummit> newAsmList= new ArrayList<AssetSummit>();
         for(AssetClinicalRecordPojo accrp:acrpList){
             AssetSummit asm1 =assetSummitRepository.getAssetSummitByAssetIdAndCreated(accrp.getAssetIds(),date);
+            //如果某资产已经在assumit中录入过了 ，那就只要更新该资产相对应的inject_count等信息
             if(asm1!=null){
-                //logger.info("-------"+accrp.getAssetIds()+"---"+date);
-                logger.info(accrp.getAssetIds() +"---"+date + "need to be updated");
-                asm1.setCreated(date);
-                asm1.setAssetId(accrp.getAssetIds());
-                asm1.setSiteId(accrp.getSiteIds());
-                asm1.setHospitalId(accrp.getHospitalIds());
-                asm1.setExposeCount(accrp.getExposeCounts());
-                asm1.setFilmCount(accrp.getFilmCounts());
-                asm1.setInjectCount(accrp.getInjectCounts());
-                if(accrp.getExamCount()==null){
-                    logger.info("gl: accrp.getExamCount() should not be null");
-                }else {
-                    asm1.setExamCount(accrp.getExamCount().intValue());
-                }
-                if(accrp.getExamDurations()==null){
-                    logger.info("gl: accrp.getExamDurations() should not be null");
-                }else {
-                    asm1.setExamDuration(accrp.getExamDurations().intValue());
-                }
-                if(accrp.getPriceAmounts()==null){
-                    logger.info("gl: accrp.getPriceAmounts() should not be null");
-                }else {
-                    asm1.setRevenue(Math.round(accrp.getPriceAmounts() * 100.0) / 100.0);
-                }
-                asmUpdateList.add(asm1);
+                logger.info(accrp.getAssetIds() +"-already in the asset_summit,only updated for the time being on date "+date);
+                extractor(date, asmList, accrp, asm1);
             }else {
-                AssetSummit asm = new AssetSummit();
-                asm.setAssetId(accrp.getAssetIds());
-                asm.setHospitalId(accrp.getHospitalIds());
-                asm.setSiteId(accrp.getSiteIds());
-                //logger.info("---insert----"+accrp.getAssetIds()+"---"+date);
-                asm.setExposeCount(accrp.getExposeCounts());
-                asm.setFilmCount(accrp.getFilmCounts());
-                asm.setInjectCount(accrp.getInjectCounts());
-                if(accrp.getExamCount()==null){
-                    logger.info("gl: accrp.getExamCount() should not be null");
-                }else {
-                    asm.setExamCount(accrp.getExamCount().intValue());
-                }
-                if(accrp.getExamDurations()==null){
-                    logger.info("gl: accrp.getExamDurations() should not be null");
-                }else {
-                    asm.setExamDuration(accrp.getExamDurations().intValue());
-                }
-                asm.setCreated(date);
-                if(accrp.getPriceAmounts()==null){
-                    logger.info("gl: accrp.getPriceAmounts() should not be null");
-                }else {
-                    asm.setRevenue(Math.round(accrp.getPriceAmounts() * 100.0) / 100.0);
-                }
-                asmNewList.add(asm);
+                AssetSummit newAsm = new AssetSummit();
+                logger.info(accrp.getAssetIds() +" is new record that is to be inserted into asset_summit on date "+date);
+                extractor(date, newAsmList, accrp, newAsm);
             }
         }
-        if(asmNewList.size()>0) {
-            logger.info("gl: new records are inserted into, how many ?--> "+asmNewList.size());
-             assetSummitRepository.save(asmNewList);
-            /*for(AssetSummit asml :asmNewList) {
-                assetSummitRepository.save(asml);
-            }*/
+        if(asmList.size()>0) {
+            logger.info("how many records to be updated on asset_summit--> "+asmList.size());
+             assetSummitRepository.save(asmList);
         }
-
-        if(asmUpdateList.size()>0){
-            logger.info("gl: there are records to be updated, how many? --->"+asmUpdateList.size());
-            assetSummitRepository.save(asmUpdateList);
-            /*for(AssetSummit asm :asmUpdateList){
-                logger.info(asm.getAssetId() +"--id-- "+asm.getCreated()+" --created-- "+asm.getRevenue() +" --- revenue --------ready to be updated");
-                assetSummitRepository.updateAssetSummit(asm.getExposeCount(),asm.getInjectCount(),asm.getFilmCount(),asm.getId());
-            }*/
+        if(newAsmList.size()>0) {
+            logger.info("how many new records to be loaded into asset_summit--> "+newAsmList.size());
+            assetSummitRepository.save(newAsmList);
         }
         return "success";
 
+    }
+    //在将asset clininical中聚合的数据写到assetsummit中去，将数据放到列表里面
+    private void extractor(Date date, List<AssetSummit> asmList, AssetClinicalRecordPojo accrp, AssetSummit asm1) {
+        asm1.setCreated(date);
+        asm1.setAssetId(accrp.getAssetIds());
+        asm1.setSiteId(accrp.getSiteIds());
+        asm1.setHospitalId(accrp.getHospitalIds());
+        asm1.setExposeCount(accrp.getExposeCounts());
+        asm1.setFilmCount(accrp.getFilmCounts());
+        asm1.setInjectCount(accrp.getInjectCounts());
+        if(accrp.getInjectCounts()>0){
+            System.out.println();
+        }
+        if(accrp.getExamCount()==null){
+            logger.info("gl: accrp.getExamCount() should not be null");
+        }else {
+            asm1.setExamCount(accrp.getExamCount().intValue());
+        }
+        if(accrp.getExamDurations()==null){
+            logger.info("gl: accrp.getExamDurations() should not be null");
+        }else {
+            asm1.setExamDuration(accrp.getExamDurations().intValue());
+        }
+        if(accrp.getPriceAmounts()==null){
+            logger.info("gl: accrp.getPriceAmounts() should not be null");
+        }else {
+            asm1.setRevenue(Math.round(accrp.getPriceAmounts() * 100.0) / 100.0);
+        }
+        asmList.add(asm1);
     }
 
     public void initAssetAggregationDataByDateRange(Date fromDate, Date toDate){

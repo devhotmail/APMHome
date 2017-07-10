@@ -47,9 +47,6 @@
                                 <p:column headerText="#{msg.assetName}" >
                                     <h:outputText value="#{item.get('asset').name}"/>
                                 </p:column>
-                                <p:column headerText="#{msg.aliasName}"  >
-                                    <h:outputText value="#{item.get('asset').aliasName}"/>
-                                </p:column>
                                 <p:column headerText="#{msg.departNum}"  >
                                     <h:outputText value="#{item.get('asset').departNum}"/>
                                 </p:column>
@@ -111,7 +108,7 @@
                     <p:panelGrid columns="2" layout="grid" styleClass="ui-panelgrid-blank form-group" >
 
                         <h:panelGroup>
-                            <p:commandButton validateClient="true" actionListener="#{assetFileImportController.importData()}" value="#{msg.Import}" update=":importDataForm :growl" icon="ui-icon-check" disabled="#{!assetFileImportController.canbeImported}"/>
+                            <p:commandButton validateClient="true" actionListener="#{assetFileImportController.importData()}" value="#{msg.Import}" update=":importDataForm :growl" icon="ui-icon-check" disabled="#{!assetFileImportController.canbeImported or assetFileImportController.isImported}"/>
                             <p:commandButton validateClient="true"  ajax="false" value="#{msg.Export}" update=" :growl" icon="ui-icon-arrowthick-1-s" onclick="PrimeFaces.monitorDownload(start, stop);" disabled="#{!assetFileImportController.isImported}" rendered="#{assetFileImportController.hasExportData}">
                                 <p:fileDownload value="#{assetFileImportController.exportFile}" />
                             </p:commandButton>
