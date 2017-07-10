@@ -253,6 +253,9 @@
 	                    <p:column headerText="#{msg.depreciationMethod}" visible="false" exportable="true">
 	                     	<h:outputText value="#{fieldMsg.fieldValue('depreciationMethodList',item.depreciationMethod)}"/>
 	                    </p:column>
+	                    <p:column headerText="#{msg.QRCode}" visible="true" exportable="true">
+	                     	<h:outputText value="#{item.qrCode}"/>
+	                    </p:column>
 
                         <!-- import to xml end -->
                         <f:facet name="{Toolbar}">
