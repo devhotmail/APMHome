@@ -21,6 +21,10 @@ public class MM3DataRecord implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
+    public static enum Status {
+        New, Cancel, Expired 
+    }
+    
     @Id
     @GeneratedValue(generator = "uuid")
     @GenericGenerator(name = "uuid", strategy = "uuid")
@@ -35,6 +39,10 @@ public class MM3DataRecord implements Serializable {
     @Column(name = "asset_uid")
     @Basic(optional = true)
     private String assetUid;
+    
+    @Column(name = "status")
+    @Basic(optional = true)
+    private String status;
     
     @Column(name = "system_id")
     @Basic(optional = false)
@@ -207,12 +215,15 @@ public class MM3DataRecord implements Serializable {
     public void setHeaterOnPressure(Double heaterOnPressure) {
         this.heaterOnPressure = heaterOnPressure;
     }
-    
-    
 
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
     
-
-
     @Override
     public int hashCode() {
         Integer hash = 0;
