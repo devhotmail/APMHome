@@ -33,7 +33,6 @@ public class AssetExamDataAggregator {
 
     /*该方法会由route id=aggregationAssetExamData来调用*/
     public String aggregateExamData() throws Exception{
-        List<AssetClinicalRecordPojo> acrpList = assetClinicalRecordRepository.getAssetExamDataAggregator();
         Date currentDate = new Date();
         aggregateExamDataByDay(currentDate);
         return "success";
