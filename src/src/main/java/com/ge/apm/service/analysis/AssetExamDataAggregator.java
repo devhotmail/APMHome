@@ -33,7 +33,6 @@ public class AssetExamDataAggregator {
 
     /*该方法会由route id=aggregationAssetExamData来调用*/
     public String aggregateExamData() throws Exception{
-        List<AssetClinicalRecordPojo> acrpList = assetClinicalRecordRepository.getAssetExamDataAggregator();
         Date currentDate = new Date();
         aggregateExamDataByDay(currentDate);
         return "success";
@@ -42,7 +41,7 @@ public class AssetExamDataAggregator {
     @Transactional
     public String aggregateExamDataByDay(Date date) throws Exception {
         List<AssetClinicalRecordPojo> acrpList = assetClinicalRecordRepository.getAssetExamDataAggregatorByDate(date);
-        logger.info("Asset Clinical Record Aggregator records size-->",acrpList.size());
+        logger.info("Asset Clinical Record Aggregator records size-->"+acrpList.size());
          List<AssetSummit> asmList= new ArrayList<AssetSummit>();
         List<AssetSummit> newAsmList= new ArrayList<AssetSummit>();
         for(AssetClinicalRecordPojo accrp:acrpList){
