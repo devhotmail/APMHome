@@ -1,6 +1,5 @@
 delete from i18n_message where msg_Type like 'assetFunctionType' and msg_key not LIKE '68%' ;
 
-
 INSERT INTO "public"."i18n_message" VALUES ('1', 'label', 'logout', '注销', 'Logout', null, '-1');
 INSERT INTO "public"."i18n_message" VALUES ('2', 'label', 'login', '登录系统', 'Login', null, '-1');
 INSERT INTO "public"."i18n_message" VALUES ('3', 'label', 'login_name', '登录用户名', 'Login Name', null, '-1');

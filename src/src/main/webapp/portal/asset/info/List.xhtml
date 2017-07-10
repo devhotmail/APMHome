@@ -250,8 +250,11 @@
 	                    <p:column headerText="#{msg.lifecycle}" visible="false" exportable="true">
 	                        <h:outputText value="#{item.lifecycle}"/>
 	                    </p:column>
-	                    <p:column headerText="#{msg.depreciationMethod}" visible="false" exportable="true">
+                        <p:column headerText="#{msg.depreciationMethod}" visible="false" exportable="true">
 	                     	<h:outputText value="#{fieldMsg.fieldValue('depreciationMethodList',item.depreciationMethod)}"/>
+	                    </p:column>
+	                    <p:column headerText="#{msg.QRCode}" visible="true" exportable="true" width="150">
+	                     	<h:outputText value="#{item.qrCode}"/>
 	                    </p:column>
 
                         <!-- import to xml end -->
