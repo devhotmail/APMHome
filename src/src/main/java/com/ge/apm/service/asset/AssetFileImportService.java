@@ -132,8 +132,8 @@ public class AssetFileImportService {
             if (assetName == null || assetName.isEmpty()) {
                 break;
             }
-            String modalityId = ExcelDocument.getCellStringValue(rowMap.get("设备编号"));
-            asset.setDepartNum(modalityId);
+            String departNum = ExcelDocument.getCellStringValue(rowMap.get("设备编号"));
+            asset.setDepartNum(departNum);
             asset.setName(assetName);
             asset.setAliasName(ExcelDocument.getCellStringValue(rowMap.get("设备别名")));
             asset.setSiteId(siteId);
@@ -181,7 +181,7 @@ public class AssetFileImportService {
             map.put("status", ImportStatus.New);
             map.put("rowData", rowMap);
 
-            result.put(modalityId.concat(assetName).concat(financingNum == null ? "" : financingNum), map);
+            result.put(departNum.concat(assetName).concat(financingNum == null ? "" : financingNum), map);
         }
 
         return result;
@@ -360,8 +360,11 @@ public class AssetFileImportService {
         assetFilters.add(new SearchFilter("siteId", SearchFilter.Operator.EQ, siteId));
         assetFilters.add(new SearchFilter("name", SearchFilter.Operator.EQ, asset.getName()));
         assetFilters.add(new SearchFilter("departNum", SearchFilter.Operator.EQ, asset.getDepartNum()));
-        assetFilters.add(new SearchFilter("financingNum", SearchFilter.Operator.EQ, asset.getFinancingNum()));
-        return assetDao.findBySearchFilter(assetFilters);
+        if (null != asset.getFinancingNum() && !asset.getFinancingNum().isEmpty()) {
+            assetFilters.add(new SearchFilter("financingNum", SearchFilter.Operator.EQ, asset.getFinancingNum()));
+        }
+        List<AssetInfo> tempList = assetDao.findBySearchFilter(assetFilters);
+        return tempList;
     }
 
     private List<UserAccount> getUserInfosByName(String userName) {
