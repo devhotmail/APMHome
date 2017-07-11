@@ -55,7 +55,10 @@ public class AssetFileImportController {
         try {
             this.file = event.getFile();
             ExcelDocument doc = new ExcelDocument(file.getInputstream(), ExcelDocument.parseTypeByFileName(file.getFileName()));
-
+            if(!aiService.checkDocVersion(doc)){
+                WebUtil.addErrorMessage(WebUtil.getMessage("ParsingImportFileError"));
+                return;
+            }
             importOrgMap = aiService.getOrgInfoMapFromTemplate(doc);
             importAssetMap = aiService.getAssetMapFromTemplate(doc);
             importUserMap = aiService.getUserMapFromTemplate(doc);
