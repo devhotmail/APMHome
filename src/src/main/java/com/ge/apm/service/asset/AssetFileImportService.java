@@ -421,6 +421,12 @@ public class AssetFileImportService {
                 item.put("asset", assetList.get(0));
                 item.put("status", ImportStatus.Exist);
             }
+            
+            if (null == newAsset.getAssetGroup()) {
+                item.put("status", ImportStatus.CheckFail);
+                result.add(Boolean.FALSE);
+                addErrMessage(item, "Error:" + WebUtil.getMessage("assetGroup") + WebUtil.getMessage("ValidationRequire"));
+            }
 
         });
         return result.isEmpty();
