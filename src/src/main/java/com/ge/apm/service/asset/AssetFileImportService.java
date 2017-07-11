@@ -422,8 +422,23 @@ public class AssetFileImportService {
                 item.put("status", ImportStatus.Exist);
             }
 
+            if (null == newAsset.getAssetGroup()) {
+                item.put("status", ImportStatus.CheckFail);
+                result.add(Boolean.FALSE);
+                addErrMessage(item, "Error:" + WebUtil.getMessage("assetGroup") + WebUtil.getMessage("ValidationRequire"));
+            }
+
         });
         return result.isEmpty();
     }
 
+    public boolean checkDocVersion(ExcelDocument doc) {
+        String[] keyRow = doc.getKeyRow(SHEET_ASSET, 6);
+        for (String str : keyRow) {
+            if (str.equals("设备型号")) {
+                return true;
+            }
+        }
+        return false;
+    }
 }
