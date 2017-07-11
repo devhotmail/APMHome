@@ -13,10 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 import webapp.framework.broker.SiBroker;
 import webapp.framework.util.TimeUtil;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 /**
  *
@@ -76,9 +73,6 @@ public class AssetExamDataAggregator {
         asm1.setExposeCount(accrp.getExposeCounts());
         asm1.setFilmCount(accrp.getFilmCounts());
         asm1.setInjectCount(accrp.getInjectCounts());
-        if(accrp.getInjectCounts()>0){
-            System.out.println();
-        }
         if(accrp.getExamCount()==null){
             logger.info("gl: accrp.getExamCount() should not be null");
         }else {
