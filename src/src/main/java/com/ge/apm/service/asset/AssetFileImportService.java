@@ -140,6 +140,7 @@ public class AssetFileImportService {
             asset.setHospitalId(hospitalId);
             asset.setIsValid(true);
             asset.setStatus(1);
+            asset.setIsDeleted(Boolean.FALSE);
             asset.setAssetOwnerName(ExcelDocument.getCellStringValue(rowMap.get("负责人")));
 
             asset.setClinicalDeptName(ExcelDocument.getCellStringValue(rowMap.get("使用部门")));

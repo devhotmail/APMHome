@@ -19,6 +19,10 @@ public class AssetClinicalRecordPojo {
     private Double exposeCounts;
     private Long filmCounts;
 
+    private int procedureId;
+  /*  private int subPartId;
+    private int stepId;*/
+
     public AssetClinicalRecordPojo(int siteIds, int hospitalIds, int assetIds,Date examDate,long examCount, Long examDurations, Double priceAmounts, Double injectCounts, Double exposeCounts, Long filmCounts) {
         this.siteIds = siteIds;
         this.hospitalIds = hospitalIds;
@@ -32,6 +36,24 @@ public class AssetClinicalRecordPojo {
         this.exposeCounts = exposeCounts;
         this.filmCounts = filmCounts;
 
+    }
+
+    public AssetClinicalRecordPojo( int siteIds, int hospitalIds, int assetIds,Date examDate,int procedureId,long examCount) {
+        this.siteIds = siteIds;
+        this.hospitalIds = hospitalIds;
+        this.assetIds = assetIds;
+        this.examDate=examDate;
+       this.procedureId =procedureId;
+       this.examCount = examCount;
+
+    }
+
+    public int getProcedureId() {
+        return procedureId;
+    }
+
+    public void setProcedureId(int procedureId) {
+        this.procedureId = procedureId;
     }
 
     public Long getExamCount() {

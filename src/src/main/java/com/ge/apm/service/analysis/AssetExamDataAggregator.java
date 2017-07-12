@@ -2,7 +2,9 @@ package com.ge.apm.service.analysis;
 
 import com.ge.apm.dao.AssetClinicalRecordRepository;
 import com.ge.apm.dao.AssetSummitRepository;
+import com.ge.apm.dao.ExamSummitRepository;
 import com.ge.apm.domain.AssetSummit;
+import com.ge.apm.domain.ExamSummit;
 import com.ge.apm.pojo.AssetClinicalRecordPojo;
 import org.joda.time.DateTime;
 import org.slf4j.Logger;
@@ -13,10 +15,8 @@ import org.springframework.transaction.annotation.Transactional;
 import webapp.framework.broker.SiBroker;
 import webapp.framework.util.TimeUtil;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 /**
  *
@@ -30,12 +30,49 @@ public class AssetExamDataAggregator {
     AssetClinicalRecordRepository assetClinicalRecordRepository;
     @Autowired
     AssetSummitRepository assetSummitRepository;
+    @Autowired
+    ExamSummitRepository examSummitRepository;
 
     /*该方法会由route id=aggregationAssetExamData来调用*/
     public String aggregateExamData() throws Exception{
         Date currentDate = new Date();
         aggregateExamDataByDay(currentDate);
         return "success";
+    }
+
+    public String aggregateExamSummit() throws Exception{
+        Date currentDate = new Date();
+       /* SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        currentDate= sdf.parse("2016-01-18");*/
+        aggregateForAssetSumit(currentDate);
+        return "success";
+    }
+
+    @Transactional
+    public String aggregateForAssetSumit(Date date)throws Exception{
+        List<AssetClinicalRecordPojo> acrpList = assetClinicalRecordRepository.aggregateForExamSummitByDate(date);
+        List<ExamSummit> asmList= new ArrayList<ExamSummit>();
+        List<ExamSummit> newAsmList= new ArrayList<ExamSummit>();
+        for(AssetClinicalRecordPojo accrp:acrpList){
+            ExamSummit asm1 =examSummitRepository.getExamSummitByAssetIdAndCreated(accrp.getAssetIds(),accrp.getHospitalIds(),accrp.getProcedureId(),accrp.getSiteIds(), date);
+            if(asm1!=null){
+                logger.info(accrp.getAssetIds() +"-already in the asset_summit,only updated for the time being on date "+date);
+                extractorExamSummit(date, asmList, accrp, asm1);
+            }else {
+                ExamSummit newAsm = new ExamSummit();
+                logger.info(accrp.getAssetIds() +" is new record that is to be inserted into asset_summit on date "+date);
+                extractorExamSummit(date, newAsmList, accrp, newAsm);
+            }
+        }
+        if(asmList.size()>0) {
+            logger.info("how many records have already been in exam_summit--> "+asmList.size());
+            examSummitRepository.save(asmList);
+        }
+        if(newAsmList.size()>0) {
+            logger.info("how many new records to be inserted into exam_summit--> "+newAsmList.size());
+            examSummitRepository.save(newAsmList);
+        }
+return "success";
     }
 
     @Transactional
@@ -57,11 +94,11 @@ public class AssetExamDataAggregator {
             }
         }
         if(asmList.size()>0) {
-            logger.info("how many records to be updated on asset_summit--> "+asmList.size());
+            logger.info("how many records  have already been asset_summit--> "+asmList.size());
              assetSummitRepository.save(asmList);
         }
         if(newAsmList.size()>0) {
-            logger.info("how many new records to be loaded into asset_summit--> "+newAsmList.size());
+            logger.info("how many new records to be inserted into asset_summit--> "+newAsmList.size());
             assetSummitRepository.save(newAsmList);
         }
         return "success";
@@ -69,16 +106,13 @@ public class AssetExamDataAggregator {
     }
     //在将asset clininical中聚合的数据写到assetsummit中去，将数据放到列表里面
     private void extractor(Date date, List<AssetSummit> asmList, AssetClinicalRecordPojo accrp, AssetSummit asm1) {
-        asm1.setCreated(date);
+        asm1.setCreated(date);//gl: created这个字段是做聚合那天的日期?
         asm1.setAssetId(accrp.getAssetIds());
         asm1.setSiteId(accrp.getSiteIds());
         asm1.setHospitalId(accrp.getHospitalIds());
         asm1.setExposeCount(accrp.getExposeCounts());
         asm1.setFilmCount(accrp.getFilmCounts());
         asm1.setInjectCount(accrp.getInjectCounts());
-        if(accrp.getInjectCounts()>0){
-            System.out.println();
-        }
         if(accrp.getExamCount()==null){
             logger.info("gl: accrp.getExamCount() should not be null");
         }else {
@@ -96,7 +130,23 @@ public class AssetExamDataAggregator {
         }
         asmList.add(asm1);
     }
+    private void extractorExamSummit(Date date, List<ExamSummit> asmList, AssetClinicalRecordPojo accrp, ExamSummit asm1) {
 
+        asm1.setCreated(accrp.getExamDate());
+        asm1.setAssetId(accrp.getAssetIds());
+        asm1.setSiteId(accrp.getSiteIds());
+        asm1.setHospitalId(accrp.getHospitalIds());
+        asm1.setPartId(accrp.getProcedureId());
+        asm1.setSubPartId(1);
+        asm1.setStepId(1);
+        if(accrp.getExamCount()==null){
+            logger.info("gl: accrp.getExamCount() should not be null");
+        }else {
+            asm1.setExamCount(accrp.getExamCount().intValue());
+        }
+
+        asmList.add(asm1);
+    }
     public void initAssetAggregationDataByDateRange(Date fromDate, Date toDate){
         HashMap<String, Object> params = new HashMap<String, Object>();
         DateTime dtFrom = TimeUtil.toJodaDate(fromDate);

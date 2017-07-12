@@ -61,12 +61,12 @@ public class AssetExamTest extends BaseJunit4Test{
     @Test
     @Transactional
     @Rollback(false)
-    public void testAggregateExamData()throws Exception{
+    public void testAggregateExamSummitByDay()throws Exception{
 
-        //  assetExamDataAggregator.aggregateExamData();
-        //    assetExamDataAggregator.aggregateExamData__bak();
+        assetExamDataAggregator.aggregateExamSummit();
 
     }
+
     @Autowired
     AssetExamDataService assetExamDataService;
     @Test
