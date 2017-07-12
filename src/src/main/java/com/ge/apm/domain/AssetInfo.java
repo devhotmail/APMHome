@@ -243,6 +243,10 @@ public class AssetInfo implements Serializable {
     public void initializeUid() {
         if(uid==null)
             uid = UUID.randomUUID().toString().replace("-", "");
+        
+        if(isDeleted == null){
+            isDeleted = false;
+        }
     }
     
     public String getUid() {
