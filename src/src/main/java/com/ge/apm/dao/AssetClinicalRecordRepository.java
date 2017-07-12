@@ -56,11 +56,16 @@ public interface AssetClinicalRecordRepository extends GenericRepository<AssetCl
     public List<AssetClinicalRecordPojo> getAssetExamDataAggregatorByDate(@Param("date") Date date);
 
 
+@Query("select new com.ge.apm.pojo.AssetClinicalRecordPojo(siteId as siteIds,hospitalId as hospitalIds,assetId as assetIds, examDate as examDate, procedureId as procedureId,count(examDuration) as examCount) from AssetClinicalRecord group by examDate,siteId,hospitalId,assetId, procedureId having exam_date = :date")
+public List<AssetClinicalRecordPojo> aggregateForExamSummitByDate(@Param("date") Date date);
+
 
 }
 
-/*navtive sql for getAssetExamDataAggregatorByDate
-* select site_Id as siteIds,hospital_Id as hospitalIds,asset_Id as assetIds, exam_Date as examDate,
+/* native sql for  aggregateForExamSummitByDate:
+ select exam_Date,site_Id,hospital_Id,asset_Id, procedure_Id,count(exam_duration) as exam_count from asset_clinical_record group by exam_Date,site_Id,hospital_Id,asset_Id, procedure_Id having exam_date='2016-01-18'*/
+
+/*navtive sql for getAssetExamDataAggregatorByDate: select site_Id as siteIds,hospital_Id as hospitalIds,asst_Id as assetIds, exam_Date as examDate,
             count(exam_Duration) as examCount,
             sum(exam_Duration) as examDurations ,
             sum(price_Amount) as priceAmounts ,
@@ -71,15 +76,5 @@ public interface AssetClinicalRecordRepository extends GenericRepository<AssetCl
             GROUP BY acr.exam_Date,acr.site_Id,acr.hospital_Id,acr.asset_Id
             having exam_date = '2017-07-06'*/
 
-//    @Query("select asm from AssetSummit asm where asm.siteId = :siteId and " +
-//            "asm.hospitalId = :hospitalId and asm.assetId = :assetId")
-//    public List<AssetSummit> getAssetSummit(@Param("assetId") int assetId, @Param("hospitalId") int hospitalId, @Param("siteId") int siteId);
-
-/*sql
-* select count(*),acr.exam_date,
- sum(price_amount) as priceamounts,
- sum(inject_Count) as injectsCountssum, sum(film_Count) as filmCounts
-from asset_clinical_record acr GROUP BY acr.exam_date,acr.site_id,acr.hospital_id,acr.asset_id
-* */
 
 
