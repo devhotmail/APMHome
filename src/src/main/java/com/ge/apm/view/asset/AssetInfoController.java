@@ -179,6 +179,13 @@ public class AssetInfoController extends JpaCRUDController<AssetInfo> {
     @Override
     protected Page<AssetInfo> loadData(PageRequest pageRequest) {
         selected = null;
+//        searchFilters.add(new SearchFilter("isDeleted",SearchFilter.Operator.EQ,false));
+        searchFilters.add(new SearchFilter("isDeleted",SearchFilter.Operator.EQ, false));
+        if (terminate) {
+            this.searchFilters.add(new SearchFilter("isValid", SearchFilter.Operator.EQ, false));
+        } else {
+            searchFilters.add(new SearchFilter("isValid", SearchFilter.Operator.EQ, true));
+        }
         if (this.searchFilters == null) {
             return dao.findAll(pageRequest);
         } else {
@@ -252,6 +259,7 @@ public class AssetInfoController extends JpaCRUDController<AssetInfo> {
         object.setHospitalId(UserContextService.getCurrentUserAccount().getHospitalId());
         object.setIsValid(true);
         object.setStatus(1);
+        object.setIsDeleted(false);
     }
 
     @Override
