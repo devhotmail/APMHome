@@ -310,6 +310,7 @@ public class UserAccountController extends JpaCRUDController<UserAccount> {
     @Override
     public void setSelected(UserAccount selectedUser) {
         super.setSelected(selectedUser);
+        if(selectedUser==null) return;
         
         selectedUserOrgId = selectedUser.getOrgInfoId();
         selectedUserOrgName = getOrgFullName(selectedUserOrgId);
