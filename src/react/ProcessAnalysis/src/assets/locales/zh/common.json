@@ -19,7 +19,7 @@
   "failure_cause": "故障原因",
   "group_info": "分组信息",
   "asset_info": "设备信息",
-  "ettr": "ETTR",
+  "ettr": "修复时间",
   "response_time": "响应时间",
   "arrival_time": "到场时间",
   "report_incident": "报修",
