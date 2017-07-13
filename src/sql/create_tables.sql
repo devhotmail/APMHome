@@ -474,6 +474,26 @@ msg_type varchar(60) NOT NULL,
 msg_type_name varchar(60) NOT NULL
 );
 
+CREATE TABLE "exam_summit" (
+"id" serial NOT NULL,
+"site_id" int4 NOT NULL,
+"hospital_id" int4 NOT NULL,
+"asset_id" int4 NOT NULL,
+"asset_group" int4 NOT NULL,
+"dept_id" int4 NOT NULL,
+"part_id" int4 NOT NULL,
+"subpart_id" int4 NOT NULL,
+"step_id" int4 NOT NULL,
+"exam_count" int4 NOT NULL,
+"created" date,
+"last_modified" timestamp(6),
+"tenant_uid" char(32) COLLATE "default",
+"institution_uid" char(32) COLLATE "default",
+"hospital_uid" char(32) COLLATE "default",
+"site_uid" char(32) COLLATE "default",
+CONSTRAINT "exam_summit_pkey" PRIMARY KEY ("id")
+);
+
 ALTER TABLE asset_info ADD PRIMARY KEY (id);
 ALTER TABLE asset_file_attachment ADD PRIMARY KEY (id);
 ALTER TABLE inspection_checklist ADD PRIMARY KEY (id);
