@@ -24,7 +24,7 @@ const Ranges = DatePresets.reduce((prev, cur) => {
 }, {})
 
 function mapState2Props(state) {
-  let { 
+  let {
     parameters: { filterBy, orderBy, period },
     context: { org, name },
     meta: { departments, assetTypes }
@@ -59,7 +59,7 @@ export class Header extends PureComponent {
     return [
       { key: 'all_dept', label: t('all_dept') },
     ].concat(departments.map(t => ({ key: String(t.id), label: t.name })))
-    
+
   }
   filtersAssetType() {
     let { t, assetTypes = [] } = this.props

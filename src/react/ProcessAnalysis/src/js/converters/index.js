@@ -43,12 +43,13 @@ export function DetailConv(details, type) {
 }
 
 function ToothAdapter(array, max, type) {
+  if (max === 0) max = .1 // avoid NaN
   let color = getStripColor(type)
-  return array.map(a => ({ 
-    id: SID.generate(), 
-    data: a, 
-    mode: 'bar', 
-    label: ellipsis(a.name, 8), 
+  return array.map(a => ({
+    id: SID.generate(),
+    data: a,
+    mode: 'bar',
+    label: ellipsis(a.name, 8),
     strips: [{color: color, weight: +a[type] / max, data: a}]  // TODO remove +
   }))
 }

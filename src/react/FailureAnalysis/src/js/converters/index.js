@@ -40,16 +40,17 @@ export function ReasonConv(resp) {
 }
 
 function BriefToothAdapter(array, max, type, lastYear) {
+  if (max === 0) max = .1 // avoid NaN
   let color = getStripColor(type)
   if (lastYear) {
     color = ColorUtil(color).lighten(.4).hexString()
   }
-  return array.map(a => ({ 
-    id: SID.generate(), 
-    data: a, 
-    mode: 'bar', 
+  return array.map(a => ({
+    id: SID.generate(),
+    data: a,
+    mode: 'bar',
     label: ellipsis(a.key.name, 8),
-    strips: [{color: color, weight: a.val[type] / max, value: a.val[type], data: a}] 
+    strips: [{color: color, weight: a.val[type] / max, value: a.val[type], data: a}]
   }))
 }
 
@@ -74,9 +75,9 @@ function ReasonToothAdapter(array) {
     cursor += e.count
     let color = cursor/sum > .85 ? colors.gray : colors.blue
     result.push({
-      id: SID.generate(), 
-      data: e, 
-      mode: 'bar', 
+      id: SID.generate(),
+      data: e,
+      mode: 'bar',
       label: ellipsis(e.name, 5),
       strips:[{ color: color, weight: e.count/weightMax, data: e}] })
   })

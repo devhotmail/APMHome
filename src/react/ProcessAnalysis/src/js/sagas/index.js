@@ -1,21 +1,10 @@
-import { call, put, take, takeEvery, takeLatest, fork, all, select } from 'redux-saga/effects'
+import { call, put, takeEvery, takeLatest, all, select } from 'redux-saga/effects'
 import Services from 'services'
 import cache from 'utils/cache'
 import { error } from 'utils/logger'
 import EventBus from 'eventbusjs'
 import { DateFormat, GroupByMap, DataTypeMap } from 'converters'
 const API = Services.api
-
-
-// function mapParamsCommon(params) {
-//   let { assettype, dept } = params.filterBy
-//   return {
-//     from: params.period.from.format(DateFormat),
-//     to: params.period.to.format(DateFormat),
-//     type: assettype === 'all_assettype' ? undefined : assettype ,
-//     dept: dept === 'all_dept' ? undefined : dept,
-//   }
-// }
 
 /** Do not temper the original object !! */
 // TODO: extract common params
@@ -99,9 +88,6 @@ function* fetchBriefs(action) {
     if (action.type === 'page/change') {
       params.start = params.limit * (action.data.value - 1)
     }
-    // if (action.type === 'update/param') {
-    //   // do general reload when param changes
-    // }
     let briefs = yield call(API.getBriefs, params)
     // sync pagination
     let value = {
@@ -122,9 +108,6 @@ function* fetchDetails(action) {
     if (action.type === 'page/change') {
       params.start = params.limit * (action.data.value - 1)
     }
-    // if (action.type === 'update/param') {
-    //   // do general reload when param changes
-    // }
 
     let details = yield call(API.getDetails, params)
     // sync pagination
@@ -174,7 +157,7 @@ function* fetchAll(action) {
     }
     yield all([
       call(fetchGross, action),
-      call(fetchDetails, action), 
+      call(fetchDetails, action),
       call(fetchBriefs, action),
       call(fetchPhase, { data: 'ettr' }),
       call(fetchPhase, { data: 'arrival_time' }),
@@ -213,15 +196,18 @@ function* getBriefsSaga() {
 function* getDetailsSaga() {
   yield takeLatest('get/details', fetchDetails)
 }
+
 function* getGrossSaga() {
   yield takeLatest('get/gross', fetchGross)
 }
+
 function* getPhase() {
   yield takeEvery('get/phase', fetchPhase)
 }
+
 export default function* sagas() {
   yield all([
-    metaSaga(), 
+    metaSaga(),
     paramChangeSaga(),
     pageChangeSaga(),
     getBriefsSaga(),

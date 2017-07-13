@@ -183,11 +183,13 @@ export class App extends Component<void, Props, void> {
 
   onLeftPagerChange = next => {
     let current = this.getCurrentPageLeft()
-    this.props.updatePagination('brief', current < next)
+    this.setState({ leftClockwise: current < next })
+    this.props.updatePagination('brief', next)
   }
   onRightPagerChange = next => {
     let current = this.getCurrentPageRight()
-    this.props.updatePagination('detail', current < next)
+    this.setState({ rightClockwise: current < next })
+    this.props.updatePagination('detail', next)
   }
   initDistributionMax(dataType) {
     let [ max, unit ] = HumanizeDurationInput(last(this.getCurrentDistribution(dataType)))
@@ -292,9 +294,9 @@ export class App extends Component<void, Props, void> {
     let gross = selected || generalGross
     let isEmpty = gross.ETTR == 0
     let balls = BallsStub.map((b, i) => Object.assign({
-      label: t(b.i18n), 
+      label: t(b.i18n),
       distance: isEmpty ? i * 60 : GetDistance(b, gross)
-    }, b)) 
+    }, b))
     // update lane color
     let dataType = this.props.dataType
     let connectIndex = -1
@@ -311,7 +313,7 @@ export class App extends Component<void, Props, void> {
       default:
         warn('Invalid type')
     }
-    balls[connectIndex] && (balls[connectIndex].connectPrevious = true) 
+    balls[connectIndex] && (balls[connectIndex].connectPrevious = true)
     return balls
   }
 
@@ -331,7 +333,7 @@ export class App extends Component<void, Props, void> {
     } else if (distriUnit === 'day') {
       factor = 3600 * 24
     }
-    return distriMax * factor 
+    return distriMax * factor
   }
 
   updateDistributionMax = () => {
@@ -343,7 +345,7 @@ export class App extends Component<void, Props, void> {
 
   getCurrentDistribution(type) {
     let { dataType, distributionEttr, distributionArrival, distributionResponse } = this.props
-    type = type || dataType 
+    type = type || dataType
     let distribution
     if (type === 'ettr') {
       distribution = distributionEttr
@@ -396,11 +398,11 @@ export class App extends Component<void, Props, void> {
     let { briefs, details, selected, generalGross, distriMax, distriUnit, leftClockwise, rightClockwise,
       distriArrival, distriEttr, distriResponse, tooltipX, tooltipY, tooltipData
     } = this.state
-    let { t, updateDisplayType, pagination, clientRect, display, dataType, 
+    let { t, updateDisplayType, pagination, clientRect, display, dataType,
       distributionEttr, distributionResponse, distributionArrival
     } = this.props
     let { left, right } = pagination
-    let { outer_R, outer_r, inner_R  } = ensureSize(clientRect.width, clientRect.height)
+    let { outer_R, outer_r, inner_R } = ensureSize(clientRect.width, clientRect.height)
     let onClickDonut = this.onClickDonut
     let gross = selected || generalGross
     return (
@@ -411,26 +413,26 @@ export class App extends Component<void, Props, void> {
 
             <div className="display-select">{selectHelper(display, this.getDisplayOptions(), updateDisplayType)}</div>
             { left.total > left.top &&
-              <Pagination current={CurrentPage(left.skip, left.top)} pageSize={left.top} total={left.total} 
-              className="pager-left" onChange={this.onLeftPagerChange}/>
+              <Pagination current={CurrentPage(left.skip, left.top)} pageSize={left.top} total={left.total}
+                className="pager-left" onChange={this.onLeftPagerChange}/>
             }
-            { right.total > right.top && 
-              <Pagination current={CurrentPage(right.skip, right.top)} pageSize={right.top} total={right.total} 
+            { right.total > right.top &&
+              <Pagination current={CurrentPage(right.skip, right.top)} pageSize={right.top} total={right.total}
                 className="pager-right" onChange={this.onRightPagerChange}/>
             }
-            <GearListChart 
+            <GearListChart
               id="left-chart"
               ref="leftChart"
-              startAngle={110} endAngle={250} 
+              startAngle={110} endAngle={250}
               outerRadius={outer_R} innerRadius={outer_r}
               margin={7}
               onClick={this.clickLeftTooth}
               clockwise={false}
               clockwiseAnimate={leftClockwise}
-              items={DataOrPlaceHolder(briefs, pagination.left.top)} 
+              items={DataOrPlaceHolder(briefs, pagination.left.top)}
               />
-            <Orbit 
-              id="center-chart" 
+            <Orbit
+              id="center-chart"
               radius={Math.max(inner_R, 165)}
               ballRadius={30}
               laneColor={this.getLaneColor()}
@@ -438,43 +440,43 @@ export class App extends Component<void, Props, void> {
             />
             <div id="legend-container">
               <h1 className="center-chart-title" style={{top: -(inner_R * .4 - 18) + '%'}}>{gross.name || t('all_chosen_assets')}</h1>
-              <Donut 
+              <Donut
                 id="ettr"
                 className={classnames("donut-chart-ettr", dataType === 'ettr' ? 'active' : '' )}
                 baseColor={colors.purple}
-                onClick={onClickDonut} 
+                onClick={onClickDonut}
                 title={t('ettr')}
                 data={distriEttr}
                 rows={[GetDonutChartRow(t('average'), gross.ETTR), GetDonutChartRow('P75', gross.ETTR75), GetDonutChartRow('P95', gross.ETTR95)]}
                 onMouseMove={evt => this.onDonutHover(evt, distriEttr, distributionEttr)}
                 onMouseLeave={this.onDonutHover}
               />
-              <Donut 
+              <Donut
                 id="arrival_time"
                 className={classnames("donut-chart-arrival", dataType === 'arrival_time' ? 'active' : '' )}
                 baseColor={colors.green}
-                onClick={onClickDonut} 
+                onClick={onClickDonut}
                 title={t('arrival_time')}
                 data={distriArrival}
                 rows={[GetDonutChartRow(t('average'), gross.arrived)]}
                 onMouseMove={evt => this.onDonutHover(evt, distriArrival, distributionArrival)}
                 onMouseLeave={this.onDonutHover}
               />
-              <Donut 
+              <Donut
                 id="response_time"
                 className={classnames("donut-chart-response", dataType === 'response_time' ? 'active' : '' )}
                 baseColor={colors.yellow}
-                onClick={onClickDonut} 
+                onClick={onClickDonut}
                 title={t('response_time')}
                 data={distriResponse}
                 rows={[GetDonutChartRow(t('average'), gross.respond)]}
                 onMouseMove={evt => this.onDonutHover(evt, distriResponse, distributionResponse)}
                 onMouseLeave={this.onDonutHover}
               />
- 
+
             </div>
-            <GearListChart 
-              id="right-chart" 
+            <GearListChart
+              id="right-chart"
               ref="rightChart"
               startAngle={290} endAngle={70}
               outerRadius={outer_R} innerRadius={outer_r}
@@ -536,7 +538,7 @@ export class App extends Component<void, Props, void> {
         </Tooltip>
       </div>
     )
-  } 
+  }
 }
 
 export default translate()(withClientRect(App))
