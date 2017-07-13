@@ -563,6 +563,14 @@ INSERT INTO "public"."i18n_message" VALUES ('3041', 'message', 'AlreadyUsingQrCo
 INSERT INTO "public"."i18n_message" VALUES ('3042', 'message', 'DeleteAssetConformationMsg', '确认删除设备?', 'Confirm to remove this asset?', null, '-1');
 INSERT INTO "public"."i18n_message" VALUES ('3043', 'message', 'Institution', '集团', 'Institution', null, '-1');
 INSERT INTO "public"."i18n_message" VALUES ('3044', 'message', 'ExistsUnfinishedWorkOrders', '当前设备存在未完成工单，不能报废！', 'The asset has unfinished workOrders', null, '-1');
+
+INSERT INTO "public"."i18n_message" VALUES ('3050', 'message', 'feedbackComment', '备注', '备注', null, '-1');
+INSERT INTO "public"."i18n_message" VALUES ('3051', 'message', 'feedbackRating', '评分', '评分', null, '-1');
+INSERT INTO "public"."i18n_message" VALUES ('3052', 'message', 'patProblems', '问题描述', '问题描述', null, '-1');
+INSERT INTO "public"."i18n_message" VALUES ('3053', 'message', 'patActions', '解决方案', '解决方案', null, '-1');
+INSERT INTO "public"."i18n_message" VALUES ('3054', 'message', 'patTests', '测试方法', '方法', null, '-1');
+INSERT INTO "public"."i18n_message" VALUES ('3055', 'message', 'equipmentTaker', '取物人', '取物人', null, '-1');
+
 INSERT INTO "public"."i18n_message" VALUES ('5000', 'label', 'deviceScanhd', '设备扫描量（次）', 'Scan #', null, '-1');
 INSERT INTO "public"."i18n_message" VALUES ('5001', 'label', 'deviceScanlg', '扫描次数', 'Scan', null, '-1');
 INSERT INTO "public"."i18n_message" VALUES ('5002', 'label', 'deviceExpohd', '设备曝光量（次）', 'Exposure #', null, '-1');

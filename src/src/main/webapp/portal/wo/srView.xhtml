@@ -34,10 +34,6 @@
                             <p:outputLabel value="#{serviceRequestController.selected.requestReason}" />
                         </h:panelGroup>
                         <h:panelGroup>
-                            <label class="label">#{msg.status}</label>
-                            <p:outputLabel value="#{fieldMsg.fieldValue('status', serviceRequestController.selected.status)}" />
-                        </h:panelGroup>
-                        <h:panelGroup>
                             <label class="label">#{msg.equipmentTaker}</label>
                             <p:outputLabel value="#{serviceRequestController.selected.equipmentTaker}" />
                         </h:panelGroup>
@@ -65,10 +61,6 @@
                                 <h:panelGroup>
                                     <label class="label">#{msg.currentPersonName}</label>
                                     <p:outputLabel value="#{woItem.currentPersonName}"/>
-                                </h:panelGroup>
-                                <h:panelGroup>
-                                    <label class="label">#{msg.status}</label>
-                                    <p:outputLabel value="#{fieldMsg.fieldValue('status',woItem.status)}"/>
                                 </h:panelGroup>
                                 <h:panelGroup>
                                     <label class="label">#{msg.feedbackRating}</label>

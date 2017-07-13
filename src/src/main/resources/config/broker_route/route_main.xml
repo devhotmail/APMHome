@@ -135,7 +135,7 @@
         </route>
 <!--gl working-->
         <route>
-            <from uri="quartz://quartzAssetExamDataAggregation?cron=0+0+*/1+*+*+?"/>
+            <from uri="quartz://quartzExamSummitAggregation?cron=0+0+*/1+*+*+?"/>
             <to uri="direct:aggregateExamSummitData"/>
         </route>
 
