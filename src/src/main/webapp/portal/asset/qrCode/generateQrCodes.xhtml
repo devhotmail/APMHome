@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+<ui:composition>
+    <p:dialog id="generateQrCodesDlg" widgetVar="generateQrCodesDialog" modal="true" resizable="true" draggable="true" appendTo="@(body)" header="二维码导出">
+    <h:form id="generateQrCodesForm">
+        <h:panelGroup id="display">
+            <h:outputLabel for="siteIdSelect" value="租户 ： " />
+            <p:selectOneMenu id="siteIdSelect" value="#{generateQrCodesController.siteId}" required="true" requiredMessage="租户院区不能为空">
+                <p:ajax listener="#{generateQrCodesController.onSiteChange}" update="hospitalIdSelect" />
+                <f:selectItem itemLabel="#{msg.selectOneMessage}"/>
+                <f:selectItems value="#{generateQrCodesController.siteList}" var="item" itemLabel="#{item.name}" itemValue="#{item.id}"/>
+            </p:selectOneMenu>
+            <br/>
+            <br/>
+            <h:outputLabel for="hospitalIdSelect" value="医院 ： " />
+            <p:selectOneMenu id="hospitalIdSelect" value="#{generateQrCodesController.hospitalId}" required="true" requiredMessage="医院不能为空">
+                <f:selectItem itemLabel="#{msg.selectOneMessage}"/>
+                <f:selectItems value="#{generateQrCodesController.hospitalList}" var="item" itemLabel="#{item.name}" itemValue="#{item.id}"/>
+            </p:selectOneMenu>
+            <br/>
+            <br/>
+            <h:outputLabel for="hospitalIdSelect" value="大图数量 ： " />
+            <p:inputNumber id="big" decimalPlaces="0" minValue="1" maxValue="9999" value="#{generateQrCodesController.big}" required="true" requiredMessage="大图数量不能为空"/>
+            <br/>
+             <br/>
+            <h:outputLabel for="hospitalIdSelect" value="小图数量 ： " />
+            <p:inputNumber id="small" decimalPlaces="0" minValue="1" maxValue="9999" value="#{generateQrCodesController.small}" required="true" requiredMessage="小图数量不能为空"/>
+            <br/>
+            <br/>
+            <p:commandButton value="生成导出二维码" icon="ui-icon-extlink" validateClient="true" actionListener="#{generateQrCodesController.createQrCode}"
+             	update=":qrCodeLibListForm:datalist :growl" oncomplete="handleSubmit(args, 'generateQrCodesDialog');"
+             	onclick="PrimeFaces.monitorDownload(start, stop);" ajax="false">
+             		<p:fileDownload value="#{generateQrCodesController.qrZip}" />
+             </p:commandButton>
+            <br/>
+        </h:panelGroup>
+    </h:form>
+    </p:dialog>
+    
+    <script type="text/javascript">
+		function start() {
+		    PF('statusDialog').show();
+		}
+		 
+		function stop() {
+		    PF('statusDialog').hide();
+		}
+	</script>
+
+</ui:composition>
+
+</html>

@@ -473,8 +473,11 @@ INSERT INTO "public"."i18n_message" VALUES ('1712', 'alertType', '2', '压缩机
 INSERT INTO "public"."i18n_message" VALUES ('1713', 'alertType', '3', '水浸状态报警(常闭报警)', 't3', null, '-1');
 INSERT INTO "public"."i18n_message" VALUES ('1714', 'alertType', '101', '水冷温度报警', 't101', null, '-1');
 INSERT INTO "public"."i18n_message" VALUES ('1715', 'alertType', '102', '机房湿度报警', 't102', null, '-1');
-INSERT INTO "public"."i18n_message" VALUES ('1716', 'alertType', '104', '机房温度报警', 't103', null, '-1');
+INSERT INTO "public"."i18n_message" VALUES ('1716', 'alertType', '103', '机房温度报警', 't103', null, '-1');
 INSERT INTO "public"."i18n_message" VALUES ('1717', 'alertType', '4', '压缩机状态报警(常闭报警)', 't4', null, '-1');
+INSERT INTO "public"."i18n_message" VALUES ('1718', 'alertType', '105', '流量报警', 't105', null, '-1');
+INSERT INTO "public"."i18n_message" VALUES ('1719', 'alertType', '5', '压缩机报警状态报警(常闭报警)', 't5', null, '-1');
+INSERT INTO "public"."i18n_message" VALUES ('1720', 'alertType', '104', '水冷机冷却液温度报警', 't104', null, '-1');
 INSERT INTO "public"."i18n_message" VALUES ('2001', 'assetFunctionType', '6801', '6801基础外科手术器械', null, null, '-1');
 INSERT INTO "public"."i18n_message" VALUES ('2002', 'assetFunctionType', '6802', '6802显微外科手术器械', null, null, '-1');
 INSERT INTO "public"."i18n_message" VALUES ('2003', 'assetFunctionType', '6803', '6803神经外科手术器械', null, null, '-1');

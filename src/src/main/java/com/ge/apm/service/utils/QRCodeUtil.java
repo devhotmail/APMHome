@@ -16,8 +16,10 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.OutputStream;
+import java.text.SimpleDateFormat;
 import java.util.Random;
 //import java.util.UUID;
+import java.util.UUID;
 
 import javax.imageio.ImageIO;
 
@@ -30,7 +32,10 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.logging.Level;
@@ -57,7 +62,8 @@ public class QRCodeUtil {
     // LOGO路径
     private static final String LOGO_PATH = QRCodeUtil.class.getResource("/").getFile().concat("logo.jpg");
     private static final String BACKGROUND_PATH = QRCodeUtil.class.getResource("/").getFile().concat("background.png");
-
+    private static final String LOGO_NYD = QRCodeUtil.class.getResource("/").getFile().concat("nyd_logo.png");
+    private static final int NYD_SITE_ID = 17;
     private static String suscribeLink;
 
 //    private static QRCodeUtil qrCodeUtil;
@@ -197,27 +203,27 @@ public class QRCodeUtil {
         QRCodeUtil.encode(content, null, output, false);
     }
 
-    public static void main(String[] args) throws Exception {
+/*    public static void main(String[] args) throws Exception {
 
-        String logoFile = "c:/Temp/logo.jpg";
-        String backGroundPath = "c:/Temp/background.png";
-        String prefix = "http://weixin.qq.com/r/nCnx6dbEDItzrZKK93yO";
-        String text = "1703307223655922";
+        String logoFile = "c:/Temp/logo.jpg";//GE logo
+        String backGroundPath = "c:/Temp/background.png";//图片背景
+        String prefix = "http://weixin.qq.com/r/nCnx6dbEDItzrZKK93yO"; //nCnx6dbEDItzrZKK93yO 公众号
+        String text = "1703307223655922";//qrCode
 //		QRCodeUtil.encode(text, logoFile, "c:/Temp", true);
 
         //    批量生成
-//        String srcFolder = "c:/Temp/170707";
-//        String[] files = new File(srcFolder).list();
-//        for (String item : files) {
-//            System.out.println(item);
-//            qrCodeBatchJob(srcFolder + File.separator + item, logoFile, backGroundPath, prefix,1000);
-//        }
-        BufferedImage image = QRCodeUtil.createImage(prefix + "1703307223655922", logoFile, true);
-        BufferedImage img = addBackground(backGroundPath, image, 472, "1703307223655922");
-        ImageIO.write(img, FORMAT_NAME, new File("c:/Temp/" + text + ".jpg"));
+        String srcFolder = "c:/Temp/170707";
+        String[] files = new File(srcFolder).list();
+        for (String item : files) {
+            System.out.println(item);
+            qrCodeBatchJob(srcFolder + File.separator + item, logoFile, backGroundPath, prefix,100);
+        }
+//        BufferedImage image = QRCodeUtil.createImage(prefix + "1703307223655922", logoFile, true);
+//        BufferedImage img = addBackground(backGroundPath, image, 472, "1703307223655922");
+//        ImageIO.write(img, FORMAT_NAME, new File("c:/Temp/" + text + ".jpg"));
 //        
 //        
-    }
+    }*/
 
     private static BufferedImage addBackground(String bgPath, BufferedImage innerImg, int size, String text) throws IOException {
 
@@ -288,5 +294,50 @@ public class QRCodeUtil {
         }
 
     }
+
+	public static String generateQrCodes(List<String> codes, Integer small, Integer big, Integer siteId) throws Exception {
+		String logo = null;
+		if(siteId == NYD_SITE_ID){
+			logo = LOGO_NYD;
+		}else{
+			logo = LOGO_PATH;
+		}
+		String foldName = new SimpleDateFormat("yyyyMMdd").format(new Date()) +"_"+new Random().nextInt(1000);
+		String codeExistsFileFold = System.getProperty("user.home")+"/qrCode" +foldName;
+		File src = new File(codeExistsFileFold);
+        String codeOutputFolder = src.getAbsolutePath() + System.getProperty("file.separator");
+        System.out.println("codeOutputFolder is " + codeOutputFolder);
+        mkdirs(codeOutputFolder.concat("472"));
+        mkdirs(codeOutputFolder.concat("709"));
+        int num = small + big;
+        for (int i = 0; i<num; i++) {
+        	String code = codes.get(i);
+        	  BufferedImage image = QRCodeUtil.createImage(suscribeLink + "?" + code, logo, true);
+              if (i < small) {
+                  BufferedImage imageWithbg = addBackground(BACKGROUND_PATH, image, 472, code);
+                  ImageIO.write(imageWithbg, FORMAT_NAME, new File(codeOutputFolder + "472/" + code + ".jpg"));
+              } else {
+                  BufferedImage imageWithbg790 = addBackground(BACKGROUND_PATH, image, 709, code);
+                  ImageIO.write(imageWithbg790, FORMAT_NAME, new File(codeOutputFolder + "709/" + code + ".jpg"));
+              }
+		}
+        
+        String zipPosition = System.getProperty("user.home")+System.getProperty("file.separator");
+        String zipName = zipPosition +foldName+ "code.zip";
+        ZipCompressor zc = new ZipCompressor(zipName);   
+        zc.compress(codeOutputFolder.concat("472"),codeOutputFolder.concat("709"));
+        return zipName;
+	}
+	
+	public static void main(String[] args) throws Exception {
+		List<String> codes = new ArrayList<String>();
+		codes.add(UUID.randomUUID().toString());
+		codes.add(UUID.randomUUID().toString());
+		codes.add(UUID.randomUUID().toString());
+		codes.add(UUID.randomUUID().toString());
+		codes.add(UUID.randomUUID().toString());
+		codes.add(UUID.randomUUID().toString());
+		generateQrCodes(codes, 1, 2,1);
+	}
 
 }

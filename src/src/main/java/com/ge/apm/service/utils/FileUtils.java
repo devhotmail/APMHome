@@ -1,8 +1,10 @@
 package com.ge.apm.service.utils;
 
 import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -243,6 +245,60 @@ public class FileUtils {
         zipOut.close();
     }
     
+    public static void zipIteratorFolder(String folderToZip, String saveToZipFile, boolean addDicomSuffix) throws Exception {
+        File sourceFile = new File(folderToZip);  
+        FileInputStream fis = null;  
+        BufferedInputStream bis = null;  
+        FileOutputStream fos = null;  
+        ZipOutputStream zos = null;  
+        if(sourceFile.exists() == false){  
+            System.out.println("待压缩的文件目录："+folderToZip+"不存在.");  
+        }else{  
+            try {  
+                File zipFile = new File(saveToZipFile);  
+                if(zipFile.exists()){  
+                    System.out.println("文件已存在!");
+                }else{  
+                    File[] sourceFiles = sourceFile.listFiles();  
+                    if(null == sourceFiles || sourceFiles.length<1){  
+                        System.out.println("待压缩的文件目录：" + folderToZip + "里面不存在文件，无需压缩.");  
+                    }else{  
+                        fos = new FileOutputStream(zipFile);  
+                        zos = new ZipOutputStream(new BufferedOutputStream(fos));  
+                        byte[] bufs = new byte[1024*10];  
+                        for(int i=0;i<sourceFiles.length;i++){  
+                            //创建ZIP实体，并添加进压缩包  
+                            ZipEntry zipEntry = new ZipEntry(sourceFiles[i].getName());  
+                            zos.putNextEntry(zipEntry);  
+                            //读取待压缩的文件并写进压缩包里  
+                            fis = new FileInputStream(sourceFiles[i]);  
+                            bis = new BufferedInputStream(fis, 1024*10);  
+                            int read = 0;  
+                            while((read=bis.read(bufs, 0, 1024*10)) != -1){  
+                                zos.write(bufs,0,read);  
+                            }  
+                        }  
+                    }  
+                }  
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();  
+                throw new RuntimeException(e);  
+            } catch (IOException e) {  
+                e.printStackTrace();  
+                throw new RuntimeException(e);  
+            } finally{  
+                //关闭流  
+                try {  
+                    if(null != bis) bis.close();  
+                    if(null != zos) zos.close();  
+                } catch (IOException e) {  
+                    e.printStackTrace();  
+                    throw new RuntimeException(e);  
+                }  
+            }  
+        }
+    }
+    
     /**
      *
      * @param zip
@@ -349,7 +405,15 @@ public class FileUtils {
 
     public static void main(String args[]) {
         try {
-            FileUtils.zipFolder("C:/GE", "C:/GUID/a.zip", true);
+        	File file = new File("C:/Users/212593079/qrCode20170712/");
+        	file.setExecutable(true);
+        	file.setWritable(true);
+        	file.setReadable(true);
+        	System.out.println(file.getAbsolutePath());
+//        	String chmod = "chmod 777 "+ file.getAbsolutePath();
+//        	Runtime.getRuntime().exec(chmod);
+            FileUtils.zipIteratorFolder("C:/Users/212593079/qrCode20170712/", "C:/Users/212593079/a.zip", true);
+            System.out.println(file.getAbsolutePath());
         } catch (Exception e) {
             log.error(e.getMessage(), e);
         }
