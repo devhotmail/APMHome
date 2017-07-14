@@ -1,5 +1,6 @@
 package com.ge.apm.domain;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
@@ -15,6 +16,8 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -26,7 +29,7 @@ import org.hibernate.annotations.GenericGenerator;
 @Table(name = "v2_work_order")
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Cacheable(true)
-public class V2_WorkOrder implements Serializable {
+public class V2_WorkOrder extends JHipAbstractAuditingEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -114,7 +117,10 @@ public class V2_WorkOrder implements Serializable {
     @Column(name = "close_time")
     private Date closeTime;
 
-//	    @OneToMany(cascade=CascadeType.ALL,fetch=FetchType.LAZY,targetEntity=V2_BlobObject.class) 
+    @Column(name = "checkin")
+    private Integer checkin;
+
+    //	    @OneToMany(cascade=CascadeType.ALL,fetch=FetchType.LAZY,targetEntity=V2_BlobObject.class) 
 //	    @Where(clause="bo_uuid=id")
 //	    private List<V2_BlobObject> attachments ;
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
@@ -125,6 +131,48 @@ public class V2_WorkOrder implements Serializable {
     @JoinColumn(name = "wo_id")
     private List<V2_WorkOrder_Detail> v2_workOrder_detail_list;
 
+    @Column(name = "comment")
+    private String comment;
+
+    @Column(name = "nearest_days")
+    private Integer nearestDays;//上次维修距今的天数
+    @Column(name = "nearest_wo_id")
+    private String nearestWoId;//上次维修工单的id
+
+    @Column(name = "repair_type")
+    private Integer repairType;
+
+    @Column(name = "checkin_time")
+    @Temporal(TemporalType.TIMESTAMP)
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
+    private Date checkinTime;
+
+	    
+	    
+    public Date getCheckinTime() {
+        return checkinTime;
+    }
+
+    public void setCheckinTime(Date checkinTime) {
+        this.checkinTime = checkinTime;
+    }
+
+    public Integer getNearestDays() {
+        return nearestDays;
+    }
+
+    public void setNearestDays(Integer nearestDays) {
+        this.nearestDays = nearestDays;
+    }
+
+    public String getNearestWoId() {
+        return nearestWoId;
+    }
+
+    public void setNearestWoId(String nearestWoId) {
+        this.nearestWoId = nearestWoId;
+    }
+
     public String getId() {
         return id;
     }
@@ -133,15 +181,24 @@ public class V2_WorkOrder implements Serializable {
         this.id = id;
     }
 
-//		public List<V2_BlobObject> getAttachments() {
-//			return attachments;
-//		}
-//
-//		public void setAttachments(List<V2_BlobObject> attachments) {
-//			this.attachments = attachments;
-//		}
+    public Integer getRepairType() {
+        return repairType;
+    }
+
+    public void setRepairType(Integer repairType) {
+        this.repairType = repairType;
+    }
+
     public List<V2_WorkOrder_Step> getV2_workOrder_step_list() {
         return v2_workOrder_step_list;
+    }
+
+    public String getComment() {
+        return comment;
+    }
+
+    public void setComment(String comment) {
+        this.comment = comment;
     }
 
     public void setV2_workOrder_step_list(List<V2_WorkOrder_Step> v2_workOrder_step_list) {
@@ -314,6 +371,14 @@ public class V2_WorkOrder implements Serializable {
 
     public void setCaseType(Integer caseType) {
         this.caseType = caseType;
+    }
+
+    public Integer getCheckin() {
+        return checkin;
+    }
+
+    public void setCheckin(Integer checkin) {
+        this.checkin = checkin;
     }
 
 //		public V2_ServiceRequest getServiceRequest() {

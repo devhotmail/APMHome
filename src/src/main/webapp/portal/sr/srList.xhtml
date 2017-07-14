@@ -6,11 +6,11 @@
                 template="/WEB-INF/template.xhtml">
 
     <ui:define name="preRenderView">
-<!--        <f:metadata>
-            <f:viewParam name="isClosed" value="#{workOrderController.filterIsClosed}"/>
-            <f:viewParam name="aid" value="#{workOrderController.filterAssetId}"/>
-        </f:metadata>
-        <f:event type="preRenderView" listener="#{workOrderController.setViewFilter()}"/>-->
+        <!--        <f:metadata>
+                    <f:viewParam name="isClosed" value="#{workOrderController.filterIsClosed}"/>
+                    <f:viewParam name="aid" value="#{workOrderController.filterAssetId}"/>
+                </f:metadata>
+                <f:event type="preRenderView" listener="#{workOrderController.setViewFilter()}"/>-->
     </ui:define>
 
     <ui:define name="head">
@@ -27,6 +27,14 @@
                 <p:messages autoUpdate="true" closable="true" showDetail="false"/>
 
                 <h:form id="SRListForm">
+                    <h:panelGrid id="buttonSet" columns="6" cellpadding="5">
+                        <p:commandButton value="新增报修" id="btnCreate" process="@this" update="datalist buttonSet :WorkOrderEditForm :ServiceRequestCreateForm" actionListener="#{serviceRequestController.createServiceRequest()}" />
+                        <p:commandButton value="我的未完成" id="btn1" process="@this" update="datalist buttonSet :WorkOrderEditForm :ServiceRequestCreateForm" actionListener="#{serviceRequestController.searchList(1)}"  disabled="#{serviceRequestController.queryIndex==1}" />
+                        <p:commandButton value="我的已完成" id="btn2" process="@this" update="datalist buttonSet :WorkOrderEditForm :ServiceRequestCreateForm" actionListener="#{serviceRequestController.searchList(2)}" disabled="#{serviceRequestController.queryIndex==2}"/>
+                        <p:commandButton value="科室未完成" id="btn3" process="@this" update="datalist buttonSet :WorkOrderEditForm :ServiceRequestCreateForm" actionListener="#{serviceRequestController.searchList(3)}" disabled="#{serviceRequestController.queryIndex==3}"/>
+                        <p:commandButton value="科室已完成" id="btn4" process="@this" update="datalist buttonSet :WorkOrderEditForm :ServiceRequestCreateForm" actionListener="#{serviceRequestController.searchList(4)}" disabled="#{serviceRequestController.queryIndex==4}"/>
+                        <p:commandButton value="已取消" id="btn5" process="@this" update="datalist buttonSet :WorkOrderEditForm :ServiceRequestCreateForm" actionListener="#{serviceRequestController.searchList(5)}" disabled="#{serviceRequestController.queryIndex==5}"/>
+                    </h:panelGrid>
                     <p:dataTable id="datalist" value="#{serviceRequestController.lazyModel}" var="item" widgetVar="varDataList"
                                  selectionMode="single" selection="#{serviceRequestController.selected}"
                                  lazy="true" paginator="true" paginatorPosition="top" paginatorAlwaysVisible="true"
@@ -67,11 +75,11 @@
                         </p:column>
                         <p:column headerText="#{msg.assetName}" sortBy="#{item.assetName}" filterBy="#{item.assetName}" filterMatchMode="LIKE">
                             <h:outputText value="#{item.assetName}"/>
-                        </p:column><!--
--->                        <p:column headerText="#{msg.requestReason}" sortBy="#{item.requestReason}" filterBy="#{item.requestReason}" filterMatchMode="LIKE">
+                        </p:column>               
+                        <p:column headerText="#{msg.requestReason}" sortBy="#{item.requestReason}" filterBy="#{item.requestReason}" filterMatchMode="LIKE">
                             <h:outputText value="#{serviceRequestController.getRequestReasonInShort(item)}" title="#{item.requestReason}"/>
-                        </p:column><!--
--->                        <p:column headerText="#{msg.status}" sortBy="#{item.status}" filterBy="#{item.status}" filterMatchMode="EQ">
+                        </p:column>                 
+<!--                        <p:column headerText="#{msg.status}" sortBy="#{item.status}" filterBy="#{item.status}" filterMatchMode="EQ">
                             <f:facet name="filter">
                                 <p:selectOneMenu onchange="PF('varDataList').filter()" >
                                     <f:selectItem itemLabel="#{msg.SelectOneMessage}" itemValue="#{null}" noSelectionOption="true" />
@@ -79,7 +87,7 @@
                                 </p:selectOneMenu>
                             </f:facet>
                             <h:outputText value="#{fieldMsg.fieldValue('status', item.status)}"/>
-                        </p:column>
+                        </p:column>-->
                         <f:facet name="{Toolbar}">
                             <p:commandButton title="#{msg.exportToXLS}" icon="ui-icon-arrowstop-1-s" ajax="false">
                                 <p:dataExporter type="xls" target="datalist" fileName="WorkOrder_export"/>
@@ -89,6 +97,8 @@
                 </h:form>
 
                 <ui:include src="srView.xhtml"/>
+                <ui:include src="srCreate.xhtml"/>
+                <ui:include src="/portal/asset/selectAssetDialog.xhtml"/>
 
             </div>
         </div>

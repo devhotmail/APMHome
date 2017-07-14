@@ -27,7 +27,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 
 @Entity
 @Table(name = "v2_service_request")
-public class V2_ServiceRequest implements Serializable {
+public class V2_ServiceRequest extends JHipAbstractAuditingEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
 

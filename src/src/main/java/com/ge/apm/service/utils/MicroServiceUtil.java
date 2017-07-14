@@ -14,18 +14,15 @@ import java.util.Map;
 import java.util.List;
 import org.primefaces.model.DefaultStreamedContent;
 import org.primefaces.model.StreamedContent;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.web.client.RestTemplate;
 import org.springframework.util.MultiValueMap;
 
 /**
@@ -33,10 +30,7 @@ import org.springframework.util.MultiValueMap;
  * @author 212579464
  */
 @Component
-public class MicroServiceUtil {
-
-    @Autowired
-    private RestTemplate template;
+public class MicroServiceUtil extends MicroServiceInvoker{
 
     @Value("#{urlProperties.url_getAuthenticateByOpenId}")
     private String url_getAuthenticateByOpenId;
@@ -116,15 +110,7 @@ public class MicroServiceUtil {
         return null;
     }
 
-    private Boolean isOkay(ResponseEntity res) {
-
-        if (!res.getStatusCode().equals(HttpStatus.OK)) {
-            return false;
-        }
-        LinkedHashMap<String, Object> body = (LinkedHashMap<String, Object>) res.getBody();
-
-        return body.containsKey("bizStatusCode") && body.get("bizStatusCode").equals("OK");
-    }
+    
 
     public String getAuthenticateByOpenId(String code, String weChatId) {
         HttpHeaders headers = new HttpHeaders();

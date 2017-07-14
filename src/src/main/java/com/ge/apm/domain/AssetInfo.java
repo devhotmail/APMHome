@@ -28,7 +28,7 @@ import javax.validation.constraints.Size;
  */
 @Entity
 @Table(name = "asset_info")
-public class AssetInfo implements Serializable {
+public class AssetInfo extends JHipAbstractAuditingEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
