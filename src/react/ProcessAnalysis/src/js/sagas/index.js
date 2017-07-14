@@ -16,7 +16,7 @@ function mapParamsBrief(params) {
     start: params.pagination.left.skip,
     limit: params.pagination.left.top,
     groupby: GroupByMap[params.display],
-    type: assettype === 'all_assettype' ? undefined : assettype ,
+    type: assettype === 'all_asset_type' ? undefined : assettype ,
     dept: dept === 'all_dept' ? undefined : dept,
     orderby: DataTypeMap[params.dataType]
   }
@@ -29,7 +29,7 @@ function mapParamsDetail(params) {
     to: params.period.to.format(DateFormat),
     start: params.pagination.right.skip,
     limit: params.pagination.right.top,
-    type: assettype === 'all_assettype' ? undefined : assettype ,
+    type: assettype === 'all_asset_type' ? undefined : assettype ,
     dept: dept === 'all_dept' ? undefined : dept,
     orderby: DataTypeMap[params.dataType]
   }
@@ -40,7 +40,7 @@ function mapParamsGross(params) {
   return {
     from: params.period.from.format(DateFormat),
     to: params.period.to.format(DateFormat),
-    typeId: assettype === 'all_assettype' ? undefined : assettype ,
+    typeId: assettype === 'all_asset_type' ? undefined : assettype ,
     deptId: dept === 'all_dept' ? undefined : dept
   }
 }
@@ -60,7 +60,7 @@ function mapParamsPhase(params, phase) {
   return {
     from: params.period.from.format(DateFormat),
     to: params.period.to.format(DateFormat),
-    typeId: assettype === 'all_assettype' ? undefined : assettype ,
+    typeId: assettype === 'all_asset_type' ? undefined : assettype ,
     deptId: dept === 'all_dept' ? undefined : dept,
     t1: distribution[1],
     t2: distribution[2],
@@ -126,9 +126,6 @@ function* fetchGross() {
   try {
     let store = yield select(state => state.parameters)
     let params = mapParamsGross(store)
-    // if (action.type === 'update/param') {
-    //   // do general reload when param changes
-    // }
     let gross = yield call(API.getGross, params)
     EventBus.dispatch('gross-data', this, gross)
   } catch (e) {

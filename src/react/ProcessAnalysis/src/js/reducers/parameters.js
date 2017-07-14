@@ -6,7 +6,7 @@ const Current = moment()
 const YearStart = moment(new Date().getFullYear(), 'YYYY')
 const initParameter = {
   filterBy: {
-    'assettype': 'all_assettype',
+    'assettype': 'all_asset_type',
     'dept': 'all_dept',
   },
   period: {

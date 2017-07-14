@@ -15,7 +15,7 @@ $filterBarHeight: 50px;
   width: $sidepanelWidth;
   height: 100%;
   display: flex;
-  align-items: center;  
+  align-items: center;
 }
 
 .main {
@@ -33,6 +33,7 @@ $filterBarHeight: 50px;
 .content {
   position: relative;
   width: 100%;
+  min-width: 680px;
   height: calc(100% - #{$filterBarHeight});
 }
 
