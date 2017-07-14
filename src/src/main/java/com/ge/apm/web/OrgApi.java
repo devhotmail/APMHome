@@ -52,7 +52,7 @@ public class OrgApi {
   @RequestMapping(path = "/all", method = RequestMethod.GET)
   @ResponseBody
   public ResponseEntity<? extends Map<String, Object>> requestAll(HttpServletRequest request,
-                                                                  @Min(1) @Max(Integer.MAX_VALUE) @RequestParam(value = "limit", required = false, defaultValue = "30") Integer limit,
+                                                                  @Min(1) @Max(Integer.MAX_VALUE) @RequestParam(value = "limit", required = false, defaultValue = "3000") Integer limit,
                                                                   @Min(0) @RequestParam(value = "start", required = false, defaultValue = "0") Integer start) {
     return Try.of(UserContext::getCurrentLoginUser).map(u ->
       ResponseEntity.ok().cacheControl(CacheControl.maxAge(1, TimeUnit.HOURS))

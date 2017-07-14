@@ -35,7 +35,7 @@ public class OrgService {
   }
 
   public Iterable<Tuple6<Integer, Integer, Integer, Integer, String, String>> find(Integer site, Integer hospital, Integer start, Integer limit) {
-    return db.select("select id, parent_id as parent, site_id as site, hospital_id as hospital, name as cn, name_en as en from org_info where site_id = :site and hospital_id = :hospital offset :start limit :limit")
+    return db.select("select id, parent_id as parent, site_id as site, hospital_id as hospital, name as cn, name_en as en from org_info where parent_id is not null and site_id = :site and hospital_id = :hospital offset :start limit :limit")
       .parameter("site", site).parameter("hospital", hospital).parameter("start", start).parameter("limit", limit)
       .getAs(Integer.class, Integer.class, Integer.class, Integer.class, String.class, String.class)
       .map(t -> Tuple.of(t._1(), Option.of(t._2()).getOrElse(0), Option.of(t._3()).getOrElse(0), Option.of(t._4()).getOrElse(0), Option.of(t._5()).getOrElse(""), Option.of(t._6()).getOrElse("")))
