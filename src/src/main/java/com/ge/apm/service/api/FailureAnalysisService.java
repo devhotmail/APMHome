@@ -72,12 +72,13 @@ public class FailureAnalysisService {
   @Cacheable(cacheNames = "springCache", key = "'failureAnalysisService.reasons.'+#site+'.'+#hospital+'.'+#from+'.'+#to+'.'+#dept+'.'+#type+'.'+#supplier+'.'+#asset")
   public Observable<Tuple2<Integer, Integer>> reasons(int site, int hospital, Date from, Date to, Integer dept, Integer type, Integer supplier, Integer asset) {
     QuerySelect.Builder builder = db.select(new SQL() {{
-      SELECT("w.case_type", "sum(w.case_type) as reason_count");
+      SELECT("w.case_type", "count(w.case_type) as reason_count");
       FROM("asset_info a");
       JOIN("v2_work_order w on a.site_id = w.site_id and a.hospital_id = w.hospital_id and a.id = w.asset_id");
       WHERE("a.site_id = :site");
       WHERE("a.hospital_id = :hospital");
       WHERE("w.created_date between :from and :to");
+      WHERE("w.case_type is not null");
       if (Option.of(type).filter(i -> i > 0).isDefined()) {
         WHERE("a.asset_group = :type");
       }
