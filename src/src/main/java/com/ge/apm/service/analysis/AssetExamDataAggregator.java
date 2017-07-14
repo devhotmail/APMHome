@@ -64,11 +64,11 @@ public class AssetExamDataAggregator {
         for(AssetClinicalRecordPojo accrp:acrpList){
             ExamSummit asm1 =examSummitRepository.getExamSummitByAssetIdAndCreated(accrp.getAssetIds(),accrp.getHospitalIds(),accrp.getProcedureId(),accrp.getSiteIds(), date);
             if(asm1!=null){
-                logger.info(accrp.getAssetIds() +"-already in the asset_summit,only updated for the time being on date "+date);
+                logger.info(accrp.getAssetIds() +"-already in the exam_summit,only updated for the time being on date "+date);
                 extractorExamSummit(date, asmList, accrp, asm1);
             }else {
                 ExamSummit newAsm = new ExamSummit();
-                logger.info(accrp.getAssetIds() +" is new record that is to be inserted into asset_summit on date "+date);
+                logger.info(accrp.getAssetIds() +" is new record that is to be inserted into exam_summit on date "+date);
                 extractorExamSummit(date, newAsmList, accrp, newAsm);
             }
         }
