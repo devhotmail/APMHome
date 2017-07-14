@@ -25,25 +25,34 @@ public class AssetExamController {
     @Autowired
     AssetExamDataAggregator assetExamDataAggregator;
 
-    @RequestMapping(value = "/aggreFromTo", method = RequestMethod.PUT)
+    @RequestMapping(value = "/assetSummitFromTo", method = RequestMethod.PUT)
     @ResponseBody
     public String aggreFromTo(@RequestBody BatchAssetExam batchAssetExam) {
 
-        return  assetExamDataService.aggrateExambyRange(batchAssetExam);
+        return  assetExamDataService.aggregateAssetSummitRangeDay(batchAssetExam);
     }
 
-    @RequestMapping(value = "/aggreByDay", method = RequestMethod.PUT)
+    @RequestMapping(value = "/examSummitFromTo", method = RequestMethod.PUT)
+    @ResponseBody
+    public String aggreExamFromTo(@RequestBody BatchAssetExam batchAssetExam) {
+
+        return  assetExamDataService.aggregateExamSumitRangeDay(batchAssetExam);
+    }
+
+    @RequestMapping(value = "/assetSummitByDay", method = RequestMethod.PUT)
     @ResponseBody
     public String aggreByDay(@RequestBody BatchAssetExam batchAssetExam) {
         logger.info("----aggreFromTo--batchAssetExam--bODY->"+ batchAssetExam.getCalDay());
-        return  assetExamDataService.assetExamAggregatorByday(batchAssetExam);
+        return  assetExamDataService.assetAssetSumitAggregatorByday(batchAssetExam);
     }
+
     @RequestMapping(value = "/rating", method = RequestMethod.PUT)
     @ResponseBody
     public String calRating() throws Exception {
         return  assetExamDataService.calRating();
 
     }
+
 
 
 }

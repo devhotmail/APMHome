@@ -26,6 +26,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import webapp.framework.dao.SearchFilter;
@@ -36,6 +37,7 @@ import webapp.framework.web.WebUtil;
  * @author 212579464
  */
 @Component
+@Scope("prototype")
 public class AssetFileImportService {
 
     private static final String SHEET_ASSET = "Asset List";

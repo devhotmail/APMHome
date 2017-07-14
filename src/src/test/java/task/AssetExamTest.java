@@ -40,31 +40,35 @@ public class AssetExamTest extends BaseJunit4Test{
 
     @Test
     @Transactional
-    @Rollback(false)
-    public void testAggregateExamDataByDate()throws Exception{
+    @Rollback(false) //ok
+    public void testExamSummit()throws Exception{
+        //by range day
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         BatchAssetExam batchAssetExam=new BatchAssetExam();
-        batchAssetExam.setFrom("2014-11-10");
-        batchAssetExam.setTo("2015-09-18");
-        assetExamDataService.aggrateExambyRange(batchAssetExam);
+        batchAssetExam.setFrom("2016-08-01");
+        batchAssetExam.setTo("2016-09-01");
+        assetExamDataService.aggregateExamSumitRangeDay(batchAssetExam);
+        //by specific day
+        Date date = sdf.parse("2017-01-21");
+        assetExamDataAggregator.aggregateForExamSumit(date);
     }
-    @Test
-    @Transactional
-    @Rollback(false)
-    public void testAggregateExamDataByDay()throws Exception{
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-        Date date = sdf.parse("2017-01-06");
-        assetExamDataAggregator.aggregateExamDataByDay(date);
 
-    }
 
     @Test
     @Transactional
     @Rollback(false)
-    public void testAggregateExamSummitByDay()throws Exception{
-
+    public void testAssetSummit()throws Exception{
+        //by current day
         assetExamDataAggregator.aggregateExamSummit();
-
+        // by specific day
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        Date currentDate= sdf.parse("2017-02-18");
+        assetExamDataAggregator.aggregateForAssetSumit(currentDate);
+        //by range
+        BatchAssetExam batchAssetExam=new BatchAssetExam();
+        batchAssetExam.setFrom("2016-08-01");
+        batchAssetExam.setTo("2016-09-01");
+        assetExamDataService.aggregateAssetSummitRangeDay(batchAssetExam);
     }
 
     @Autowired
@@ -72,7 +76,7 @@ public class AssetExamTest extends BaseJunit4Test{
     @Test
     @Transactional
     @Rollback(false)
-    public void testAssetSummit()throws Exception{
+    public void testRating()throws Exception{
         assetExamDataService.calRating();
 
     }

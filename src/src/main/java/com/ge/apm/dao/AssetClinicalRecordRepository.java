@@ -65,7 +65,8 @@ public List<AssetClinicalRecordPojo> aggregateForExamSummitByDate(@Param("date")
 /* native sql for  aggregateForExamSummitByDate:
  select exam_Date,site_Id,hospital_Id,asset_Id, procedure_Id,count(exam_duration) as exam_count from asset_clinical_record group by exam_Date,site_Id,hospital_Id,asset_Id, procedure_Id having exam_date='2016-01-18'*/
 
-/*navtive sql for getAssetExamDataAggregatorByDate: select site_Id as siteIds,hospital_Id as hospitalIds,asst_Id as assetIds, exam_Date as examDate,
+/*navtive sql for getAssetExamDataAggregatorByDate:
+select site_Id as siteIds,hospital_Id as hospitalIds,asst_Id as assetIds, exam_Date as examDate,
             count(exam_Duration) as examCount,
             sum(exam_Duration) as examDurations ,
             sum(price_Amount) as priceAmounts ,
