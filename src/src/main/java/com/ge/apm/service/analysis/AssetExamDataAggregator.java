@@ -1,8 +1,10 @@
 package com.ge.apm.service.analysis;
 
 import com.ge.apm.dao.AssetClinicalRecordRepository;
+import com.ge.apm.dao.AssetInfoRepository;
 import com.ge.apm.dao.AssetSummitRepository;
 import com.ge.apm.dao.ExamSummitRepository;
+import com.ge.apm.domain.AssetInfo;
 import com.ge.apm.domain.AssetSummit;
 import com.ge.apm.domain.ExamSummit;
 import com.ge.apm.pojo.AssetClinicalRecordPojo;
@@ -32,25 +34,31 @@ public class AssetExamDataAggregator {
     AssetSummitRepository assetSummitRepository;
     @Autowired
     ExamSummitRepository examSummitRepository;
+    @Autowired
+    AssetInfoRepository assetInfoRepository;
 
     /*该方法会由route id=aggregationAssetExamData来调用*/
     public String aggregateExamData() throws Exception{
+        logger.info("start to aggregateExamData");
         Date currentDate = new Date();
-        aggregateExamDataByDay(currentDate);
-        return "success";
-    }
-
-    public String aggregateExamSummit() throws Exception{
-        Date currentDate = new Date();
-       /* SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-        currentDate= sdf.parse("2016-01-18");*/
         aggregateForAssetSumit(currentDate);
         return "success";
     }
 
+    public String aggregateExamSummit() throws Exception{
+        logger.info("start to aggregateForAssetSumit");
+        Date currentDate = new Date();
+        /*SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        currentDate= sdf.parse("2017-02-18");*/
+        aggregateForExamSumit(currentDate);
+        return "success";
+    }
+
     @Transactional
-    public String aggregateForAssetSumit(Date date)throws Exception{
-        List<AssetClinicalRecordPojo> acrpList = assetClinicalRecordRepository.aggregateForExamSummitByDate(date);
+    public String aggregateForExamSumit(Date date)throws Exception{
+
+        List<AssetClinicalRecordPojo> acrpList = assetClinicalRecordRepository
+                .aggregateForExamSummitByDate(date);
         List<ExamSummit> asmList= new ArrayList<ExamSummit>();
         List<ExamSummit> newAsmList= new ArrayList<ExamSummit>();
         for(AssetClinicalRecordPojo accrp:acrpList){
@@ -76,7 +84,7 @@ return "success";
     }
 
     @Transactional
-    public String aggregateExamDataByDay(Date date) throws Exception {
+    public String aggregateForAssetSumit(Date date) throws Exception {
         List<AssetClinicalRecordPojo> acrpList = assetClinicalRecordRepository.getAssetExamDataAggregatorByDate(date);
         logger.info("Asset Clinical Record Aggregator records size-->"+acrpList.size());
          List<AssetSummit> asmList= new ArrayList<AssetSummit>();
@@ -131,7 +139,7 @@ return "success";
         asmList.add(asm1);
     }
     private void extractorExamSummit(Date date, List<ExamSummit> asmList, AssetClinicalRecordPojo accrp, ExamSummit asm1) {
-
+     AssetInfo assinfo = assetInfoRepository.findById(accrp.getAssetIds());
         asm1.setCreated(accrp.getExamDate());
         asm1.setAssetId(accrp.getAssetIds());
         asm1.setSiteId(accrp.getSiteIds());
@@ -139,6 +147,11 @@ return "success";
         asm1.setPartId(accrp.getProcedureId());
         asm1.setSubPartId(1);
         asm1.setStepId(1);
+        if(assinfo==null){
+            System.out.println("gl: accrp.getAssetIds() is null not allowed"+accrp.getAssetIds());
+        }
+        asm1.setDeptId(assinfo.getClinicalDeptId());
+        asm1.setAssetGroup(assinfo.getAssetGroup());
         if(accrp.getExamCount()==null){
             logger.info("gl: accrp.getExamCount() should not be null");
         }else {

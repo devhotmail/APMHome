@@ -44,15 +44,14 @@ public class AssetExamDataService {
      * 	按当天的聚合
      */
     @Transactional
-    public String assetExamAggregatorByday(BatchAssetExam batchAssetExam){
+    public String assetAssetSumitAggregatorByday(BatchAssetExam batchAssetExam){
         if(batchAssetExam == null){
             return "illegal param";
         }
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-        Date date = null;
         try {
-            date = sdf.parse(batchAssetExam.getCalDay());
-            assetExamDataAggregator.aggregateExamDataByDay(date);
+            Date date = sdf.parse(batchAssetExam.getCalDay());
+            assetExamDataAggregator.aggregateForAssetSumit(date);
         } catch (Exception e) {
             logger.error("assetExamAggregatorByday failed ",e.getMessage());
             return "failue";
@@ -64,7 +63,7 @@ public class AssetExamDataService {
     /***
      * 	按选定的日期聚合
      */
-    public String aggrateExambyRange(BatchAssetExam bac){
+    public String aggregateAssetSummitRangeDay(BatchAssetExam bac){
         {
             if(bac == null){
                 return "illegal param";
@@ -76,17 +75,43 @@ public class AssetExamDataService {
                 DateTime from = new DateTime(bac.getFrom());
                 DateTime to = new DateTime(bac.getTo());
                 //该方法会将某天创建新设备加入到asset_summit为了之后做统计
-                assetExamDataAggregator.initAssetAggregationDataByDateRange(from.toDate(), to.toDate());
+              //  assetExamDataAggregator.initAssetAggregationDataByDateRange(from.toDate(), to.toDate());
                 while(from.isBefore(to)||from.isEqual(to)){
                     logger.info("calByFromTo begin ,current day is {}",from.toString());
-                    assetExamDataAggregator.aggregateExamDataByDay(from.toDate());
-                    from = from.plusDays(DAY);
+                    assetExamDataAggregator.aggregateForAssetSumit(from.toDate());
 
+                    from = from.plusDays(DAY);
                 }
                 return "success";
             }catch(Exception e){
                 logger.error("calByFromTo error,param is {}",bac);
                 logger.error("calByFromTo error,message is {}",e.getMessage());
+                return "failue";
+            }
+        }
+    }
+    @Transactional
+    public String aggregateExamSumitRangeDay(BatchAssetExam bac){
+        {
+            if(bac == null){
+                return "illegal param";
+            }
+            if(StringUtils.isEmpty(bac.getFrom()) || StringUtils.isEmpty(bac.getTo())){
+                return "from or to is empty !";
+            }
+            try{
+                DateTime from = new DateTime(bac.getFrom());
+                DateTime to = new DateTime(bac.getTo());
+               // assetExamDataAggregator.initAssetAggregationDataByDateRange(from.toDate(), to.toDate());
+                while(from.isBefore(to)||from.isEqual(to)){
+                    logger.info("aggrateExamSummitbyRange begin ,current day is {}",from.toString());
+                    assetExamDataAggregator.aggregateForExamSumit(from.toDate());
+                    from = from.plusDays(DAY);
+                }
+                return "success";
+            }catch(Exception e){
+                logger.error("aggrateExamSummitbyRange error,param is {}",bac);
+                logger.error("aggrateExamSummitbyRange error,message is {}",e.getMessage());
                 return "failue";
             }
         }
