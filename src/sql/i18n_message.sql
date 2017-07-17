@@ -573,6 +573,8 @@ INSERT INTO "public"."i18n_message" VALUES ('3041', 'message', 'AlreadyUsingQrCo
 INSERT INTO "public"."i18n_message" VALUES ('3042', 'message', 'DeleteAssetConformationMsg', '确认删除设备?', 'Confirm to remove this asset?', null, '-1');
 INSERT INTO "public"."i18n_message" VALUES ('3043', 'message', 'Institution', '集团', 'Institution', null, '-1');
 INSERT INTO "public"."i18n_message" VALUES ('3044', 'message', 'ExistsUnfinishedWorkOrders', '当前设备存在未完成工单，不能报废！', 'The asset has unfinished workOrders', null, '-1');
+INSERT INTO "public"."i18n_message" VALUES ('3045', 'message', 'CancelWorkOrderConformationMsg', '确定取消此报修?', 'To confirm cancel this work order?', null, '-1');
+INSERT INTO "public"."i18n_message" VALUES ('3046', 'message', 'cancelWorkOrderReason', '取消原因', 'the reason of cancel this work order', null, '-1');
 
 INSERT INTO "public"."i18n_message" VALUES ('3050', 'message', 'feedbackComment', '备注', '备注', null, '-1');
 INSERT INTO "public"."i18n_message" VALUES ('3051', 'message', 'feedbackRating', '评分', '评分', null, '-1');

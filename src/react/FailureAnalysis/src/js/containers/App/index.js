@@ -7,7 +7,7 @@ import autobind from 'autobind-decorator'
 import { memoize, clamp, range, get } from 'lodash-es'
 import { message } from 'antd'
 import EventBus from 'eventbusjs'
-import GearListChart from 'react-gear-list-chart'
+import GearListChart from 'react-gear-chart'
 import Header from 'containers/Header'
 import Legend from 'components/Legend'
 import LegendTable from 'components/LegendTable'
@@ -116,7 +116,7 @@ export class App extends Component<void, Props, void> {
   }
 
   showTooltip(evt) {
-    let { t, dataType } = this.props 
+    let { t, dataType } = this.props
     if (evt.type === 'mouseleave') {
       this.setState({ tooltipX: -861112, tooltipY: -861112 })
     } else {
@@ -306,18 +306,18 @@ export class App extends Component<void, Props, void> {
             <div className="display-select">{selectHelper(display, this.getDisplayOptions(), updateDisplayType)}</div>
             {
               left.total > left.top &&
-              <Pagination current={getCurrentPage(left.skip, left.top)} pageSize={left.top} total={left.total} 
+              <Pagination current={getCurrentPage(left.skip, left.top)} pageSize={left.top} total={left.total}
                 className="pager-left" onChange={this.onLeftPagerChange}/>
             }
             {
               right.total > right.top &&
-              <Pagination current={getCurrentPage(right.skip, right.top)} pageSize={right.top} total={right.total} 
+              <Pagination current={getCurrentPage(right.skip, right.top)} pageSize={right.top} total={right.total}
                 className="pager-right" onChange={this.onRightPagerChange}/>
             }
-            <GearListChart 
+            <GearListChart
               id="left-chart"
               ref="leftChart"
-              startAngle={110} endAngle={250} 
+              startAngle={110} endAngle={250}
               outerRadius={outer_R} innerRadius={outer_r}
               margin={7}
               onClick={this.clickLeftTooth}
@@ -326,11 +326,11 @@ export class App extends Component<void, Props, void> {
               clockwise={false}
               clockwiseAnimate={leftClockwise}
               items={DataOrPlaceHolder(leftItems, pagination.left.top)}
-              extra={renderLastYearData(lastYear.leftItems)} 
+              extra={renderLastYearData(lastYear.leftItems)}
               />
             <GearListChart
               id="center-chart"
-              startAngle={90} endAngle={90} 
+              startAngle={90} endAngle={90}
               outerRadius={Math.max(inner_R, 200)} innerRadius={Math.max(inner_r, 160)}
               margin={8}
               onMouseMove={this.showTooltip}
@@ -341,10 +341,10 @@ export class App extends Component<void, Props, void> {
                 <LegendTable items={ParameterTypes} selectedDevice={selectedDevice.show && selectedDevice} checkBoxes={CheckBoxes}/>
               </Legend>
             </div>
-            <GearListChart 
+            <GearListChart
               id="right-chart"
               ref="rightChart"
-              startAngle={290} endAngle={70} 
+              startAngle={290} endAngle={70}
               outerRadius={outer_R} innerRadius={outer_r}
               margin={3}
               onClick={this.clickRightTooth}
@@ -384,7 +384,7 @@ const LastYearInidicator = (props, lastYear) => {
     return null
   }
   current.strips.lastYear = lastYearItem
-  let lastYearItemWeight = (lastYearItem.strips[0].value * current.strips[0].weight) / current.strips[0].value 
+  let lastYearItemWeight = (lastYearItem.strips[0].value * current.strips[0].weight) / current.strips[0].value
   let height = (outerRadius - innerRadius) * lastYearItemWeight
 
   return (

@@ -146,6 +146,18 @@
                                 </p:column>
 
                             </p:dataTable>
+                            <p:panelGrid columns="4" layout="grid" styleClass="ui-panelgrid-blank form-group" rendered="#{woItem.currentStepId le 3}">
+                                <h:panelGroup >
+                                    <label class="label">#{msg.cancelWorkOrderReason}</label>
+                                    <p:inputTextarea value="#{serviceRequestController.cancelReason}" maxlength="256"  required="true" requiredMessage="#{msg.cancelWorkOrderReason}#{msg.ValidationRequire}"/>
+                                </h:panelGroup>
+                            </p:panelGrid>
+                            <h:panelGroup >
+                                <p:commandButton value="#{msg.Cancel}" icon="ui-icon-arrow-back" actionListener="#{serviceRequestController.cancelWorkOrder(woItem.id)}" validateClient="true"  update=":SRListForm :WorkOrderEditForm :growl" style="float:left" 
+                                                 rendered="#{woItem.currentStepId le 3}">
+                                    <p:confirm header="#{msg.DeleteConformation}" message="#{msg.CancelWorkOrderConformationMsg}" icon="ui-icon-warning"/>
+                                </p:commandButton>
+                            </h:panelGroup>
                         </p:fieldset>
 
 

@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import webapp.framework.web.WebUtil;
 
 /**
  *
@@ -63,9 +64,17 @@ public class V2_WorkOrderService {
 
 
     public void createServiceRequest(V2_ServiceRequest newServiceRequest, AssetInfo asset) {
-        
         String token = UserContextService.getAccessToken();
         Map<String, Object> data = srApi.createServiceRequest(token, newServiceRequest, asset);
-
+    }
+    
+    public void cancelWorkOrder(String workOrderId,String reason) {
+        String token = UserContextService.getAccessToken();
+        
+        Integer stepId = woDao.findById(workOrderId).getCurrentStepId();
+        String res = srApi.cancelWorkOrderAction(token, workOrderId,reason,stepId);
+        if(!res.contains("success")){
+            WebUtil.addErrorMessage("Fail to do cancel action");
+        }
     }
 }
