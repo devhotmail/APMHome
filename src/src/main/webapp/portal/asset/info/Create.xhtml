@@ -216,9 +216,6 @@
                                 <label class="label">#{msg.locationName}</label>
                                 <p:inputText id="locationName" value="#{assetInfoController.selected.locationName}"/>
                             </h:panelGroup>
-                            <h:panelGroup>
-                                <p:selectBooleanCheckbox id="isValid" itemLabel="#{msg.isValid}" value="#{assetInfoController.selected.isValid}" required="true" requiredMessage="#{msg.isValid} #{msg.ValidationRequire}"/>
-                            </h:panelGroup>
                             <h:panelGroup >
                                 <label class="label">#{msg.status}*</label>
                                 <p:selectOneRadio id="status" value="#{assetInfoController.selected.status}" required="true" requiredMessage="#{msg.status} #{msg.ValidationRequire}">
