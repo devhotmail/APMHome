@@ -353,7 +353,10 @@ public class AssetInfoController extends JpaCRUDController<AssetInfo> {
                 return "";
             }
         }
-
+        if(qrCode!=null && "".equals(qrCode.trim())){
+            selected.setQrCode(null);
+        }
+        
         this.save();
         assetDepreciationService.saveAssetDerpeciation(selected);
         if (resultStatus) {
