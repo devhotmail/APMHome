@@ -1,0 +1,115 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/WEB-INF/template.xhtml">
+
+    <ui:define name="preRenderView">
+        <!--        <f:metadata>
+                    <f:viewParam name="isClosed" value="#{workOrderController.filterIsClosed}"/>
+                    <f:viewParam name="aid" value="#{workOrderController.filterAssetId}"/>
+                </f:metadata>
+                <f:event type="preRenderView" listener="#{workOrderController.setViewFilter()}"/>-->
+    </ui:define>
+
+    <ui:define name="head">
+        <h:outputStylesheet name="css/wo_steps.css" />
+    </ui:define>
+
+    <ui:define name="content">
+        <div class="ui-g clearfix">
+            <div class="ui-g-12 card cardTitle">
+                <p:outputLabel class="pageTitle" value="#{msg.WorkOrder} #{msg.List}"/>
+            </div>
+
+            <div class="ui-g-12 card">
+                <p:messages autoUpdate="true" closable="true" showDetail="false"/>
+
+                <h:form id="dispatchListForm">
+                    <h:panelGrid id="buttonSet" columns="6" cellpadding="5">
+                        <p:commandButton value="#{fieldMsg.fieldValue('woSteps',2)}" id="btnCreate" process="@this" update="datalist buttonSet :dispatchDetailForm " actionListener="#{workOrderDispatchController.searchList(2)}" disabled="#{workOrderDispatchController.queryIndex==2}" />
+                        <p:commandButton value="#{fieldMsg.fieldValue('woSteps',3)}" id="btn1" process="@this" update="datalist buttonSet :dispatchDetailForm " actionListener="#{workOrderDispatchController.searchList(3)}"  disabled="#{workOrderDispatchController.queryIndex==3}" />
+                        <p:commandButton value="#{fieldMsg.fieldValue('woSteps',4)}" id="btn2" process="@this" update="datalist buttonSet :dispatchDetailForm " actionListener="#{workOrderDispatchController.searchList(4)}" disabled="#{workOrderDispatchController.queryIndex==4}"/>
+                        <p:commandButton value="已取消" id="btn5" process="@this" update="datalist buttonSet :dispatchDetailForm " actionListener="#{workOrderDispatchController.searchList(5)}" disabled="#{workOrderDispatchController.queryIndex==5}"/>
+                    </h:panelGrid>
+                    <p:dataTable id="datalist" value="#{workOrderDispatchController.lazyModel}" var="item" widgetVar="varDataList"
+                                 selectionMode="single" selection="#{workOrderDispatchController.selected}"
+                                 lazy="true" paginator="true" paginatorPosition="top" paginatorAlwaysVisible="true"
+                                 rowKey="#{item.id}" sortMode="single" sortOrder="descending" sortBy="#{item.id}"
+                                 paginatorTemplate="{CurrentPageReport} {Toolbar} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} #{msg.RowsPerPage}: {RowsPerPageDropdown}"
+                                 currentPageReportTemplate="#{msg.recordCount}: {totalRecords}" pageLinks="5"
+                                 rows="10" emptyMessage="#{msg.noRecordFound}"
+                                 rowsPerPageTemplate="10,20,30,90">
+
+                        <p:ajax event="rowSelect" listener="#{workOrderDispatchController.onSelectWorkOrder}" update=":dispatchDetailForm"/>
+                        <p:ajax event="filter" listener="#{workOrderDispatchController.onFilter}" update="datalist :dispatchDetailForm"/>
+
+                        <p:column headerText="#{msg.assetName}">
+                            <h:outputText value="#{assetInfoService.getAssetInfoName(item.assetId)}"/>
+                        </p:column>  
+                        <p:column headerText="#{msg.requestorName}">
+                            <h:outputText value="#{workOrderDispatchController.getServiceRequest(item.srId).requestorName}"/>
+                        </p:column>  
+                        <p:column headerText="#{msg.requestTime}">
+                            <h:outputText value="#{workOrderDispatchController.getServiceRequest(item.srId).requestTime}">
+                                <f:convertDateTime timeZone="GMT+8" pattern="yyyy/MM/dd HH:mm" />
+                            </h:outputText>
+                        </p:column>  
+                        <p:column headerText="#{msg.status}">
+                            <h:outputText value="#{item.currentStepName}"/>
+                        </p:column>  
+                        <p:column headerText="#{msg.intExtType}">
+                            <h:outputText value="#{fieldMsg.fieldValue('intExtType',item.intExtType)}"/>
+                        </p:column>  
+                        <p:column headerText="#{msg.currentPersonName}">
+                            <h:outputText value="#{item.currentPersonName}"/>
+                        </p:column>
+                        <p:column headerText="dispatchWorkOrder" rendered="#{workOrderDispatchController.queryIndex==2}">
+                            <p:commandButton value="dispatchWorkOrder" actionListener="#{workOrderDispatchController.prepareDispatch(item.id)}" update=":dispatchDialogForm" oncomplete="PF('dispatchDialog').show()"/>
+                        </p:column>
+
+                        <f:facet name="{Toolbar}">
+                            <p:commandButton title="#{msg.exportToXLS}" icon="ui-icon-arrowstop-1-s" ajax="false">
+                                <p:dataExporter type="xls" target="datalist" fileName="WorkOrder_export"/>
+                            </p:commandButton>
+                        </f:facet>
+                    </p:dataTable>
+                </h:form>
+
+                <ui:include src="dispatchView.xhtml"/>
+
+            </div>
+        </div>
+
+
+
+        <p:dialog id="dispatchDialog" widgetVar="dispatchDialog" modal="true" width="500"  resizable="true" draggable="true" appendTo="@(body)" header="派工">
+            <h:form id="dispatchDialogForm" >
+                <h:panelGroup id="display" rendered="#{not empty workOrderDispatchController.selectedWorkOrder}">
+                    <p:panelGrid columns="2" layout="grid" styleClass="ui-panelgrid-blank form-group">
+                        <h:panelGroup>
+                            <label class="label">#{msg.WorkOrderAssignee}*</label>
+                            <p:selectOneMenu  value="#{workOrderDispatchController.selectedWorkOrder.currentPersonId}" required="true" requiredMessage="#{msg.intExtType} #{msg.ValidationRequire}">
+                                <f:selectItems value="#{workOrderDispatchController.getWorkerList()}" var="item" itemLabel="#{item.name}" itemValue="#{item.id}"/>
+                            </p:selectOneMenu>
+                        </h:panelGroup>
+                        <h:panelGroup>
+                            <label class="label">#{msg.intExtType}*</label>
+                            <p:selectOneMenu  value="#{workOrderDispatchController.selectedWorkOrder.intExtType}" required="true" requiredMessage="#{msg.intExtType} #{msg.ValidationRequire}">
+                                <f:selectItems value="#{fieldMsg.getFieldValueList('intExtType')}" var="item" itemLabel="#{item.value}" itemValue="#{item.msgKey}"/>
+                            </p:selectOneMenu>
+                        </h:panelGroup>
+                    </p:panelGrid>
+                    <br/>
+                    <h:panelGroup>
+                        <p:commandButton validateClient="true" actionListener="#{workOrderDispatchController.dispatchWorkOrder()}" value="#{msg.dispatchWorkOrder}" update=":dispatchListForm :dispatchDetailForm :growl" icon="ui-icon-check" oncomplete="handleSubmit(args, 'dispatchDialog');"/>
+                        <p:commandButton immediate="true" value="#{msg.Cancel}" icon="ui-icon-cancel" onclick="PF('dispatchDialog').hide()"/>
+                    </h:panelGroup>
+                </h:panelGroup>
+            </h:form>
+        </p:dialog>
+
+    </ui:define> 
+
+</ui:composition>

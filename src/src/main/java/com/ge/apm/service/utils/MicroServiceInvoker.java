@@ -11,6 +11,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 import java.util.LinkedHashMap;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 
 /**
  *
@@ -31,5 +33,15 @@ public class MicroServiceInvoker {
         LinkedHashMap<String, Object> body = (LinkedHashMap<String, Object>) res.getBody();
 
         return body.containsKey("bizStatusCode") && body.get("bizStatusCode").equals("OK");
+    }
+    
+    protected HttpHeaders createHttpHeaders(String token){
+        HttpHeaders headers = new HttpHeaders();
+        MediaType type = MediaType.parseMediaType("application/json; charset=UTF-8");
+        headers.setContentType(type);
+        if(null!= token){
+            headers.add("Authorization", token);
+        }
+        return headers;
     }
 }

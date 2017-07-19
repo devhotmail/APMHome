@@ -1,0 +1,22 @@
+#!/bin/bash
+
+rm -rf ./dist
+mkdir ./dist
+
+for file in `ls ./react`
+do
+  if [ -d ./react/$file ]
+  then
+    echo found dir $file
+    mkdir ./dist/$file
+
+    if [ -d ./react/$file/build ]
+    then
+      echo copy from build dir
+      cp -r ./react/$file/build/* ./dist/$file
+    else
+      echo copy from dist dir
+      cp -r ./react/$file/dist/* ./dist/$file
+    fi
+  fi
+done
