@@ -123,7 +123,7 @@
     "react": "^15.5.4",
     "react-debounce-input": "^3.0.0",
     "react-dom": "^15.5.4",
-    "react-gear-chart": "^0.0.12",
+    "react-gear-chart": "^0.0.13",
     "react-hot-loader": "3.0.0-beta.2",
     "react-i18next": "^3.1.0",
     "react-if": "^2.1.0",

@@ -5435,7 +5435,7 @@ node-pre-gyp@^0.6.29:
     tar "^2.2.1"
     tar-pack "^3.4.0"
 
-node-sass@4.5.3:
+node-sass@^4.5.3:
   version "4.5.3"
   resolved "https://registry.yarnpkg.com/node-sass/-/node-sass-4.5.3.tgz#d09c9d1179641239d1b97ffc6231fdcec53e1568"
   dependencies:
@@ -6751,9 +6751,9 @@ react-dom@^15.5.4:
     object-assign "^4.1.0"
     prop-types "~15.5.7"
 
-react-gear-chart@0.0.12:
-  version "0.0.12"
-  resolved "https://registry.yarnpkg.com/react-gear-chart/-/react-gear-chart-0.0.12.tgz#7397872a6207c464643c7646171f81bed17f1f66"
+react-gear-chart@^0.0.13:
+  version "0.0.13"
+  resolved "https://registry.yarnpkg.com/react-gear-chart/-/react-gear-chart-0.0.13.tgz#35869bb3595b27eafaa5d6fd0e55165ad8d72863"
   dependencies:
     classnames "^2.2.5"
     lodash-es "^4.17.4"
