@@ -134,7 +134,7 @@ public class ServiceRequestController extends GenericCRUDUUIDController<V2_Servi
         cancel();
     }
 
-    public void removeFilterOnField(String fieldName) {
+    private void removeFilterOnField(String fieldName) {
         SearchFilter temp = null;
         for (SearchFilter filter : searchFilters) {
             if (fieldName.equals(filter.fieldName)) {

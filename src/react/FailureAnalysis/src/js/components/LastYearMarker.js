@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react'
-import { Polar2Cartesian } from 'react-gear-list-chart/dist/utils/math'
+import { Polar2Cartesian } from 'react-gear-chart/dist/utils/math'
 
 export default class LastYearMarker extends PureComponent {
 
@@ -13,7 +13,7 @@ export default class LastYearMarker extends PureComponent {
     let color = '#bababa'
     let [x, y] = Polar2Cartesian(r, (endAngle + startAngle) / 2, { baseX: cx, baseY: cy })
     return (<g className="last-year-marker" style={style}>
-      <Line 
+      <Line
         startAngle={startAngle}
         endAngle={endAngle}
         r={r}
@@ -21,7 +21,7 @@ export default class LastYearMarker extends PureComponent {
         cy={cy}
         color={color}
       />
-      <Dot 
+      <Dot
         angle={centerlineAngle}
         cx={x}
         cy={-y}
@@ -38,9 +38,9 @@ export class Line extends PureComponent {
     let [x1, y1] = Polar2Cartesian(r, startAngle, { baseX: cx, baseY: cy })
     let [x2, y2] = Polar2Cartesian(r, endAngle, { baseX: cx, baseY: cy })
     return (
-      <path 
+      <path
         className="orbit-trail" fill="none" stroke={color}
-        d={`M ${x1} ${-y1} A ${r} ${r} 0 0 0 ${x2} ${-y2}`} 
+        d={`M ${x1} ${-y1} A ${r} ${r} 0 0 0 ${x2} ${-y2}`}
       />
     )
   }

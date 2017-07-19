@@ -18,6 +18,8 @@ import java.io.Serializable;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import com.ge.apm.dao.TenantInfoRepository;
+import com.ge.apm.dao.WorkflowConfigRepository;
+import com.ge.apm.domain.WorkflowConfig;
 
 @ManagedBean(name = "userContextService")
 @SessionScoped
@@ -221,4 +223,20 @@ public class UserContextService implements Serializable {
         return token;
     }
     
+    private Boolean isDispatcher = null;
+
+    public Boolean isDispatcher() {
+        if (isDispatcher == null) {
+            WorkflowConfigRepository wcDao = WebUtil.getBean(WorkflowConfigRepository.class);
+            WorkflowConfig workflowConfig = wcDao.getBySiteIdAndHospitalId(userAccount.getSiteId(), userAccount.getHospitalId());
+            if (null != workflowConfig) {
+                boolean res1 = workflowConfig.getDispatchUserId() != null && workflowConfig.getDispatchUserId().equals(userAccount.getId());
+                boolean res2 = workflowConfig.getDispatchUserId2() != null && workflowConfig.getDispatchUserId2().equals(userAccount.getId());
+                isDispatcher = res1 || res2;
+            } else {
+                isDispatcher = false;
+            }
+        }
+        return isDispatcher;
+    }
 }

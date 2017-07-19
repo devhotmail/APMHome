@@ -137,12 +137,18 @@ public class HealthService {
 	}
 
     private static final String asset_pm
-    	= " SELECT asset_id, asset_name, to_char(start_time, 'YYYY-MM-DD'), asset_info.clinical_dept_id "
+    	/*= " SELECT asset_id, asset_name, to_char(start_time, 'YYYY-MM-DD'), asset_info.clinical_dept_id "
     	+ " FROM pm_order "
     	+ " LEFT JOIN asset_info "
     	+ " ON pm_order.asset_id = asset_info.id "
     	+ " WHERE asset_info.site_id=:site_id AND asset_info.hospital_id=:hospital_id AND pm_order.is_finished=false AND pm_order.start_time<(NOW() + interval '1 weeks') "
-    	+ " ORDER BY start_time ";
+    	+ " ORDER BY start_time ";*/
+			= " SELECT asset_id, asset_name, to_char(plan_time, 'YYYY-MM-DD'), asset_info.clinical_dept_id "
+			+ " FROM pm_order "
+			+ " LEFT JOIN asset_info "
+			+ " ON pm_order.asset_id = asset_info.id "
+			+ " WHERE asset_info.site_id=:site_id AND asset_info.hospital_id=:hospital_id AND pm_order.is_finished=false AND pm_order.plan_time<(NOW() + interval '1 weeks') "
+			+ " ORDER BY plan_time ";
 
 	public Observable<Tuple4<Integer, String, String, Integer>> queryForPm(Integer site_id, Integer hospital_id) {
 
@@ -172,7 +178,7 @@ public class HealthService {
 	}
 
     private static final String assets_meterqa
-    	= " SELECT left_table.asset_id, left_table.asset_name, left_table.to_char, asset_info.clinical_dept_id "
+    	/*= " SELECT left_table.asset_id, left_table.asset_name, left_table.to_char, asset_info.clinical_dept_id "
     	+ " FROM ( SELECT DISTINCT asset_id, asset_name, to_char(start_time, 'YYYY-MM-DD') "
     	+ " FROM inspection_order "
     	+ " INNER JOIN inspection_order_detail "
@@ -181,7 +187,17 @@ public class HealthService {
     	+ " ORDER BY to_char ) as left_table "
     	+ " LEFT JOIN asset_info "
     	+ " ON left_table.asset_id = asset_info.id "
-    	+ " ORDER BY asset_id ";
+    	+ " ORDER BY asset_id ";*/
+			= " SELECT left_table.asset_id, left_table.asset_name, left_table.to_char, asset_info.clinical_dept_id "
+			+ " FROM ( SELECT DISTINCT asset_id, asset_name, to_char(plan_time, 'YYYY-MM-DD') "
+			+ " FROM inspection_order "
+			+ " INNER JOIN inspection_order_detail "
+			+ " ON inspection_order.id = inspection_order_detail.order_id "
+			+ " WHERE inspection_order.site_id = :site_id AND inspection_order.hospital_id=:hospital_id AND plan_time<=(NOW() + interval '2 months') AND is_finished=false AND order_type=%s "
+			+ " ORDER BY to_char ) as left_table "
+			+ " LEFT JOIN asset_info "
+			+ " ON left_table.asset_id = asset_info.id "
+			+ " ORDER BY asset_id ";
 
 	public Observable<Tuple4<Integer, String, String, Integer>> queryForMeterqa(Integer site_id, Integer hospital_id, Integer meterqa) {
 
