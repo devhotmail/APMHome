@@ -14,8 +14,6 @@ import java.util.Map;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
@@ -30,20 +28,16 @@ public class ServiceRequestApiService extends MicroServiceInvoker {
     private String url_serviceRequestCreate;
     @Value("#{urlProperties.url_workOrderAction}")
     private String url_workOrderAction;
+//    @Value("#{urlProperties.url_workOrdersForDispatcher}")
+//    private String url_workOrdersForDispatcher;
 
     
     
-    
     public String cancelWorkOrderAction(String token, String woId, String reason,Integer stepId) {
-        HttpHeaders headers = new HttpHeaders();
-        MediaType type = MediaType.parseMediaType("application/json; charset=UTF-8");
-        headers.setContentType(type);
-        headers.add("Authorization", token);
-        
         WorkOrderActionForm formData = new WorkOrderActionForm();
         formData.setDesc(reason);
         formData.setCurrentStepId(stepId);
-        HttpEntity<WorkOrderActionForm> requestEntity = new HttpEntity<WorkOrderActionForm>(formData, headers);
+        HttpEntity<WorkOrderActionForm> requestEntity = new HttpEntity<WorkOrderActionForm>(formData, createHttpHeaders(token));
         
         String url = url_workOrderAction.replace("{workOrderId}", woId).concat("?type=cancel");
         ResponseEntity<LinkedHashMap> response = template.postForEntity(url, requestEntity, LinkedHashMap.class);
@@ -55,12 +49,24 @@ public class ServiceRequestApiService extends MicroServiceInvoker {
         }
     }
     
+    public String dispatchWorkOrderAction(String token,String woId, String assigneeId, String intExtType,Integer stepId) {
+        WorkOrderActionForm formData = new WorkOrderActionForm();
+        formData.setAssigneeId(assigneeId);
+        formData.setIntExtType(intExtType);
+        formData.setCurrentStepId(stepId);
+        HttpEntity<WorkOrderActionForm> requestEntity = new HttpEntity<WorkOrderActionForm>(formData, createHttpHeaders(token));
+        
+        String url = url_workOrderAction.replace("{workOrderId}", woId).concat("?type=assign");
+        ResponseEntity<LinkedHashMap> response = template.postForEntity(url, requestEntity, LinkedHashMap.class);
+        if (isOkay(response)) {
+            LinkedHashMap<String, Object> responseMap = (LinkedHashMap<String, Object>) response.getBody();
+            return (String) responseMap.get("data");
+        } else {
+            return null;
+        }
+    }
+    
     public Map<String, Object> createServiceRequest(String token, V2_ServiceRequest newServiceRequest, AssetInfo asset) {
-        HttpHeaders headers = new HttpHeaders();
-        MediaType type = MediaType.parseMediaType("application/json; charset=UTF-8");
-        headers.setContentType(type);
-        headers.add("Authorization", token);
-
         ServiceRequestForm formData = new ServiceRequestForm();
         formData.setAssetId(asset.getId());
         formData.setAssetStatus(String.valueOf(asset.getStatus()));
@@ -69,18 +75,17 @@ public class ServiceRequestApiService extends MicroServiceInvoker {
         }
         formData.setPriority(newServiceRequest.getCasePriority());
         formData.setRequestReason(newServiceRequest.getRequestReason());
-
-        HttpEntity<ServiceRequestForm> requestEntity = new HttpEntity<ServiceRequestForm>(formData, headers);
+        
+        HttpEntity<ServiceRequestForm> requestEntity = new HttpEntity<>(formData, createHttpHeaders(token));
         ResponseEntity<LinkedHashMap> response = template.postForEntity(url_serviceRequestCreate, requestEntity, LinkedHashMap.class);
         if (isOkay(response)) {
             LinkedHashMap<String, Object> responseMap = (LinkedHashMap<String, Object>) response.getBody();
-            LinkedHashMap<String, Object> data = (LinkedHashMap<String, Object>) responseMap.get("data");
-            return data;
+            return (LinkedHashMap<String, Object>) responseMap.get("data");
         } else {
             return null;
         }
     }
-
+    
 }
 
 class ServiceRequestForm {
