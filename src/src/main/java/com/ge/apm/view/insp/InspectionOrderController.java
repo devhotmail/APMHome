@@ -383,15 +383,15 @@ public class InspectionOrderController extends JpaCRUDController<InspectionOrder
         this.excutedItemArray = excutedItemArray;
     }
 
-    private String filterStartTime = null;
+    private String filterPlanTime = null;
     private String filterIsFinished = null;
 
-    public String getFilterStartTime() {
-        return filterStartTime;
+    public String getFilterPlanTime() {
+        return filterPlanTime;
     }
 
-    public void setFilterStartTime(String filterStartTime) {
-        this.filterStartTime = filterStartTime;
+    public void setFilterPlanTime(String filterPlanTime) {
+        this.filterPlanTime = filterPlanTime;
     }
 
     public String getFilterIsFinished() {
@@ -402,8 +402,8 @@ public class InspectionOrderController extends JpaCRUDController<InspectionOrder
         this.filterIsFinished = filterIsFinished;
     }
 
-    public void setStartTimeFilter() {
-        if (filterStartTime == null || !"1".equals(filterStartTime)) {
+    public void setPlanTimeFilter() {
+        if (filterPlanTime == null || !"1".equals(filterPlanTime)) {
             return;
         }
         if (searchFilters == null) {
@@ -414,35 +414,35 @@ public class InspectionOrderController extends JpaCRUDController<InspectionOrder
         Calendar c = Calendar.getInstance();
         c.setTime(startTime);
         c.add(Calendar.MONTH, 2);
-        varStartTimeTo = c.getTime();
-        searchFilters.add(new SearchFilter("startTime", SearchFilter.Operator.LTE, varStartTimeTo));
+        varPlanTimeTo = c.getTime();
+        searchFilters.add(new SearchFilter("planTime", SearchFilter.Operator.LTE, varPlanTimeTo));
         searchFilters.add(new SearchFilter("isFinished", SearchFilter.Operator.EQ, false));
-        filterStartTime = null;
+        filterPlanTime = null;
         filterIsFinished = "false";
     }
 
-    private Date varStartTimeTo = null;
-    private String startFormatTime = null;
+    private Date varPlanTimeTo = null;
+    private String planFormatTime = null;
 
-    public Date getVarStartTimeTo() {
-        return varStartTimeTo;
+    public Date getVarPlanTimeTo() {
+        return varPlanTimeTo;
     }
 
-    public void setVarStartTimeTo(Date varStartTimeTo) {
-        this.varStartTimeTo = varStartTimeTo;
+    public void setVarPlanTimeTo(Date varPlanTimeTo) {
+        this.varPlanTimeTo = varPlanTimeTo;
     }
 
-    public String getStartFormatTime() {
+    public String getPlanFormatTime() {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
-        if (varStartTimeTo == null) {
-            return startFormatTime;
+        if (varPlanTimeTo == null) {
+            return planFormatTime;
         } else {
-            return "~" + sdf.format(varStartTimeTo);
+            return "~" + sdf.format(varPlanTimeTo);
         }
     }
 
-    public void setStartFormatTime(String startFormatTime) {
-        this.startFormatTime = startFormatTime;
+    public void setPlanFormatTime(String planFormatTime) {
+        this.planFormatTime = planFormatTime;
     }
 
     public String getOperation() {

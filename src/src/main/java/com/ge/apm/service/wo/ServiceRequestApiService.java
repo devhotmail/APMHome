@@ -6,29 +6,16 @@
 package com.ge.apm.service.wo;
 
 import com.ge.apm.domain.AssetInfo;
-import com.ge.apm.domain.UserAccount;
 import com.ge.apm.domain.V2_BlobObject;
 import com.ge.apm.domain.V2_ServiceRequest;
 import com.ge.apm.service.utils.*;
-import java.io.File;
-import java.io.InputStream;
-import java.io.ByteArrayInputStream;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.List;
-import org.primefaces.model.DefaultStreamedContent;
-import org.primefaces.model.StreamedContent;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.io.FileSystemResource;
 import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
 
 /**
  *
@@ -39,16 +26,47 @@ public class ServiceRequestApiService extends MicroServiceInvoker {
 
     @Value("#{urlProperties.url_serviceRequestCreate}")
     private String url_serviceRequestCreate;
+    @Value("#{urlProperties.url_workOrderAction}")
+    private String url_workOrderAction;
+//    @Value("#{urlProperties.url_workOrdersForDispatcher}")
+//    private String url_workOrdersForDispatcher;
 
+    
+    
+    public String cancelWorkOrderAction(String token, String woId, String reason,Integer stepId) {
+        WorkOrderActionForm formData = new WorkOrderActionForm();
+        formData.setDesc(reason);
+        formData.setCurrentStepId(stepId);
+        HttpEntity<WorkOrderActionForm> requestEntity = new HttpEntity<WorkOrderActionForm>(formData, createHttpHeaders(token));
+        
+        String url = url_workOrderAction.replace("{workOrderId}", woId).concat("?type=cancel");
+        ResponseEntity<LinkedHashMap> response = template.postForEntity(url, requestEntity, LinkedHashMap.class);
+        if (isOkay(response)) {
+            LinkedHashMap<String, Object> responseMap = (LinkedHashMap<String, Object>) response.getBody();
+            return (String) responseMap.get("data");
+        } else {
+            return null;
+        }
+    }
+    
+    public String dispatchWorkOrderAction(String token,String woId, String assigneeId, String intExtType,Integer stepId) {
+        WorkOrderActionForm formData = new WorkOrderActionForm();
+        formData.setAssigneeId(assigneeId);
+        formData.setIntExtType(intExtType);
+        formData.setCurrentStepId(stepId);
+        HttpEntity<WorkOrderActionForm> requestEntity = new HttpEntity<WorkOrderActionForm>(formData, createHttpHeaders(token));
+        
+        String url = url_workOrderAction.replace("{workOrderId}", woId).concat("?type=assign");
+        ResponseEntity<LinkedHashMap> response = template.postForEntity(url, requestEntity, LinkedHashMap.class);
+        if (isOkay(response)) {
+            LinkedHashMap<String, Object> responseMap = (LinkedHashMap<String, Object>) response.getBody();
+            return (String) responseMap.get("data");
+        } else {
+            return null;
+        }
+    }
+    
     public Map<String, Object> createServiceRequest(String token, V2_ServiceRequest newServiceRequest, AssetInfo asset) {
-        HttpHeaders headers = new HttpHeaders();
-        MediaType type = MediaType.parseMediaType("application/json; charset=UTF-8");
-        headers.setContentType(type);
-        headers.add("Authorization", token);
-
-//        Map<String, String> postParameters = new HashMap<String, String>();
-//        postParameters.put("urlFile", url);
-//        postParameters.put("fileName", fileName);
         ServiceRequestForm formData = new ServiceRequestForm();
         formData.setAssetId(asset.getId());
         formData.setAssetStatus(String.valueOf(asset.getStatus()));
@@ -57,17 +75,17 @@ public class ServiceRequestApiService extends MicroServiceInvoker {
         }
         formData.setPriority(newServiceRequest.getCasePriority());
         formData.setRequestReason(newServiceRequest.getRequestReason());
-
-        HttpEntity<ServiceRequestForm> requestEntity = new HttpEntity<ServiceRequestForm>(formData, headers);
+        
+        HttpEntity<ServiceRequestForm> requestEntity = new HttpEntity<>(formData, createHttpHeaders(token));
         ResponseEntity<LinkedHashMap> response = template.postForEntity(url_serviceRequestCreate, requestEntity, LinkedHashMap.class);
         if (isOkay(response)) {
             LinkedHashMap<String, Object> responseMap = (LinkedHashMap<String, Object>) response.getBody();
-            LinkedHashMap<String, Object> data = (LinkedHashMap<String, Object>) responseMap.get("data");
-            return data;
+            return (LinkedHashMap<String, Object>) responseMap.get("data");
+        } else {
+            return null;
         }
-        return null;
     }
-
+    
 }
 
 class ServiceRequestForm {
@@ -171,4 +189,188 @@ class ServiceRequestForm {
     public void setAttachments(List<V2_BlobObject> attachments) {
         this.attachments = attachments;
     }
+}
+
+class WorkOrderActionForm {
+	String serviceRequestId;
+    String  strDate;
+    String desc;
+    String estimatedCloseTime;
+    String assigneeId;
+    String feedbackRating;
+    String patProblems;
+    String patActions;
+    String patTests;
+    String caseType;
+    String confirmedDownTime;
+    String confirmedUpTime;
+    String assetStatus;
+    String intExtType;
+    Object stepDetail;
+    Integer currentStepId;
+    String equipmentTaker;
+    String takeTime;    
+    Integer repairType;
+    List<V2_BlobObject> attachments;
+    
+    public String getServiceRequestId() {
+		return serviceRequestId;
+	}
+
+	public void setServiceRequestId(String serviceRequestId) {
+		this.serviceRequestId = serviceRequestId;
+	}
+
+	public String getStrDate() {
+        return strDate;
+    }
+
+    public void setStrDate(String strDate) {
+        this.strDate = strDate;
+    }
+
+    public String getDesc() {
+        return desc;
+    }
+
+    public void setDesc(String desc) {
+        this.desc = desc;
+    }
+
+    public String getEstimatedCloseTime() {
+        return estimatedCloseTime;
+    }
+
+    public void setEstimatedCloseTime(String estimatedCloseTime) {
+        this.estimatedCloseTime = estimatedCloseTime;
+    }
+
+    public String getAssigneeId() {
+        return assigneeId;
+    }
+
+    public void setAssigneeId(String assigneeId) {
+        this.assigneeId = assigneeId;
+    }
+
+    public String getFeedbackRating() {
+        return feedbackRating;
+    }
+
+    public void setFeedbackRating(String feedbackRating) {
+        this.feedbackRating = feedbackRating;
+    }
+
+    public String getPatProblems() {
+        return patProblems;
+    }
+
+    public void setPatProblems(String patProblems) {
+        this.patProblems = patProblems;
+    }
+
+    public String getPatActions() {
+        return patActions;
+    }
+
+    public void setPatActions(String patActions) {
+        this.patActions = patActions;
+    }
+
+    public String getPatTests() {
+        return patTests;
+    }
+
+    public void setPatTests(String patTests) {
+        this.patTests = patTests;
+    }
+
+    public String getCaseType() {
+        return caseType;
+    }
+
+    public void setCaseType(String caseType) {
+        this.caseType = caseType;
+    }
+
+    public String getConfirmedDownTime() {
+        return confirmedDownTime;
+    }
+
+    public void setConfirmedDownTime(String confirmedDownTime) {
+        this.confirmedDownTime = confirmedDownTime;
+    }
+
+    public String getConfirmedUpTime() {
+        return confirmedUpTime;
+    }
+
+    public void setConfirmedUpTime(String confirmedUpTime) {
+        this.confirmedUpTime = confirmedUpTime;
+    }
+
+    public String getAssetStatus() {
+        return assetStatus;
+    }
+
+    public void setAssetStatus(String assetStatus) {
+        this.assetStatus = assetStatus;
+    }
+
+    public String getIntExtType() {
+        return intExtType;
+    }
+
+    public void setIntExtType(String intExtType) {
+        this.intExtType = intExtType;
+    }
+
+    public Object getStepDetail() {
+        return stepDetail;
+    }
+
+    public void setStepDetail(Object stepDetail) {
+        this.stepDetail = stepDetail;
+    }
+
+    public Integer getCurrentStepId() {
+        return currentStepId;
+    }
+
+    public void setCurrentStepId(Integer currentStepId) {
+        this.currentStepId = currentStepId;
+    }
+
+    public String getEquipmentTaker() {
+        return equipmentTaker;
+    }
+
+    public void setEquipmentTaker(String equipmentTaker) {
+        this.equipmentTaker = equipmentTaker;
+    }
+
+    public String getTakeTime() {
+        return takeTime;
+    }
+
+    public void setTakeTime(String takeTime) {
+        this.takeTime = takeTime;
+    }
+
+    public List<V2_BlobObject> getAttachments() {
+        return attachments;
+    }
+
+    public void setAttachments(List<V2_BlobObject> attachments) {
+        this.attachments = attachments;
+    }
+
+    public Integer getRepairType() {
+        return repairType;
+    }
+
+    public void setRepairType(Integer repairType) {
+        this.repairType = repairType;
+    }
+    
 }

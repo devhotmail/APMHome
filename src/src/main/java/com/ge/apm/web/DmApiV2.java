@@ -703,9 +703,9 @@ public class DmApiV2 {
     java.util.List<Integer> usageSum = ImmutableList.of(subItems.map(v -> v.getUsgSum().get(0)).sum().intValue(),
       subItems.map(v -> v.getUsgSum().get(1)).sum().intValue());
     double averageUsage = subItems.map(PdtData::getUsgPdt).average().getOrElse(0D);
-    int buyIn = (int) Math.ceil((averageUsage / (subItems.get(0).getUsgThr().get(1) + 1e-7D) - 1D) * count);
-    return Tuple.of(new TypePdtData(calculateBottomLevelSuggestions(usageSum.get(1), averageUsage, buyIn, subItems.get(0).getUsgThr()), buyIn, new PdtData(
-      subItems.get(0).getDate(), subItems.map(PdtData::getDepre).sum().doubleValue(), usageSum, subItems.get(0).getUsgThr(), averageUsage,
+    int buyIn = Try.of(() -> (int) Math.ceil((averageUsage / (subItems.get(0).getUsgThr().get(1) + 1e-7D) - 1D) * count)).getOrElse(0);
+    return Tuple.of(new TypePdtData(calculateBottomLevelSuggestions(usageSum.get(1), averageUsage, buyIn, Try.of(() -> subItems.get(0).getUsgThr()).getOrElse(List.of(0D, 1D).toJavaList())), buyIn, new PdtData(
+      Try.of(() -> subItems.get(0).getDate()).getOrElse(LocalDate.now()), subItems.map(PdtData::getDepre).sum().doubleValue(), usageSum, Try.of(() -> subItems.get(0).getUsgThr()).getOrElse(List.of(0D, 1D).toJavaList()), averageUsage,
       Option.when(lastYearUsage.equals(0D), 0D).getOrElse(averageUsage / lastYearUsage - 1D),
       Option.when(buyIn > 0, averageUsage * count / (count + buyIn)).getOrElse(averageUsage),
       Option.when(lastYearUsage.equals(0D), 0D).getOrElse(Option.when(buyIn > 0, averageUsage * count / (count + buyIn)).getOrElse(averageUsage) / lastYearUsage - 1D)
@@ -720,18 +720,19 @@ public class DmApiV2 {
    * @return HisData of this type
    */
   private Tuple3<HisData, HisData, HisData> calculateHistoricalData(Seq<Tuple3<HisData, HisData, HisData>> items) {
-    return Tuple.of(dealWithHisdata(items.map(v -> v._1)), dealWithHisdata(items.map(v -> v._2)), dealWithHisdata(items.map(v -> v._3)));
+    return Tuple.of(dealWithHisdata(items.map(v -> v._1), LocalDate.now().minusYears(2)), dealWithHisdata(items.map(v -> v._2), LocalDate.now().minusYears(1)), dealWithHisdata(items.map(v -> v._3), LocalDate.now()));
   }
 
   /**
    * This function is used by calculateHistoricalData() to return historical values about a type of assets in a single time slots.
    * This function may change when the historical data user wants on his/her screen changes
    *
-   * @param hisDatas HisData for all single assets in a certain time slot
+   * @param hisDatas    HisData for all single assets in a certain time slot
+   * @param defaultDate default date when items is null
    * @return HisData for all current type of assets in the same time slot
    */
-  private HisData dealWithHisdata(Seq<HisData> hisDatas) {
-    return new HisData(hisDatas.get(0).getDate(),
+  private HisData dealWithHisdata(Seq<HisData> hisDatas, LocalDate defaultDate) {
+    return new HisData(Try.of(() -> hisDatas.get(0).getDate()).getOrElse(defaultDate),
       hisDatas.map(HisData::getDepre).sum().doubleValue(),
       hisDatas.map(HisData::getUsage).average().getOrElse(0D));
   }
@@ -790,7 +791,7 @@ public class DmApiV2 {
       subItems.map(v -> v.getPdtData().getUsgSum().get(1)).sum().intValue());
     return Tuple.of(new DeptPdtData(
       calculateHighLevelSuggestions(items.map(v -> Tuple.of(v.getTypeBsc().getTypeName(), v.getTypePdtDatas()._1.getSuggestions(), v.getTypePdtDatas()._1.getBuyIn())), "type"), buyIn,
-      subItems.get(0).getPdtData().getDate(),
+      Try.of(() -> subItems.get(0).getPdtData().getDate()).getOrElse(LocalDate.now()),
       subItems.map(v -> v.getPdtData().getDepre()).sum().doubleValue(), usageSum,
       averageUsage,
       Option.when(lastYearUsage.equals(0D), 0D).getOrElse(averageUsage / lastYearUsage - 1D),
@@ -850,7 +851,7 @@ public class DmApiV2 {
       subItems.map(v -> v.getPdtData().getUsgSum().get(1)).sum().intValue());
     return Tuple.of(new AllAssetPdtData(
       calculateHighLevelSuggestions(items.map(v -> Tuple.of(v.getTypeBsc().getTypeName(), v.getTypePdtDatas()._1.getSuggestions(), v.getTypePdtDatas()._1.getBuyIn())), "type"), buyIn,
-      subItems.get(0).getPdtData().getDate(),
+      Try.of(() -> subItems.get(0).getPdtData().getDate()).getOrElse(LocalDate.now()),
       subItems.map(v -> v.getPdtData().getDepre()).sum().doubleValue(), usageSum,
       averageUsage,
       Option.when(lastYearUsage.equals(0D), 0D).getOrElse(averageUsage / lastYearUsage - 1D),
@@ -867,7 +868,7 @@ public class DmApiV2 {
       subItems.map(v -> v.getUsgSum().get(1)).sum().intValue());
     return Tuple.of(new AllAssetPdtData(
       calculateHighLevelSuggestions(items.map(v -> Tuple.of(v.getDeptBsc().getDeptName(), v.getDeptPdtDatas()._1.getSuggestions(), v.getDeptPdtDatas()._1.getBuyIn())), "dept"), buyIn,
-      subItems.get(0).getDate(),
+      Try.of(() -> subItems.get(0).getDate()).getOrElse(LocalDate.now()),
       subItems.map(DeptPdtData::getUsgPdt).sum().doubleValue(), usageSum,
       averageUsage,
       Option.when(lastYearUsage.equals(0D), 0D).getOrElse(averageUsage / lastYearUsage - 1D),

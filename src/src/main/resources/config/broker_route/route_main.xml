@@ -77,7 +77,7 @@
         <route id="initAssetAggregationDataByDateRange">
             <from uri="direct:initAssetAggregationDataByDateRange"/>
             <doTry>
-                <to uri="sql:insert into asset_summit(site_id,hospital_id,asset_id,asset_group,dept_id,supplier_id,revenue,maintenance_cost,deprecation_cost,inject_count,expose_count,film_count,exam_count,exam_duration,down_time,work_order_count,rating,created,last_modified) select site_id,hospital_id,id as asset_id,asset_group,asset_dept_id,supplier_id,0 as revenue,0 as maintenance_cost,0 as deprecation_cost,0 as inject_count,0 as expose_count,0 as film_count,0 as exam_count,0 as exam_duration,0 as down_time,0 as work_order_count,0 as rating,:#theDate::DATE,now() from asset_info where is_valid=true and not EXISTS(select 1 from asset_summit where asset_id = asset_info.id and created=:#theDate::DATE)?dataSource=risDataSource"/>
+                <to uri="sql:insert into asset_summit(site_id,hospital_id,asset_id,asset_group,dept_id,supplier_id,revenue,maintenance_cost,deprecation_cost,inject_count,expose_count,film_count,exam_count,exam_duration,down_time,work_order_count,rating,created,last_modified) select site_id,hospital_id,id as asset_id,asset_group,clinical_dept_id,supplier_id,0 as revenue,0 as maintenance_cost,0 as deprecation_cost,0 as inject_count,0 as expose_count,0 as film_count,0 as exam_count,0 as exam_duration,0 as down_time,0 as work_order_count,0 as rating,:#theDate::DATE,now() from asset_info where is_valid=true and not EXISTS(select 1 from asset_summit where asset_id = asset_info.id and created=:#theDate::DATE)?dataSource=risDataSource"/>
                 <doCatch>
                     <exception>java.lang.Exception</exception>
                 </doCatch>
@@ -88,7 +88,7 @@
         <route id="initAssetAggregationData">
             <from uri="direct:initAssetAggregationData"/>
             <doTry>
-                <to uri="sql:insert into asset_summit(site_id,hospital_id,asset_id,asset_group,dept_id,supplier_id,revenue,maintenance_cost,deprecation_cost,inject_count,expose_count,film_count,exam_count,exam_duration,down_time,work_order_count,rating,created,last_modified) select site_id,hospital_id,id as asset_id,asset_group,asset_dept_id,supplier_id,0 as revenue,0 as maintenance_cost,0 as deprecation_cost,0 as inject_count,0 as expose_count,0 as film_count,0 as exam_count,0 as exam_duration,0 as down_time,0 as work_order_count,0 as rating,CURRENT_DATE,now() from asset_info where is_valid=true and not EXISTS(select 1 from asset_summit where asset_id = asset_info.id and date(now())=created)?dataSource=risDataSource"/>
+                <to uri="sql:insert into asset_summit(site_id,hospital_id,asset_id,asset_group,dept_id,supplier_id,revenue,maintenance_cost,deprecation_cost,inject_count,expose_count,film_count,exam_count,exam_duration,down_time,work_order_count,rating,created,last_modified) select site_id,hospital_id,id as asset_id,asset_group,clinical_dept_id,supplier_id,0 as revenue,0 as maintenance_cost,0 as deprecation_cost,0 as inject_count,0 as expose_count,0 as film_count,0 as exam_count,0 as exam_duration,0 as down_time,0 as work_order_count,0 as rating,CURRENT_DATE,now() from asset_info where is_valid=true and not EXISTS(select 1 from asset_summit where asset_id = asset_info.id and date(now())=created)?dataSource=risDataSource"/>
                 <doCatch>
                     <exception>org.springframework.dao.DuplicateKeyException</exception>
                     <exception>org.postgresql.util.PSQLException</exception>
@@ -154,7 +154,7 @@
         <route id="initAssetAggregationDataByAssetId">
             <from uri="direct:initAssetAggregationDataByAssetId"/>
             <doTry>
-                <to uri="sql:insert into asset_summit(site_id,hospital_id,asset_id,asset_group,dept_id,supplier_id,revenue,maintenance_cost,deprecation_cost,inject_count,expose_count,film_count,exam_count,exam_duration,down_time,work_order_count,rating,created,last_modified) select site_id,hospital_id,id as asset_id,asset_group,asset_dept_id,supplier_id,0 as revenue,0 as maintenance_cost,0 as deprecation_cost,0 as inject_count,0 as expose_count,0 as film_count,0 as exam_count,0 as exam_duration,0 as down_time,0 as work_order_count,0 as rating,CURRENT_DATE,now() from asset_info where id=${headers.assetId} and is_valid=true?dataSource=risDataSource"/>
+                <to uri="sql:insert into asset_summit(site_id,hospital_id,asset_id,asset_group,dept_id,supplier_id,revenue,maintenance_cost,deprecation_cost,inject_count,expose_count,film_count,exam_count,exam_duration,down_time,work_order_count,rating,created,last_modified) select site_id,hospital_id,id as asset_id,asset_group,clinical_dept_id,supplier_id,0 as revenue,0 as maintenance_cost,0 as deprecation_cost,0 as inject_count,0 as expose_count,0 as film_count,0 as exam_count,0 as exam_duration,0 as down_time,0 as work_order_count,0 as rating,CURRENT_DATE,now() from asset_info where id=${headers.assetId} and is_valid=true?dataSource=risDataSource"/>
                 <doCatch>
                     <exception>org.springframework.dao.DuplicateKeyException</exception>
                     <exception>org.postgresql.util.PSQLException</exception>

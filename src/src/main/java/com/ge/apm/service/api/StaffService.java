@@ -31,7 +31,8 @@ public class StaffService {
   private static final String staff_wo
     = " SELECT asset_owner_id, asset_owner_name, SUM(wo_hour) as wo_hour, AVG(score) as score, SUM(count) as count, SUM(closed) as closed, SUM(open) as open "
     + " FROM "
-    + " ( (SELECT DISTINCT asset_owner_id, id, asset_owner_name FROM asset_info WHERE site_id = :site_id AND hospital_id = :hospital_id ) left_table "
+    //+ " ( (SELECT DISTINCT asset_owner_id, id, asset_owner_name FROM asset_info WHERE site_id = :site_id AND hospital_id = :hospital_id ) left_table "
+          + " ((SELECT DISTINCT current_person_id as asset_owner_id, asset_id as id, current_person_name as asset_owner_name FROM v2_work_order WHERE site_id = :site_id AND hospital_id = :hospital_id ) left_table "
     + " LEFT JOIN "
     + " (SELECT asset_id, SUM(total_man_hour) as wo_hour, COUNT(*) as count, SUM(CASE WHEN status != 1 THEN 1 ELSE 0 END) as closed, SUM(CASE WHEN status = 1 THEN 1 ELSE 0 END) as open FROM v2_work_order WHERE site_id = :site_id AND hospital_id = :hospital_id AND created_date >= :from AND created_date <= :to GROUP BY asset_id) right_table "
     + " ON left_table.id = right_table.asset_id ) left_table "
@@ -57,7 +58,8 @@ public class StaffService {
   private static final String staff_other
     = " SELECT asset_owner_id, pm_hour, insp_hour, meter_hour "
     + " FROM "
-    + " ( (SELECT DISTINCT asset_owner_id FROM asset_info WHERE site_id = :site_id AND hospital_id = :hospital_id ) left_table "
+    //+ " ( (SELECT DISTINCT asset_owner_id FROM asset_info WHERE site_id = :site_id AND hospital_id = :hospital_id ) left_table "
+          + " ((SELECT DISTINCT current_person_id as asset_owner_id FROM v2_work_order WHERE site_id = :site_id AND hospital_id = :hospital_id ) left_table "
     + " LEFT JOIN "
     + " (SELECT owner_id, SUM(man_hours) as pm_hour FROM pm_order WHERE site_id = :site_id AND hospital_id = :hospital_id AND create_time >= :from AND create_time <= :to GROUP BY owner_id) right_table "
     + " ON left_table.asset_owner_id = right_table.owner_id ) left_table "

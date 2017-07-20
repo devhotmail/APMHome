@@ -210,6 +210,9 @@ INSERT INTO "public"."i18n_message" VALUES ('429', 'label', 'patProblems', 'PAT�
 INSERT INTO "public"."i18n_message" VALUES ('430', 'label', 'patActions', 'PAT处理', 'PAT Actions', null, '-1');
 INSERT INTO "public"."i18n_message" VALUES ('431', 'label', 'patTests', 'PAT测试', 'PAT Tests', null, '-1');
 INSERT INTO "public"."i18n_message" VALUES ('432', 'label', 'confirmedDownTime', '停机时间', 'Confirmed DownTime', null, '-1');
+INSERT INTO "public"."i18n_message" VALUES ('433', 'label', 'dispatchMgmt', '派工管理', 'Dispatch Management', null, '-1');
+INSERT INTO "public"."i18n_message" VALUES ('434', 'label', 'dispatchWorkOrder', '派工', 'Dispatch Work Order', null, '-1');
+INSERT INTO "public"."i18n_message" VALUES ('435', 'label', 'WorkOrderAssignee', '维修人员', 'Assignee', null, '-1');
 
 INSERT INTO "public"."i18n_message" VALUES ('600', 'field_name', 'accessory', '备件', 'Accessory', null, '-1');
 INSERT INTO "public"."i18n_message" VALUES ('601', 'field_name', 'accessoryPrice', '单价(元)', 'Accessory Price', null, '-1');
@@ -573,6 +576,8 @@ INSERT INTO "public"."i18n_message" VALUES ('3041', 'message', 'AlreadyUsingQrCo
 INSERT INTO "public"."i18n_message" VALUES ('3042', 'message', 'DeleteAssetConformationMsg', '确认删除设备?', 'Confirm to remove this asset?', null, '-1');
 INSERT INTO "public"."i18n_message" VALUES ('3043', 'message', 'Institution', '集团', 'Institution', null, '-1');
 INSERT INTO "public"."i18n_message" VALUES ('3044', 'message', 'ExistsUnfinishedWorkOrders', '当前设备存在未完成工单，不能报废！', 'The asset has unfinished workOrders', null, '-1');
+INSERT INTO "public"."i18n_message" VALUES ('3045', 'message', 'CancelWorkOrderConformationMsg', '确定取消此报修?', 'To confirm cancel this work order?', null, '-1');
+INSERT INTO "public"."i18n_message" VALUES ('3046', 'message', 'cancelWorkOrderReason', '取消原因', 'the reason of cancel this work order', null, '-1');
 
 INSERT INTO "public"."i18n_message" VALUES ('3050', 'message', 'feedbackComment', '备注', '备注', null, '-1');
 INSERT INTO "public"."i18n_message" VALUES ('3051', 'message', 'feedbackRating', '评分', '评分', null, '-1');

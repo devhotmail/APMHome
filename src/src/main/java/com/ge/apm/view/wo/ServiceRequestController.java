@@ -54,6 +54,8 @@ public class ServiceRequestController extends GenericCRUDUUIDController<V2_Servi
     private Integer currentStatus = 1;
 
     private Boolean needConfirmTime = false;
+    
+    private String cancelReason;
 
     protected void init() {
         dao = WebUtil.getBean(ServiceRequestRepository.class);
@@ -132,7 +134,7 @@ public class ServiceRequestController extends GenericCRUDUUIDController<V2_Servi
         cancel();
     }
 
-    public void removeFilterOnField(String fieldName) {
+    private void removeFilterOnField(String fieldName) {
         SearchFilter temp = null;
         for (SearchFilter filter : searchFilters) {
             if (fieldName.equals(filter.fieldName)) {
@@ -194,6 +196,12 @@ public class ServiceRequestController extends GenericCRUDUUIDController<V2_Servi
             needConfirmTime = false;
         }
     }
+    
+    public void cancelWorkOrder(String woId){
+        woService.cancelWorkOrder(woId,cancelReason);
+        cancelReason=null;
+        cancel();
+    }
 
     //getter and setter
     public List<V2_WorkOrder> getWorkOrders() {
@@ -234,6 +242,14 @@ public class ServiceRequestController extends GenericCRUDUUIDController<V2_Servi
 
     public Boolean getNeedConfirmTime() {
         return needConfirmTime;
+    }
+
+    public String getCancelReason() {
+        return cancelReason;
+    }
+
+    public void setCancelReason(String cancelReason) {
+        this.cancelReason = cancelReason;
     }
 
 }
