@@ -247,6 +247,8 @@ public class AssetInfo extends JHipAbstractAuditingEntity implements Serializabl
         if(isDeleted == null){
             isDeleted = false;
         }
+        if(supplierId==null)
+            supplierId = -1;
     }
     
     public String getUid() {
