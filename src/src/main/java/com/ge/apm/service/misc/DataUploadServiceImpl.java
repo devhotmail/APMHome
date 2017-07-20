@@ -68,7 +68,12 @@ public class DataUploadServiceImpl implements DataUploadService{
             assetClinicalRecord.setHospitalId(edgeServerInfo.getHospitalId());
             assetClinicalRecord.setAssetId(getAssetIdByModalityId(assetClinicalRecord));
             assetClinicalRecord.setId(null);
-
+            
+            assetClinicalRecord.setOriginalExamDuration(assetClinicalRecord.getExamDuration());
+            if(assetClinicalRecord.getExamDuration()>7200){
+                assetClinicalRecord.setExamDuration(7200);  // exam duration should be no more than 2 hours.
+            }
+            
             mapProcedureName(edgeServerInfo.getSiteId(), edgeServerInfo.getHospitalId(), assetClinicalRecord);
             
             AssetClinicalRecordRepository dao = WebUtil.getBean(AssetClinicalRecordRepository.class);
