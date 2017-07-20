@@ -24,34 +24,6 @@ public class PmOrderAggregateService {
 	@Autowired
 	PmOrderRepository pmOrderRepository;
 	
-	public void updatePmOrder(@Headers Map<String, Object> map){
-		Integer assetId = (Integer) map.get("assetId");
-		logger.info("begin to updatePmOrderData");
-		PageRequest pr = buildPageRequest(0,2,"startTime");
-		Page<PmOrder> orders = pmOrderRepository.findByAssetId(assetId,pr);
-		if(!orders.hasContent()){
-			logger.warn("can't find pmOrders by assetId :{}",assetId);
-			return;
-		}
-		if(orders.getSize() == 1){
-			PmOrder order = orders.getContent().get(0);
-			order.setNearestDays(-1);
-			order.setNearestPmId(-1);
-			pmOrderRepository.save(order);
-			return;
-		}
-		PmOrder order1 = orders.getContent().get(0);
-		PmOrder order2 = orders.getContent().get(1);
-		DateTime dt1 = new DateTime(order1.getCreateTime());
-		DateTime dt2 = new DateTime(order2.getCreateTime());
-		Integer days = Math.abs(Days.daysBetween(dt1, dt2).getDays());
-		order1.setNearestDays(days);
-		order1.setNearestPmId(order2.getId());
-		pmOrderRepository.save(order1);
-		
-	
-	}
-	
     //构建PageRequest
     private PageRequest buildPageRequest(int pageNumber, int pagzSize,String createTime) {
         //Sort sort = new Sort(Sort.Direction.DESC, "createdDate");

@@ -107,7 +107,7 @@ public class PmOrderService {
             pmOrderDao.save(pmOrder);
             Map<String,Object> param = new HashMap<String,Object>();
             param.put("assetId", assetInfo.getId());
-            SiBroker.sendMessageWithHeaders("direct:updatePmOrder", null, param);
+            //SiBroker.sendMessageWithHeaders("direct:updatePmOrder", null, param);
         }
 
     }

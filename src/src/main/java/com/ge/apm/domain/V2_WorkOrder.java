@@ -134,11 +134,6 @@ public class V2_WorkOrder extends JHipAbstractAuditingEntity implements Serializ
     @Column(name = "comment")
     private String comment;
 
-    @Column(name = "nearest_days")
-    private Integer nearestDays;//上次维修距今的天数
-    @Column(name = "nearest_wo_id")
-    private String nearestWoId;//上次维修工单的id
-
     @Column(name = "repair_type")
     private Integer repairType;
 
@@ -155,22 +150,6 @@ public class V2_WorkOrder extends JHipAbstractAuditingEntity implements Serializ
 
     public void setCheckinTime(Date checkinTime) {
         this.checkinTime = checkinTime;
-    }
-
-    public Integer getNearestDays() {
-        return nearestDays;
-    }
-
-    public void setNearestDays(Integer nearestDays) {
-        this.nearestDays = nearestDays;
-    }
-
-    public String getNearestWoId() {
-        return nearestWoId;
-    }
-
-    public void setNearestWoId(String nearestWoId) {
-        this.nearestWoId = nearestWoId;
     }
 
     public String getId() {
