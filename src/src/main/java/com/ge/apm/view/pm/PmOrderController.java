@@ -337,64 +337,68 @@ public class PmOrderController extends JpaCRUDController<PmOrder> {
 	public void setAttachements(List<FileUploaded> attachements) {
 		this.attachements = attachements;
 	}
-    
-        private String filterStartTime = null;
-        private String filterIsFinished = null;
 
-        public String getFilterStartTime() {
-            return filterStartTime;
-        }
+    private String filterPlanTime = null;
+    private String filterIsFinished = null;
 
-        public void setFilterStartTime(String filterStartTime) {
-            this.filterStartTime = filterStartTime;
-        }
-        
-        public String getFilterIsFinished() {
-            return filterIsFinished;
-        }
+    public String getFilterPlanTime() {
+        return filterPlanTime;
+    }
 
-        public void setFilterIsFinished(String filterIsFinished) {
-            this.filterIsFinished = filterIsFinished;
-        }
+    public void setFilterPlanTime(String filterPlanTime) {
+        this.filterPlanTime = filterPlanTime;
+    }
 
-        public void setStartTimeFilter(){
-            if(filterStartTime==null || !"1".equals(filterStartTime))  return;
-            if(searchFilters==null) searchFilters = new ArrayList<SearchFilter>();
-            Date startTime = new Date();
-            //一周内，则是在一周后时间之前所有
-            Calendar c = Calendar.getInstance();
-            c.setTime(startTime);
-            c.add(Calendar.DAY_OF_WEEK, 7);
-            varStartTimeTo = c.getTime();
-            searchFilters.add(new SearchFilter("startTime", SearchFilter.Operator.LTE, varStartTimeTo));
-            searchFilters.add(new SearchFilter("isFinished", SearchFilter.Operator.EQ, false));
-            filterStartTime = null;
-            filterIsFinished = "false";
-        }
-        
-        private Date varStartTimeTo = null;
-        private String startFormatTime = null;
+    public String getFilterIsFinished() {
+        return filterIsFinished;
+    }
 
-        public Date getVarStartTimeTo() {
-            return varStartTimeTo;
-        }
+    public void setFilterIsFinished(String filterIsFinished) {
+        this.filterIsFinished = filterIsFinished;
+    }
 
-        public void setVarStartTimeTo(Date varStartTimeTo) {
-            this.varStartTimeTo = varStartTimeTo;
+    public void setPlanTimeFilter() {
+        if (filterPlanTime == null || !"1".equals(filterPlanTime)) {
+            return;
         }
+        if (searchFilters == null) {
+            searchFilters = new ArrayList<SearchFilter>();
+        }
+        //2个月内，则是在2个月后时间之前所有
+        Date startTime = new Date();
+        Calendar c = Calendar.getInstance();
+        c.setTime(startTime);
+        c.add(Calendar.MONTH, 2);
+        varPlanTimeTo = c.getTime();
+        searchFilters.add(new SearchFilter("planTime", SearchFilter.Operator.LTE, varPlanTimeTo));
+        searchFilters.add(new SearchFilter("isFinished", SearchFilter.Operator.EQ, false));
+        filterPlanTime = null;
+        filterIsFinished = "false";
+    }
 
-        public String getStartFormatTime() {
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
-            if (varStartTimeTo==null){
-                return startFormatTime;
-            } else {
-                return "~"+sdf.format(varStartTimeTo);
-            } 
-        }
+    private Date varPlanTimeTo = null;
+    private String planFormatTime = null;
 
-        public void setStartFormatTime(String startFormatTime) {
-            this.startFormatTime = startFormatTime;
+    public Date getVarPlanTimeTo() {
+        return varPlanTimeTo;
+    }
+
+    public void setVarPlanTimeTo(Date varPlanTimeTo) {
+        this.varPlanTimeTo = varPlanTimeTo;
+    }
+
+    public String getPlanFormatTime() {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
+        if (varPlanTimeTo == null) {
+            return planFormatTime;
+        } else {
+            return "~" + sdf.format(varPlanTimeTo);
         }
+    }
+
+    public void setPlanFormatTime(String planFormatTime) {
+        this.planFormatTime = planFormatTime;
+    }
 
     public void getQueryAssetsListByHospital() {
         queryAsset.setClinicalDeptId(null);

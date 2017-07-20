@@ -7,9 +7,9 @@
 
     <ui:define name="preRenderView">
         <f:metadata>
-            <f:viewParam name="model" value="#{pmOrderController.filterStartTime}"/>
+            <f:viewParam name="model" value="#{pmOrderController.filterPlanTime}"/>
         </f:metadata>
-        <f:event type="preRenderView" listener="#{pmOrderController.setStartTimeFilter()}"/>
+        <f:event type="preRenderView" listener="#{pmOrderController.setPlanTimeFilter()}"/>
     </ui:define>
 
     <ui:define name="content">
@@ -62,7 +62,7 @@
                         -->
                         <p:column headerText="计划时间" sortBy="#{item.planTime}" filterBy="#{item.planTime}" filterMatchMode="GTE">
                             <f:facet name="filter">
-                                <p:inputText id="filterPlanTime" widgetVar="varFilterPlanTime"/>
+                                <p:inputText id="filterPlanTime" widgetVar="varFilterPlanTime" value="#{pmOrderController.planFormatTime}"/>
                             </f:facet>
                             <h:outputText value="#{item.planTime}">
                                 <f:convertDateTime timeZone="GMT+8" pattern="yyyy/MM/dd" />
@@ -82,7 +82,7 @@
                         </p:column>
                         <p:column headerText="#{msg.startTime}" sortBy="#{item.startTime}" filterBy="#{item.startTime}" filterMatchMode="GTE">
                             <f:facet name="filter">
-                                <p:inputText id="filterStartTime" widgetVar="varFilterStartTime" value="#{pmOrderController.startFormatTime}"/>
+                                <p:inputText id="filterStartTime" widgetVar="varFilterStartTime" />
                             </f:facet>
                             <h:outputText value="#{item.startTime}">
                                 <f:convertDateTime timeZone="GMT+8" pattern="yyyy/MM/dd HH:mm" />
@@ -145,7 +145,7 @@
                 <p:outputLabel value="#{msg.From}"/>
                 <p:calendar timeZone="GMT+8"  widgetVar="varPlanTimeFrom" pattern="yyyy/MM/dd" showOn="button" showButtonPanel="false" navigator="true" mask="true" size="12" locale="zh"/>
                 <p:outputLabel value="#{msg.To}"/>
-                <p:calendar timeZone="GMT+8"  widgetVar="varPlanTimeTo" pattern="yyyy/MM/dd" showOn="button" showButtonPanel="false" navigator="true" mask="true" size="12" locale="zh"/>
+                <p:calendar timeZone="GMT+8"  widgetVar="varPlanTimeTo" value="#{pmOrderController.varPlanTimeTo}" pattern="yyyy/MM/dd" showOn="button" showButtonPanel="false" navigator="true" mask="true" size="12" locale="zh"/>
             </h:panelGrid>
             <p:commandButton onclick="setDateFilter('varDataList', 'varFilterPlanTime', 'varPlanTimeFrom', 'varPlanTimeTo'); PF('panelFilterPlanTime').hide();" title="#{msg.Save}" icon="ui-icon-check" immediate="true" style="zoom: 0.8;"/>
             <p:commandButton onclick="PF('panelFilterPlanTime').hide()" title="#{msg.Close}" icon="ui-icon-close" immediate="true" type="button" style="zoom: 0.8;"/>
@@ -155,7 +155,7 @@
                 <p:outputLabel value="#{msg.From}"/>
                 <p:calendar timeZone="GMT+8"  widgetVar="varStartTimeFrom" pattern="yyyy/MM/dd" showOn="button" showButtonPanel="false" navigator="true" mask="true" size="12" locale="zh"/>
                 <p:outputLabel value="#{msg.To}"/>
-                <p:calendar timeZone="GMT+8"  widgetVar="varStartTimeTo" value="#{pmOrderController.varStartTimeTo}" pattern="yyyy/MM/dd" showOn="button" showButtonPanel="false" navigator="true" mask="true" size="12" locale="zh"/>
+                <p:calendar timeZone="GMT+8"  widgetVar="varStartTimeTo" pattern="yyyy/MM/dd" showOn="button" showButtonPanel="false" navigator="true" mask="true" size="12" locale="zh"/>
             </h:panelGrid>
             <p:commandButton onclick="setDateFilter('varDataList', 'varFilterStartTime', 'varStartTimeFrom', 'varStartTimeTo'); PF('panelFilterStartTime').hide();" title="#{msg.Save}" icon="ui-icon-check" immediate="true" style="zoom: 0.8;"/>
             <p:commandButton onclick="PF('panelFilterStartTime').hide()" title="#{msg.Close}" icon="ui-icon-close" immediate="true" type="button" style="zoom: 0.8;"/>
