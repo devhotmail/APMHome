@@ -114,6 +114,7 @@ return "success";
     }
     //在将asset clininical中聚合的数据写到assetsummit中去，将数据放到列表里面
     private void extractor(Date date, List<AssetSummit> asmList, AssetClinicalRecordPojo accrp, AssetSummit asm1) {
+        AssetInfo assinfo = assetInfoRepository.findById(accrp.getAssetIds());
         asm1.setCreated(date);//gl: created这个字段是做聚合那天的日期?
         asm1.setAssetId(accrp.getAssetIds());
         asm1.setSiteId(accrp.getSiteIds());
@@ -121,6 +122,8 @@ return "success";
         asm1.setExposeCount(accrp.getExposeCounts());
         asm1.setFilmCount(accrp.getFilmCounts());
         asm1.setInjectCount(accrp.getInjectCounts());
+        asm1.setDeptId(assinfo.getClinicalDeptId());
+        asm1.setAssetGroup(assinfo.getAssetGroup());
         if(accrp.getExamCount()==null){
             logger.info("gl: accrp.getExamCount() should not be null");
         }else {
