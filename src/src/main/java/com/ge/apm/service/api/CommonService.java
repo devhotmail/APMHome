@@ -87,16 +87,20 @@ public class CommonService {
       .cache().toBlocking().single()).getOrElse(ImmutableMap.of());
   }
 
-  @Cacheable(cacheNames = "springCache", key = "'commonService.findSuppliers.'+#siteId")
+  //@Cacheable(cacheNames = "springCache", key = "'commonService.findSuppliers.'+#siteId")
   public Map<Integer, String> findSuppliers(int siteId) {
     /*return Try.of(() -> db.select(new SQL().SELECT("id", "name").FROM("supplier").WHERE("site_id = :site_id").toString())
       .parameter("site_id", siteId).getAs(Integer.class, String.class)
       .toMap(Tuple2::_1, Tuple2::_2)
       .cache().toBlocking().single()).getOrElse(ImmutableMap.of());*/
-    return Try.of(() -> db.select(new SQL().SELECT("id", "name").FROM("supplier").toString())
+    /*return Try.of(() -> db.select(new SQL().SELECT("id", "name").FROM("supplier").WHERE("site_id = :site_id or site_id = -1").toString())
       .getAs(Integer.class, String.class)
       .toMap(Tuple2::_1, Tuple2::_2)
-      .cache().toBlocking().single()).getOrElse(ImmutableMap.of());
+      .cache().toBlocking().single()).getOrElse(ImmutableMap.of());*/
+    return Try.of(() -> db.select(new SQL().SELECT("id", "name").FROM("supplier").WHERE("site_id = :site_id or site_id = -1").toString())
+            .parameter("site_id", siteId).getAs(Integer.class, String.class)
+            .toMap(Tuple2::_1, Tuple2::_2)
+            .cache().toBlocking().single()).getOrElse(ImmutableMap.of());
   }
 
   @Cacheable(cacheNames = "springCache", key = "'commonService.findAssets.'+#site+'.'+#hospital")

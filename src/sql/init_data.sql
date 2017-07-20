@@ -72,6 +72,7 @@ SELECT setval('"field_code_type_id_seq"', 5, false);
 INSERT INTO public.supplier (id, site_id, name) VALUES (-1, -1, '未知');
 update asset_info set supplier_id = -1 where supplier_id is null;
 
+delete from proc_part;
 INSERT INTO public.proc_part (id, name) VALUES (1, '头部');
 INSERT INTO public.proc_part (id, name) VALUES (2, '颈部');
 INSERT INTO public.proc_part (id, name) VALUES (3, '胸部');
@@ -82,6 +83,7 @@ INSERT INTO public.proc_part (id, name) VALUES (7, '上肢');
 INSERT INTO public.proc_part (id, name) VALUES (8, '下肢');
 INSERT INTO public.proc_part (id, name) VALUES (9, '其它');
 
+delete from proc_step;
 INSERT INTO public.proc_step (id, part_id, name) VALUES (1, 1, 'step1');
 INSERT INTO public.proc_step (id, part_id, name) VALUES (2, 1, 'step2');
 INSERT INTO public.proc_step (id, part_id, name) VALUES (3, 1, 'step3');
@@ -128,6 +130,7 @@ INSERT INTO public.proc_step (id, part_id, name) VALUES (43, 9, 'step3');
 INSERT INTO public.proc_step (id, part_id, name) VALUES (44, 9, 'step4');
 INSERT INTO public.proc_step (id, part_id, name) VALUES (45, 9, 'step5');
 
+delete from proc_map;
 INSERT INTO public.proc_map (id, asset_group, part_id, subpart_id, step_id) VALUES (8911, 1, 1, null, 1);
 INSERT INTO public.proc_map (id, asset_group, part_id, subpart_id, step_id) VALUES (8956, 2, 1, null, 1);
 INSERT INTO public.proc_map (id, asset_group, part_id, subpart_id, step_id) VALUES (9001, 3, 1, null, 1);
