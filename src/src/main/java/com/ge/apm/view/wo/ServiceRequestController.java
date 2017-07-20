@@ -134,19 +134,6 @@ public class ServiceRequestController extends GenericCRUDUUIDController<V2_Servi
         cancel();
     }
 
-    private void removeFilterOnField(String fieldName) {
-        SearchFilter temp = null;
-        for (SearchFilter filter : searchFilters) {
-            if (fieldName.equals(filter.fieldName)) {
-                temp = filter;
-                break;
-            }
-        }
-        if (null != temp) {
-            searchFilters.remove(temp);
-        }
-    }
-
     public void createServiceRequest() {
         newServiceRequest = new V2_ServiceRequest();
         newServiceRequest.setRequestorId(UserContextService.getCurrentUserAccount().getId());

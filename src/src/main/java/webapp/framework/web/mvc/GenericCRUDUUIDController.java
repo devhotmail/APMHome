@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
 import org.apache.log4j.Logger;
 import org.joda.time.DateTime;
@@ -50,6 +51,10 @@ public abstract class GenericCRUDUUIDController<E> implements Serializable {
         }
 
         return false;
+    }
+    
+    public void removeFilterOnField(String fieldName) {
+        searchFilters.removeAll(searchFilters.stream().filter(item -> fieldName.equals(item.fieldName)).collect(Collectors.toList()));
     }
 
     public void setSiteFilter(){

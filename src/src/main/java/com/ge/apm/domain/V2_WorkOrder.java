@@ -29,7 +29,7 @@ import org.hibernate.annotations.GenericGenerator;
 @Table(name = "v2_work_order")
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Cacheable(true)
-public class V2_WorkOrder extends JHipAbstractAuditingEntity implements Serializable {
+public class V2_WorkOrder implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -142,7 +142,49 @@ public class V2_WorkOrder extends JHipAbstractAuditingEntity implements Serializ
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Date checkinTime;
 
-	    
+    @Column(name = "tenant_uid", columnDefinition = "CHAR(32)")
+    private String tenantUID;
+
+    @Column(name = "institution_uid", columnDefinition = "CHAR(32)")
+    private String institutionUID;
+
+    @Column(name = "hospital_uid", columnDefinition = "CHAR(32)")
+    private String hospitalUID;
+
+    @Column(name = "site_uid", columnDefinition = "CHAR(32)")
+    private String siteUID;
+
+    public String getTenantUID() {
+        return tenantUID;
+    }
+
+    public void setTenantUID(String tenantUID) {
+        this.tenantUID = tenantUID;
+    }
+
+    public String getInstitutionUID() {
+        return institutionUID;
+    }
+
+    public void setInstitutionUID(String institutionUID) {
+        this.institutionUID = institutionUID;
+    }
+
+    public String getHospitalUID() {
+        return hospitalUID;
+    }
+
+    public void setHospitalUID(String hospitalUID) {
+        this.hospitalUID = hospitalUID;
+    }
+
+    public String getSiteUID() {
+        return siteUID;
+    }
+
+    public void setSiteUID(String siteUID) {
+        this.siteUID = siteUID;
+    }
 	    
     public Date getCheckinTime() {
         return checkinTime;
