@@ -91,6 +91,12 @@ public class AssetCreateController {
         newAsset.setAssetGroup(createRequest.getAssetGroup());
         newAsset.setClinicalDeptId(createRequest.getOrgId());
         newAsset.setClinicalOwnerId(createRequest.getUserId());
+
+        newAsset.setTenantUID(createRequest.getTenantUID());
+        newAsset.setHospitalUID(createRequest.getHospitalUID());
+        newAsset.setInstitutionUID(createRequest.getInstitutionUID());
+        newAsset.setSiteUID(createRequest.getSiteUID());
+
         if (null != createRequest.getUserId()) {
             clinicalOwner = acServie.getUserInfo(createRequest.getUserId());
             newAsset.setClinicalOwnerName(clinicalOwner.getName());
@@ -146,14 +152,14 @@ public class AssetCreateController {
         List<UserAccount> res = acServie.getAssetOnwers(assetInfo.getSiteId(), assetInfo.getHospitalId());
         return res;
     }
-    
+
     public void onClinicalDeptChange() {
         this.clinicalOwner = null;
         assetInfo.setClinicalOwnerId(null);
         assetInfo.setClinicalOwnerName(null);
         assetInfo.setClinicalOwnerTel(null);
     }
-    
+
     public void onClinicalOwnerChange() {
         if (null != clinicalOwner) {
             assetInfo.setClinicalOwnerId(clinicalOwner.getId());
@@ -161,12 +167,11 @@ public class AssetCreateController {
             assetInfo.setClinicalOwnerTel(clinicalOwner.getTelephone());
         }
     }
-    
-    
+
     public List<UserAccount> getClinicalOwnerList() {
-        
+
         return acServie.getClinicalOwnerList(assetInfo.getClinicalDeptId());
-       
+
     }
 
     //getter and setter

@@ -180,7 +180,7 @@ public class AssetInfoController extends JpaCRUDController<AssetInfo> {
     protected Page<AssetInfo> loadData(PageRequest pageRequest) {
         selected = null;
 //        searchFilters.add(new SearchFilter("isDeleted",SearchFilter.Operator.EQ,false));
-        searchFilters.add(new SearchFilter("isDeleted",SearchFilter.Operator.EQ, false));
+        searchFilters.add(new SearchFilter("isDeleted", SearchFilter.Operator.EQ, false));
         if (terminate) {
             this.searchFilters.add(new SearchFilter("isValid", SearchFilter.Operator.EQ, false));
         } else {
@@ -260,6 +260,11 @@ public class AssetInfoController extends JpaCRUDController<AssetInfo> {
         object.setIsValid(true);
         object.setStatus(1);
         object.setIsDeleted(false);
+
+        object.setTenantUID(UserContextService.getCurrentUserAccount().getTenantUID());
+        object.setHospitalUID(UserContextService.getCurrentUserAccount().getHospitalUID());
+        object.setInstitutionUID(UserContextService.getCurrentUserAccount().getInstitutionUID());
+        object.setSiteUID(UserContextService.getCurrentUserAccount().getSiteUID());
     }
 
     @Override
@@ -353,10 +358,10 @@ public class AssetInfoController extends JpaCRUDController<AssetInfo> {
                 return "";
             }
         }
-        if(qrCode!=null && "".equals(qrCode.trim())){
+        if (qrCode != null && "".equals(qrCode.trim())) {
             selected.setQrCode(null);
         }
-        
+
         this.save();
         assetDepreciationService.saveAssetDerpeciation(selected);
         if (resultStatus) {
@@ -375,14 +380,14 @@ public class AssetInfoController extends JpaCRUDController<AssetInfo> {
             this.selected.setIsValid(true);
             this.selected.setTerminateDate(null);
         } else {
-        	Integer workOrdersNum = dao.fetchCurrentWorkOrders(selected.getId());
-        	if(workOrdersNum > 0){
-        		WebUtil.addErrorMessage("当前设备存在未完成工单，不能报废！");
-        		return null;
-        	}else{
-        		this.selected.setIsValid(false);
-        		this.selected.setTerminateDate(new Date());
-        	}
+            Integer workOrdersNum = dao.fetchCurrentWorkOrders(selected.getId());
+            if (workOrdersNum > 0) {
+                WebUtil.addErrorMessage("当前设备存在未完成工单，不能报废！");
+                return null;
+            } else {
+                this.selected.setIsValid(false);
+                this.selected.setTerminateDate(new Date());
+            }
         }
         update();
         return "List?faces-redirect=true" + (terminate ? "&terminate=true" : "");
@@ -505,7 +510,7 @@ public class AssetInfoController extends JpaCRUDController<AssetInfo> {
         attachements.clear();
     }
 
-    public void removeAttachment(String  objectId) {
+    public void removeAttachment(String objectId) {
         List<AssetFileAttachment> tempList = new ArrayList();
         for (AssetFileAttachment item : attachements) {
             if (objectId.equals(item.getFileUrl())) {
@@ -776,18 +781,18 @@ public class AssetInfoController extends JpaCRUDController<AssetInfo> {
 
     }
 
-    public void onFunctionGroupChange(){
+    public void onFunctionGroupChange() {
         code68List = new ArrayList<>();
         this.selected.setAssetCode68(null);
 
         this.changeFunctionGroup();
     }
 
-    public void changeFunctionGroup(){
+    public void changeFunctionGroup() {
         Integer functionGroupId = this.selected.getFunctionGroup();
-        if(functionGroupId != null){
-            I18nMessage functionGroup = i18nDao.getByMsgTypeAndMsgKey("assetFunctionType",functionGroupId.toString());
-            if(functionGroup != null){
+        if (functionGroupId != null) {
+            I18nMessage functionGroup = i18nDao.getByMsgTypeAndMsgKey("assetFunctionType", functionGroupId.toString());
+            if (functionGroup != null) {
                 code68List = i18nDao.getByMsgType(functionGroup.getMsgKey());
             }
         }

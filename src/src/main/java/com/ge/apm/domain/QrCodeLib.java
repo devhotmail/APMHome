@@ -15,7 +15,6 @@ import javax.persistence.PrePersist;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-import javax.validation.constraints.Size;
 
 /**
  *
@@ -23,7 +22,7 @@ import javax.validation.constraints.Size;
  */
 @Entity
 @Table(name = "qr_code_lib")
-public class QrCodeLib implements Serializable {
+public class QrCodeLib  implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -66,6 +65,51 @@ public class QrCodeLib implements Serializable {
     private Integer orgId;
     @Column(name = "user_id")
     private Integer userId;
+    
+    @Column(name = "tenant_uid", columnDefinition = "CHAR(32)")
+    private String tenantUID;
+
+    @Column(name = "institution_uid", columnDefinition = "CHAR(32)")
+    private String institutionUID;
+
+    @Column(name = "hospital_uid", columnDefinition = "CHAR(32)")
+    private String hospitalUID;
+
+    @Column(name = "site_uid", columnDefinition = "CHAR(32)")
+    private String siteUID;
+
+    public String getTenantUID() {
+        return tenantUID;
+    }
+
+    public void setTenantUID(String tenantUID) {
+        this.tenantUID = tenantUID;
+    }
+
+    public String getInstitutionUID() {
+        return institutionUID;
+    }
+
+    public void setInstitutionUID(String institutionUID) {
+        this.institutionUID = institutionUID;
+    }
+
+    public String getHospitalUID() {
+        return hospitalUID;
+    }
+
+    public void setHospitalUID(String hospitalUID) {
+        this.hospitalUID = hospitalUID;
+    }
+
+    public String getSiteUID() {
+        return siteUID;
+    }
+
+    public void setSiteUID(String siteUID) {
+        this.siteUID = siteUID;
+    }
+
 
     public QrCodeLib() {
     }

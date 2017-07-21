@@ -120,6 +120,8 @@ public class GenerateQrCodesController extends JpaCRUDController<QrCodeLib>{
         if(siteId == null || hospitalId == null){
             return null;
         }
+        
+        OrgInfo org = orgDao.findById(hospitalId);
         int number = big + small;
         Set<String> tempSet = new HashSet<String>(number);
         DateTime dt = new DateTime();
@@ -134,6 +136,10 @@ public class GenerateQrCodesController extends JpaCRUDController<QrCodeLib>{
                     qrCodeLib = new QrCodeLib();
                     qrCodeLib.setSiteId(siteId);
                     qrCodeLib.setHospitalId(hospitalId);
+                    qrCodeLib.setSiteUID(org.getSiteUID());
+                    qrCodeLib.setHospitalUID(org.getHospitalUID());
+                    qrCodeLib.setTenantUID(org.getTenantUID());
+                    qrCodeLib.setInstitutionUID(org.getInstitutionUID());
                    // -- 1:已发行(未上传) / 2: 已上传(待建档) / 3: 已建档(待删除)
                     qrCodeLib.setStatus(1);
                     qrCodeLib.setIssueDate(new Date());

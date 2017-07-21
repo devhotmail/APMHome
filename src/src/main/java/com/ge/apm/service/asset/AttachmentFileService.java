@@ -8,7 +8,6 @@ package com.ge.apm.service.asset;
 import com.ge.apm.dao.FileUploadDao;
 import com.ge.apm.service.utils.AmrAudioUtil;
 import com.ge.apm.service.wechat.CoreService;
-import com.ge.apm.view.asset.PictureService;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;

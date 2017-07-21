@@ -108,8 +108,8 @@ public class PmOrder implements Serializable {
 
     @Column(name = "nearest_sr_days")
     private Integer nearestSrDays;//此次保养后，最近的报修距此保养天数
-    @Column(name = "nearest_sr_id")
-    private Integer nearestSrId;//此次保养后，最近的报修SR ID
+    @Column(name = "nearest_sr_id", columnDefinition = "CHAR(32)")
+    private String nearestSrId;//此次保养后，最近的报修SR ID
     
 
     public Integer getNearestSrDays() {
@@ -120,11 +120,11 @@ public class PmOrder implements Serializable {
 		this.nearestSrDays = nearestSrDays;
 	}
 
-	public Integer getNearestSrId() {
+	public String getNearestSrId() {
 		return nearestSrId;
 	}
 
-	public void setNearestSrId(Integer nearestSrId) {
+	public void setNearestSrId(String nearestSrId) {
 		this.nearestSrId = nearestSrId;
 	}
 

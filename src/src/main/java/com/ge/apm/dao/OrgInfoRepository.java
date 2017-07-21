@@ -29,4 +29,7 @@ public interface OrgInfoRepository extends GenericRepository<OrgInfo> {
     @Query(value = "select name from org_info where id=?1",nativeQuery = true)
     public String getDepName(int id);
     
+    public OrgInfo getByUid(String uid);
+    
+    public List<OrgInfo> getByTenantUID(String tenantUID);
 }

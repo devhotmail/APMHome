@@ -22,6 +22,8 @@ import com.ge.apm.service.asset.AssetCreateService;
 import com.ge.apm.view.sysutil.UserContextService;
 import webapp.framework.web.WebUtil;
 import com.ge.apm.dao.TenantInfoRepository;
+import java.util.stream.Collectors;
+import org.primefaces.component.collector.Collector;
 
 @ManagedBean
 @ViewScoped
@@ -35,16 +37,22 @@ public class QrCodeLibController extends JpaCRUDController<QrCodeLib> {
 
     private AssetCreateService acService;
 
-    private Integer siteId;
-    private Integer hospitalId;
+//    private Integer siteId;
+//    private Integer hospitalId;
+    private String tenantUID;
+    private String siteUID;
     private Integer qrCodeNum;
     private String qrCode;
     private String qrCodeImageBase64;
 
+    private String tenantUIDFilter;
+    private String siteUIDFilter;
     private Integer siteIdFilter;
     private Integer hospitalIdFilter;
 
     private String tempSiteId = "";
+
+    private List<OrgInfo> hospitalFileterList=new ArrayList();
 
     @Override
     protected void init() {
@@ -61,7 +69,9 @@ public class QrCodeLibController extends JpaCRUDController<QrCodeLib> {
             this.filterByHospital = false;
             this.filterBySite = false;
         } else {
+            tenantUIDFilter = UserContextService.getCurrentUserAccount().getTenantUID();
             this.filterBySite = true;
+            hospitalFileterList = orgInfoDao.getByTenantUID(tenantUIDFilter).stream().filter(item -> item.getOrgType()<4).collect(Collectors.toList());
             if (!userContextService.hasRole("MultiHospital")) {
                 this.filterByHospital = false;
             } else {
@@ -79,39 +89,49 @@ public class QrCodeLibController extends JpaCRUDController<QrCodeLib> {
     @Override
     protected Page<QrCodeLib> loadData(PageRequest pageRequest) {
 
-        List<SearchFilter> searchFilters = this.searchFilters;
-        if (searchFilters == null || searchFilters.size() == 0) {
+        this.setSiteFilter();
+
+        if (hospitalFileterList !=null && hospitalFileterList.stream().filter(item -> item.getSiteUID().equals(siteUIDFilter) && item.getTenantUID().equals(tenantUIDFilter)).collect(Collectors.toList()).size() < 1) {
+            this.removeFilterOnField("siteUID");
+        }
+
+        if (this.searchFilters == null) {
             return dao.findAll(pageRequest);
         } else {
-            Map<String, SearchFilter> tempSearchFilterMap = new HashMap<>(searchFilters.size());
-            for (SearchFilter tempSearchFilter : searchFilters) {
-                tempSearchFilterMap.put(tempSearchFilter.fieldName, tempSearchFilter);
-            }
-
-            if(tempSearchFilterMap.containsKey("siteId")){
-                if(!tempSearchFilterMap.get("siteId").value.toString().equals(tempSiteId)){
-                    tempSearchFilterMap.remove("hospitalId");
-                }
-
-                this.tempSiteId = tempSearchFilterMap.get("siteId").value.toString();
-            }
-
-            if(!tempSearchFilterMap.containsKey("siteId") && tempSearchFilterMap.containsKey("hospitalId")){
-                tempSearchFilterMap.remove("hospitalId");
-            }
-
-            searchFilters = new ArrayList<SearchFilter>();
-            for(Map.Entry<String, SearchFilter> entry : tempSearchFilterMap.entrySet()){
-                searchFilters.add(entry.getValue());
-            }
-
-            if(searchFilters.size() <= 0){
-                return dao.findAll(pageRequest);
-            }else{
-                return dao.findBySearchFilter(searchFilters, pageRequest);
-            }
-
+            return dao.findBySearchFilter(this.searchFilters, pageRequest);
         }
+//        List<SearchFilter> searchFilters = this.searchFilters;
+//        if (searchFilters == null || searchFilters.size() == 0) {
+//            return dao.findAll(pageRequest);
+//        } else {
+//            Map<String, SearchFilter> tempSearchFilterMap = new HashMap<>(searchFilters.size());
+
+//            for (SearchFilter tempSearchFilter : searchFilters) {
+//                tempSearchFilterMap.put(tempSearchFilter.fieldName, tempSearchFilter);
+//            }
+//            if(tempSearchFilterMap.containsKey("siteId")){
+//                if(!tempSearchFilterMap.get("siteId").value.toString().equals(tempSiteId)){
+//                    tempSearchFilterMap.remove("hospitalId");
+//                }
+//
+//                this.tempSiteId = tempSearchFilterMap.get("siteId").value.toString();
+//            }
+//
+//            if(!tempSearchFilterMap.containsKey("siteId") && tempSearchFilterMap.containsKey("hospitalId")){
+//                tempSearchFilterMap.remove("hospitalId");
+//            }
+//
+//            searchFilters = new ArrayList<SearchFilter>();
+//            for(Map.Entry<String, SearchFilter> entry : tempSearchFilterMap.entrySet()){
+//                searchFilters.add(entry.getValue());
+//            }
+//            if(searchFilters.size() <= 0){
+//                return dao.findAll(pageRequest);
+//            }else{
+//                return dao.findBySearchFilter(searchFilters, pageRequest);
+//            }
+//
+//        }
     }
 
     @Override
@@ -135,33 +155,19 @@ public class QrCodeLibController extends JpaCRUDController<QrCodeLib> {
         return qrCodeLibStatusList;
     }
 
-    public List<TenantInfo> getSiteList() {
+    public List<TenantInfo> getTenantList() {
 
-        List<TenantInfo> siteList = tenantInfoDao.find();
-
-        return siteList;
-    }
-
-    public List<OrgInfo> getHospitalList() {
-
-        List<OrgInfo> hospitalList = null;
-        if (siteId != null) {
-
-            hospitalList = orgInfoDao.getHospitalBySiteId(Integer.valueOf(siteId));
+        List<SearchFilter> tenantFilter = new ArrayList();
+        if (filterBySite) {
+            tenantFilter.add(new SearchFilter("tenantUID", SearchFilter.Operator.EQ, UserContextService.getCurrentUserAccount().getTenantUID()));
+        }
+        if (filterByHospital) {
+            tenantFilter.add(new SearchFilter("siteUID", SearchFilter.Operator.EQ, UserContextService.getCurrentUserAccount().getSiteUID()));
         }
 
-        return hospitalList;
-    }
+        List<TenantInfo> tenantList = tenantInfoDao.findBySearchFilter(tenantFilter);
 
-    public List<OrgInfo> getHospitalListFilter() {
-
-        List<OrgInfo> hospitalList = null;
-        if (siteIdFilter != null) {
-
-            hospitalList = orgInfoDao.getHospitalBySiteId(Integer.valueOf(siteIdFilter));
-        }
-
-        return hospitalList;
+        return tenantList;
     }
 
     public void viewQrCodeLibCreate() {
@@ -173,30 +179,36 @@ public class QrCodeLibController extends JpaCRUDController<QrCodeLib> {
         options.put("contentHeight", "100%");
         options.put("headerElement", "customheader");
         RequestContext.getCurrentInstance().openDialog("qrCodeLibCreate", options, null);*/
-        /*siteId = null;
+ /*siteId = null;
         hospitalId = null;*/
     }
 
     public void createQrCode() {
 
-        if(siteId == null || hospitalId == null){
+        if (tenantUID == null || siteUID == null) {
             return;
         }
 
+        OrgInfo currentOrg = orgInfoDao.getByUid(siteUID);
         Set<String> tempSet = new HashSet<String>(qrCodeNum);
 
         DateTime dt = new DateTime();
         String dtStr = dt.toString("yyMMdd");
 
         int i = 1;
-        while (true) {
+        while (i <= qrCodeNum) {
             String qrCode = dtStr + Long.valueOf((long) ((Math.random() * 9 + 1) * 1000000000L));
             if (!tempSet.contains(qrCode)) {
                 QrCodeLib qrCodeLib = qrCodeLibDao.findByQrCode(qrCode);
                 if (null == qrCodeLib) {
                     qrCodeLib = new QrCodeLib();
-                    qrCodeLib.setSiteId(siteId);
-                    qrCodeLib.setHospitalId(hospitalId);
+                    qrCodeLib.setSiteId(currentOrg.getSiteId());
+                    qrCodeLib.setHospitalId(currentOrg.getHospitalId());
+
+                    qrCodeLib.setSiteUID(currentOrg.getSiteUID());
+                    qrCodeLib.setHospitalUID(currentOrg.getHospitalUID());
+                    qrCodeLib.setTenantUID(currentOrg.getTenantUID());
+                    qrCodeLib.setInstitutionUID(currentOrg.getInstitutionUID());
                     /*-- 1:已发行(未上传) / 2: 已上传(待建档) / 3: 已建档(待删除)*/
                     qrCodeLib.setStatus(1);
                     qrCodeLib.setIssueDate(new Date());
@@ -208,39 +220,41 @@ public class QrCodeLibController extends JpaCRUDController<QrCodeLib> {
                 }
             }
 
-            if (i > qrCodeNum){
-                siteId = null;
-                hospitalId = null;
-
-                return;
-            }
+//            if (i > qrCodeNum) {
+//                siteId = null;
+//                hospitalId = null;
+//
+//                return;
+//            }
         }
+        
+        tenantUID = null;
+        siteUID = null;
 
     }
 
-    public void showQrCode(){
+    public void showQrCode() {
         qrCode = this.selected.getQrCode();
         qrCodeImageBase64 = QRCodeUtil.getQRCodeImageBase64(this.selected.getQrCode());
     }
 
     public void onSiteChange(){
-        if(siteId == null){
-            hospitalId = null;
+        if(tenantUID != null){
+            hospitalFileterList = orgInfoDao.getByTenantUID(tenantUID).stream().filter(item -> item.getOrgType()<4).collect(Collectors.toList());
         }
     }
-
-    public void onSiteFilterChange(){
-        if(siteIdFilter == null){
-            hospitalIdFilter = null;
+    
+    public void onTenantFilterChange() {
+        if (tenantUIDFilter == null) {
+            hospitalFileterList.clear();
+            siteUIDFilter = null;
+        } else {
+            hospitalFileterList = orgInfoDao.getByTenantUID(tenantUIDFilter).stream().filter(item -> item.getOrgType()<4).collect(Collectors.toList());
         }
     }
-
-    public Integer getSiteId() {
-        return siteId;
-    }
-
-    public Integer getHospitalId() {
-        return hospitalId;
+    
+    public Boolean isChooseTenant() {
+        return this.filterBySite;
     }
 
     public Integer getQrCodeNum() {
@@ -263,14 +277,6 @@ public class QrCodeLibController extends JpaCRUDController<QrCodeLib> {
         return qrCodeImageBase64;
     }
 
-    public void setSiteId(Integer siteId) {
-        this.siteId = siteId;
-    }
-
-    public void setHospitalId(Integer hospitalId) {
-        this.hospitalId = hospitalId;
-    }
-
     public void setQrCodeNum(Integer qrCodeNum) {
         this.qrCodeNum = qrCodeNum;
     }
@@ -290,6 +296,47 @@ public class QrCodeLibController extends JpaCRUDController<QrCodeLib> {
     public void setQrCodeImageBase64(String qrCodeImageBase64) {
         this.qrCodeImageBase64 = qrCodeImageBase64;
     }
+
+    public String getTenantUIDFilter() {
+        return tenantUIDFilter;
+    }
+
+    public void setTenantUIDFilter(String tenantUIDFilter) {
+        this.tenantUIDFilter = tenantUIDFilter;
+    }
+
+    public String getSiteUIDFilter() {
+        return siteUIDFilter;
+    }
+
+    public void setSiteUIDFilter(String siteUIDFilter) {
+        this.siteUIDFilter = siteUIDFilter;
+    }
+
+    public List<OrgInfo> getHospitalFileterList() {
+        return hospitalFileterList;
+    }
+
+    public void setHospitalFileterList(List<OrgInfo> hospitalFileterList) {
+        this.hospitalFileterList = hospitalFileterList;
+    }
+
+    public String getTenantUID() {
+        return tenantUID;
+    }
+
+    public void setTenantUID(String tenantUID) {
+        this.tenantUID = tenantUID;
+    }
+
+    public String getSiteUID() {
+        return siteUID;
+    }
+
+    public void setSiteUID(String siteUID) {
+        this.siteUID = siteUID;
+    }
+    
     /*
     @Override
     public void onBeforeNewObject(QrCodeLib object) {
@@ -323,4 +370,6 @@ public class QrCodeLibController extends JpaCRUDController<QrCodeLib> {
     public void onAfterDataChanged(){
     };
      */
+
+    
 }
