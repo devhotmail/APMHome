@@ -13,7 +13,6 @@ import com.ge.apm.domain.V2_WorkOrder;
 import com.ge.apm.domain.V2_WorkOrder_Detail;
 import com.ge.apm.domain.V2_WorkOrder_Step;
 import com.ge.apm.service.wo.V2_WorkOrderService;
-import com.ge.apm.view.sysutil.UserContextService;
 import java.io.Serializable;
 import java.util.List;
 import webapp.framework.dao.GenericRepositoryUUID;
@@ -75,19 +74,6 @@ public class WorkOrderDispatchController extends GenericCRUDUUIDController<V2_Wo
             return dao.findAll(pageRequest);
         } else {
             return dao.findBySearchFilter(this.searchFilters, pageRequest);
-        }
-    }
-
-    private void removeFilterOnField(String fieldName) {
-        SearchFilter temp = null;
-        for (SearchFilter filter : searchFilters) {
-            if (fieldName.equals(filter.fieldName)) {
-                temp = filter;
-                break;
-            }
-        }
-        if (null != temp) {
-            searchFilters.remove(temp);
         }
     }
 

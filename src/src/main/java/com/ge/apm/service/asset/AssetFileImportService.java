@@ -47,9 +47,10 @@ public class AssetFileImportService {
     public static enum ImportStatus {
         New, Exist, Created, Failure, CheckFail
     }
-
+    
     private Integer siteId = UserContextService.getCurrentUserAccount().getSiteId();
-    private Integer hospitalId = UserContextService.getCurrentUserAccount().getHospitalId();
+    private String tenantUID = UserContextService.getCurrentUserAccount().getTenantUID();
+    private String orgUid = UserContextService.getCurrentUserAccount().getSiteUID();
     private List<I18nMessage> assetFunctionTypes = FieldValueMessageController.getFieldValueList("assetFunctionType", siteId);
     private List<I18nMessage> assetGroup = FieldValueMessageController.getFieldValueList("assetGroup", siteId);
     private List<I18nMessage> depreciationMethod = FieldValueMessageController.getFieldValueList("depreciationMethodList", siteId);
@@ -68,10 +69,11 @@ public class AssetFileImportService {
     private AssetDepreciationService assetDepreciationService;
 
     public Map<String, Map<String, Object>> getOrgInfoMapFromTemplate(ExcelDocument doc) {
+
         Map<String, Map<String, Object>> result = new HashMap();
         int keyRow = 4;
         int dataRow = 5;
-        OrgInfo parentOrg = orgDao.findById(hospitalId);
+        OrgInfo currentOrg = orgDao.getByUid(orgUid);
 
         for (Map< String, Object> rowMap = doc.getDataRowMap(SHEET_ORG, keyRow, dataRow); rowMap != null; rowMap = doc.getDataRowMap(SHEET_ORG, keyRow, ++dataRow)) {
             OrgInfo org = new OrgInfo();
@@ -80,9 +82,17 @@ public class AssetFileImportService {
                 break;
             }
             org.setName(orgName);
-            org.setHospitalId(hospitalId);
-            org.setParentOrg(parentOrg);
-            org.setSiteId(siteId);
+            org.setHospitalId(currentOrg.getHospitalId());
+            org.setParentOrg(currentOrg);
+            org.setSiteId(currentOrg.getSiteId());
+
+            org.setParentUID(orgUid);
+            org.setHospitalUID(currentOrg.getHospitalUID());
+            org.setTenantUID(currentOrg.getTenantUID());
+            org.setInstitutionUID(currentOrg.getInstitutionUID());
+            org.setSiteUID(currentOrg.getSiteUID());
+            org.setOrgLevel(currentOrg.getOrgLevel());
+            org.setOrgType(4);
 
             Map<String, Object> map = new HashMap();
             map.put("org", org);
@@ -128,6 +138,8 @@ public class AssetFileImportService {
         int keyRow = 6;
         int dataRow = 7;
 
+        OrgInfo currentOrg = orgDao.getByUid(orgUid);
+
         for (Map< String, Object> rowMap = doc.getDataRowMap(SHEET_ASSET, keyRow, dataRow); rowMap != null; rowMap = doc.getDataRowMap(SHEET_ASSET, keyRow, ++dataRow)) {
             AssetInfo asset = new AssetInfo();
             String assetName = ExcelDocument.getCellStringValue(rowMap.get("设备名称"));
@@ -138,8 +150,14 @@ public class AssetFileImportService {
             asset.setDepartNum(departNum);
             asset.setName(assetName);
             asset.setAliasName(ExcelDocument.getCellStringValue(rowMap.get("设备别名")));
-            asset.setSiteId(siteId);
-            asset.setHospitalId(hospitalId);
+            asset.setSiteId(currentOrg.getSiteId());
+            asset.setHospitalId(currentOrg.getHospitalId());
+
+            asset.setTenantUID(currentOrg.getTenantUID());
+            asset.setHospitalUID(currentOrg.getHospitalUID());
+            asset.setInstitutionUID(currentOrg.getInstitutionUID());
+            asset.setSiteUID(currentOrg.getSiteUID());
+
             asset.setIsValid(true);
             asset.setStatus(1);
             asset.setIsDeleted(Boolean.FALSE);
@@ -206,6 +224,7 @@ public class AssetFileImportService {
     }
 
     public void importData(Map<String, Map<String, Object>> importOrgMap, Map<String, Map<String, Object>> importAssetMap) {
+        OrgInfo currentOrg = orgDao.getByUid(orgUid);
         importOrgMap.values().forEach(item -> {
             List<OrgInfo> orgs = getOrgInfoByName((OrgInfo) item.get("org"));
             if (null == orgs || orgs.isEmpty()) {
@@ -247,8 +266,12 @@ public class AssetFileImportService {
             List<Supplier> supplierList = getSupplierListByName(newAsset.getVendor());
             if (null == supplierList || supplierList.isEmpty()) {
                 Supplier newSupplier = new Supplier();
-                newSupplier.setSiteId(siteId);
+                newSupplier.setSiteId(currentOrg.getSiteId());
                 newSupplier.setName(newAsset.getVendor());
+                newSupplier.setTenantUID(currentOrg.getTenantUID());
+                newSupplier.setHospitalUID(currentOrg.getHospitalUID());
+                newSupplier.setInstitutionUID(currentOrg.getInstitutionUID());
+                newSupplier.setSiteUID(currentOrg.getSiteUID());
                 supplierDao.save(newSupplier);
                 newAsset.setSupplierId(newSupplier.getId());
             } else if (supplierList.size() == 1) {
@@ -292,7 +315,7 @@ public class AssetFileImportService {
             addErrMessage(item, "Error:" + WebUtil.getMessage("InvalidQRCode") + qrcode);
             return false;
         }
-        if (qrCodeLib.getSiteId() != siteId || qrCodeLib.getHospitalId() != hospitalId) {
+        if (!qrCodeLib.getSiteUID().equals(orgUid)) {
             addErrMessage(item, "Error:" + WebUtil.getMessage("WrongHospitalQRCode"));
             return false;
         }
@@ -351,16 +374,16 @@ public class AssetFileImportService {
 
     private List<OrgInfo> getOrgInfoByName(OrgInfo org) {
         List<SearchFilter> OrgInfoFilters = new ArrayList<>();
-        OrgInfoFilters.add(new SearchFilter("hospitalId", SearchFilter.Operator.EQ, hospitalId));
-        OrgInfoFilters.add(new SearchFilter("siteId", SearchFilter.Operator.EQ, siteId));
+        OrgInfoFilters.add(new SearchFilter("siteUID", SearchFilter.Operator.EQ, orgUid));
+        OrgInfoFilters.add(new SearchFilter("tenantUID", SearchFilter.Operator.EQ, tenantUID));
         OrgInfoFilters.add(new SearchFilter("name", SearchFilter.Operator.EQ, org.getName()));
         return orgDao.findBySearchFilter(OrgInfoFilters);
     }
 
     private List<AssetInfo> getAssetInfos(AssetInfo asset) {
         List<SearchFilter> assetFilters = new ArrayList<>();
-        assetFilters.add(new SearchFilter("hospitalId", SearchFilter.Operator.EQ, hospitalId));
-        assetFilters.add(new SearchFilter("siteId", SearchFilter.Operator.EQ, siteId));
+        assetFilters.add(new SearchFilter("siteUID", SearchFilter.Operator.EQ, orgUid));
+        assetFilters.add(new SearchFilter("tenantUID", SearchFilter.Operator.EQ, tenantUID));
         assetFilters.add(new SearchFilter("name", SearchFilter.Operator.EQ, asset.getName()));
         assetFilters.add(new SearchFilter("departNum", SearchFilter.Operator.EQ, asset.getDepartNum()));
         if (null != asset.getFinancingNum() && !asset.getFinancingNum().isEmpty()) {
@@ -372,15 +395,15 @@ public class AssetFileImportService {
 
     private List<UserAccount> getUserInfosByName(String userName) {
         List<SearchFilter> userFilters = new ArrayList<>();
-        userFilters.add(new SearchFilter("hospitalId", SearchFilter.Operator.EQ, hospitalId));
-        userFilters.add(new SearchFilter("siteId", SearchFilter.Operator.EQ, siteId));
+        userFilters.add(new SearchFilter("siteUID", SearchFilter.Operator.EQ, orgUid));
+        userFilters.add(new SearchFilter("tenantUID", SearchFilter.Operator.EQ, tenantUID));
         userFilters.add(new SearchFilter("name", SearchFilter.Operator.EQ, userName));
         return userDao.findBySearchFilter(userFilters);
     }
 
     private List<Supplier> getSupplierListByName(String supplierName) {
         List<SearchFilter> supplierFilters = new ArrayList<>();
-        supplierFilters.add(new SearchFilter("siteId", SearchFilter.Operator.EQ, siteId));
+        supplierFilters.add(new SearchFilter("tenantUID", SearchFilter.Operator.EQ, tenantUID));
         supplierFilters.add(new SearchFilter("name", SearchFilter.Operator.EQ, supplierName));
         return supplierDao.findBySearchFilter(supplierFilters);
     }
