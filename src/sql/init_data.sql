@@ -69,6 +69,8 @@ SELECT setval('"field_code_type_id_seq"', 5, false);
 --create index ix_exam_summit_subpart_id on exam_summit(subpart_id);
 --create index ix_exam_summit_step_id on exam_summit(step_id);
 
+update asset_summit set dept_id=a.clinical_dept_id,asset_group=a.asset_group, supplier_id=a.supplier_id from asset_info a where asset_summit.asset_id=a.id;
+
 INSERT INTO public.supplier (id, site_id, name) VALUES (-1, -1, '未知');
 update asset_info set supplier_id = -1 where supplier_id is null;
 
