@@ -239,7 +239,7 @@
 
                             <p:fieldset legend="选择图片作为资产附件保存"  style="margin-bottom:20px">
                                 <p:selectManyCheckbox id="custom" value="#{assetCreateController.selectedPictures}"  layout="custom">
-                                    <f:selectItems value="#{assetCreateController.pictureList}" var="item"  itemValue="#{item.fileId}" />
+                                    <f:selectItems value="#{assetCreateController.pictureList}" var="item"  itemValue="#{item.objectId}" />
                                 </p:selectManyCheckbox>
                                 <c:forEach items="#{assetCreateController.pictureList}" var="item" varStatus="status">
                                     <div class="ui-grid-col-2" style="text-align:center">
