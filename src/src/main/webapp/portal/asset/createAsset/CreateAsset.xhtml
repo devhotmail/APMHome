@@ -52,9 +52,6 @@
                     <div class="ui-g-7">
                         <p:galleria value="#{assetCreateController.pictureList}" var="attach" panelWidth="500" panelHeight="313" showCaption="false"  autoPlay="false">
                             <p:graphicImage url="#{fileDownloadService.getFileUrl(attach.objectId)}" /> 
-<!--                            <p:graphicImage  value="#{pictureService.getImage()}"  height="313"  width="500" onclick="showthis(this);">
-                                <f:param name="pictureId" value="#{attach.fileId}" />
-                            </p:graphicImage>-->
                         </p:galleria>
                     </div>
                     <div class="ui-g-5">
@@ -242,7 +239,7 @@
 
                             <p:fieldset legend="选择图片作为资产附件保存"  style="margin-bottom:20px">
                                 <p:selectManyCheckbox id="custom" value="#{assetCreateController.selectedPictures}"  layout="custom">
-                                    <f:selectItems value="#{assetCreateController.pictureList}" var="item"  itemValue="#{item.fileId}" />
+                                    <f:selectItems value="#{assetCreateController.pictureList}" var="item"  itemValue="#{item.objectId}" />
                                 </p:selectManyCheckbox>
                                 <c:forEach items="#{assetCreateController.pictureList}" var="item" varStatus="status">
                                     <div class="ui-grid-col-2" style="text-align:center">

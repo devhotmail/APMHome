@@ -216,8 +216,7 @@ public class ProfitService {
       .parameter("site_id", siteId)
       .parameter("hospital_id", hospitalId)
       .parameter("time_unit", "month")
-      .autoMap(Asset.class)
-      .map(v -> Tuple.of(v.id(), v.name(), v.created_day().toLocalDateTime().toLocalDate(), v.type(), v.dept(), v.revenue(), v.costs()))
+      .get(rs -> Tuple.of(rs.getInt("id"), rs.getString("name"), Option.of(rs.getDate("created_day")).map(Date::toLocalDate).getOrElse(LocalDate.now()), rs.getInt("type"), rs.getInt("dept"), rs.getDouble("revenue"), rs.getDouble("costs")))
       .cache();
   }
 

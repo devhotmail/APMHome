@@ -104,6 +104,8 @@ public class AssetClinicalRecord implements Serializable {
     private Date examStartTime;
     @Column(name = "exam_duration")
     private Integer examDuration;
+    @Column(name = "original_exam_duration")
+    private Integer originalExamDuration;
     @Column(name = "asset_id")
     @Basic(optional = false)
     @NotNull
@@ -279,6 +281,14 @@ public class AssetClinicalRecord implements Serializable {
 
     public void setExamDuration(Integer examDuration) {
         this.examDuration = examDuration;
+    }
+
+    public Integer getOriginalExamDuration() {
+        return originalExamDuration;
+    }
+
+    public void setOriginalExamDuration(Integer originalExamDuration) {
+        this.originalExamDuration = originalExamDuration;
     }
 
     public Integer getAssetId() {

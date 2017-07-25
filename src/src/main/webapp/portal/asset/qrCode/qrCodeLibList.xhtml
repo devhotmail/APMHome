@@ -33,21 +33,21 @@
                         <p:ajax event="rowSelect" update="viewButton"/>
                         <p:ajax event="filter" listener="#{qrCodeLibController.onFilter}" />
 
-                        <p:column headerText="租户" sortBy="#{item.siteId}" filterBy="#{item.siteId}" filterMatchMode="EQ">
+                        <p:column headerText="租户" sortBy="#{item.siteId}" filterBy="#{item.tenantUID}" filterMatchMode="EQ">
                             <f:facet name="filter">
-                                <p:selectOneMenu value="#{qrCodeLibController.siteIdFilter}" onchange="PF('varDataList').filter()" autoWidth="false" style="max-width: 150px;">
-                                    <p:ajax  listener="#{qrCodeLibController.onSiteFilterChange}" update="hospitalIdSelect_list" />
+                                <p:selectOneMenu value="#{qrCodeLibController.tenantUIDFilter}" onchange="PF('varDataList').filter()" autoWidth="false" style="max-width: 150px;" disabled="#{qrCodeLibController.isChooseTenant()}">
+                                    <p:ajax  listener="#{qrCodeLibController.onTenantFilterChange}" update="hospitalIdSelect_list" />
                                     <f:selectItem itemLabel="#{msg.selectOneMessage}" itemValue="#{null}" noSelectionOption="true"/>
-                                    <f:selectItems value="#{qrCodeLibController.siteList}" var="item" itemLabel="#{item.name}" itemValue="#{item.id}"/>
+                                    <f:selectItems value="#{qrCodeLibController.tenantList}" var="item" itemLabel="#{item.name}" itemValue="#{item.uid}"/>
                                 </p:selectOneMenu>
                             </f:facet>
                             <h:outputText value="#{qrCodeLibController.getSiteName(item.siteId)}"/>
                         </p:column>
-                        <p:column headerText="医院" sortBy="#{item.hospitalId}" filterBy="#{item.hospitalId}" filterMatchMode="EQ">
+                        <p:column headerText="医院" sortBy="#{item.hospitalId}" filterBy="#{item.siteUID}" filterMatchMode="EQ">
                             <f:facet name="filter">
-                                <p:selectOneMenu id="hospitalIdSelect_list" value="#{qrCodeLibController.hospitalIdFilter}" onchange="PF('varDataList').filter()" autoWidth="false" style="max-width: 150px;">
+                                <p:selectOneMenu id="hospitalIdSelect_list" value="#{qrCodeLibController.siteUIDFilter}" onchange="PF('varDataList').filter()" autoWidth="false" style="max-width: 150px;">
                                     <f:selectItem itemLabel="#{msg.selectOneMessage}" itemValue="#{null}" noSelectionOption="true"/>
-                                    <f:selectItems value="#{qrCodeLibController.hospitalListFilter}" var="item" itemLabel="#{item.name}" itemValue="#{item.id}"/>
+                                    <f:selectItems value="#{qrCodeLibController.hospitalFileterList}" var="item" itemLabel="#{item.name}" itemValue="#{item.uid}"/>
                                 </p:selectOneMenu>
                             </f:facet>
                             <h:outputText value="#{qrCodeLibController.getHospitalName(item.hospitalId)}"/>

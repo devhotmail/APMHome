@@ -28,7 +28,7 @@ import javax.validation.constraints.Size;
  */
 @Entity
 @Table(name = "asset_info")
-public class AssetInfo extends JHipAbstractAuditingEntity implements Serializable {
+public class AssetInfo implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -221,6 +221,50 @@ public class AssetInfo extends JHipAbstractAuditingEntity implements Serializabl
     @JsonBackReference
     private OrgInfo hospital;
 
+    @Column(name = "tenant_uid", columnDefinition = "CHAR(32)")
+    private String tenantUID;
+
+    @Column(name = "institution_uid", columnDefinition = "CHAR(32)")
+    private String institutionUID;
+
+    @Column(name = "hospital_uid", columnDefinition = "CHAR(32)")
+    private String hospitalUID;
+
+    @Column(name = "site_uid", columnDefinition = "CHAR(32)")
+    private String siteUID;
+
+    public String getTenantUID() {
+        return tenantUID;
+    }
+
+    public void setTenantUID(String tenantUID) {
+        this.tenantUID = tenantUID;
+    }
+
+    public String getInstitutionUID() {
+        return institutionUID;
+    }
+
+    public void setInstitutionUID(String institutionUID) {
+        this.institutionUID = institutionUID;
+    }
+
+    public String getHospitalUID() {
+        return hospitalUID;
+    }
+
+    public void setHospitalUID(String hospitalUID) {
+        this.hospitalUID = hospitalUID;
+    }
+
+    public String getSiteUID() {
+        return siteUID;
+    }
+
+    public void setSiteUID(String siteUID) {
+        this.siteUID = siteUID;
+    }
+    
     public AssetInfo() {
     }
 
@@ -247,6 +291,8 @@ public class AssetInfo extends JHipAbstractAuditingEntity implements Serializabl
         if(isDeleted == null){
             isDeleted = false;
         }
+        if(supplierId==null)
+            supplierId = -1;
     }
     
     public String getUid() {

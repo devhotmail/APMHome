@@ -106,30 +106,26 @@ public class PmOrder implements Serializable {
     @Temporal(TemporalType.TIMESTAMP)
     private Date planTime;  //计划时间
 
-    @Column(name = "nearest_sr_time")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date nearestSrTime;  //最近的一次报修时间
-    
-    @Column(name = "nearest_days")
-    private Integer nearestDays;//上次保养距今的天数
-    @Column(name = "nearest_pm_id")
-    private Integer nearestPmId;//上次保养的pmOrderId
+    @Column(name = "nearest_sr_days")
+    private Integer nearestSrDays;//此次保养后，最近的报修距此保养天数
+    @Column(name = "nearest_sr_id", columnDefinition = "CHAR(32)")
+    private String nearestSrId;//此次保养后，最近的报修SR ID
     
 
-    public Integer getNearestDays() {
-		return nearestDays;
+    public Integer getNearestSrDays() {
+		return nearestSrDays;
 	}
 
-	public void setNearestDays(Integer nearestDays) {
-		this.nearestDays = nearestDays;
+	public void setNearestSrDays(Integer nearestSrDays) {
+		this.nearestSrDays = nearestSrDays;
 	}
 
-	public Integer getNearestPmId() {
-		return nearestPmId;
+	public String getNearestSrId() {
+		return nearestSrId;
 	}
 
-	public void setNearestPmId(Integer nearestPmId) {
-		this.nearestPmId = nearestPmId;
+	public void setNearestSrId(String nearestSrId) {
+		this.nearestSrId = nearestSrId;
 	}
 
 	public PmOrder() {
@@ -331,14 +327,6 @@ public class PmOrder implements Serializable {
 
     public void setPlanTime(Date planTime) {
         this.planTime = planTime;
-    }
-
-    public Date getNearestSrTime() {
-        return nearestSrTime;
-    }
-
-    public void setNearestSrTime(Date nearestSrTime) {
-        this.nearestSrTime = nearestSrTime;
     }
 
     @Override

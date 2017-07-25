@@ -79,21 +79,22 @@ public class AssetCreateService {
     BlobObjectRepository blobDao;
 
 //    AttachmentFileService fileService = WebUtil.getBean(AttachmentFileService.class);
-
     public String getTenantName(Integer siteId) {
         TenantInfo si = tenantDao.findById(siteId);
-        if(si!=null)
+        if (si != null) {
             return si.getName();
-        else
+        } else {
             return siteId.toString();
+        }
     }
 
     public String getHospitalName(Integer hospitalId) {
         OrgInfo org = orgDao.findById(hospitalId);
-        if(org!=null)
+        if (org != null) {
             return org.getName();
-        else
+        } else {
             return hospitalId.toString();
+        }
     }
 
     public QrCodeLib getCreateRequest(String qrCode) {
@@ -103,10 +104,10 @@ public class AssetCreateService {
     public List<OrgInfo> getClinicalDeptList(Integer hospitalId) {
         List<SearchFilter> OrgInfoFilters = new ArrayList<>();
         OrgInfoFilters.add(new SearchFilter("hospitalId", SearchFilter.Operator.EQ, hospitalId));
-        return orgDao.findBySearchFilter(OrgInfoFilters);
+        OrgInfoFilters.add(new SearchFilter("orgType", SearchFilter.Operator.EQ, 4));
+        return  orgDao.findBySearchFilter(OrgInfoFilters);
     }
 
-    @Transactional
     public Boolean CreateAeest(AssetInfo assetInfo) {
         return (null != assetDao.save(assetInfo));
     }
@@ -117,7 +118,6 @@ public class AssetCreateService {
         return users;
     }
 
-    @Transactional
     public void createAttachments(AssetInfo assetInfo, String[] selectedPictures) {
         List<AssetFileAttachment> attachList = new ArrayList();
         for (String item : selectedPictures) {
@@ -148,7 +148,6 @@ public class AssetCreateService {
         return picsList;
     }
 
-    @Transactional
     public void updateQrLib(String qrCode, int i) {
         QrCodeLib qrLibItem = qrLibDao.findByQrCode(qrCode);
         qrLibItem.setStatus(i);
@@ -196,7 +195,6 @@ public class AssetCreateService {
 //        StreamedContent sc = fileService.getFile(fileId);
 //        return coreService.uploadMediaToWechat(sc.getStream());
 //    }
-
 //    public String pushImageToWechat(Integer fileId) throws Exception {
 //        StreamedContent sc = fileService.getFile(fileId);
 //        return coreService.uploadImageToWechat(sc.getStream());

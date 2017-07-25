@@ -29,7 +29,7 @@ import org.hibernate.annotations.GenericGenerator;
 @Table(name = "v2_work_order")
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Cacheable(true)
-public class V2_WorkOrder extends JHipAbstractAuditingEntity implements Serializable {
+public class V2_WorkOrder implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -134,11 +134,6 @@ public class V2_WorkOrder extends JHipAbstractAuditingEntity implements Serializ
     @Column(name = "comment")
     private String comment;
 
-    @Column(name = "nearest_days")
-    private Integer nearestDays;//上次维修距今的天数
-    @Column(name = "nearest_wo_id")
-    private String nearestWoId;//上次维修工单的id
-
     @Column(name = "repair_type")
     private Integer repairType;
 
@@ -147,7 +142,49 @@ public class V2_WorkOrder extends JHipAbstractAuditingEntity implements Serializ
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Date checkinTime;
 
-	    
+    @Column(name = "tenant_uid", columnDefinition = "CHAR(32)")
+    private String tenantUID;
+
+    @Column(name = "institution_uid", columnDefinition = "CHAR(32)")
+    private String institutionUID;
+
+    @Column(name = "hospital_uid", columnDefinition = "CHAR(32)")
+    private String hospitalUID;
+
+    @Column(name = "site_uid", columnDefinition = "CHAR(32)")
+    private String siteUID;
+
+    public String getTenantUID() {
+        return tenantUID;
+    }
+
+    public void setTenantUID(String tenantUID) {
+        this.tenantUID = tenantUID;
+    }
+
+    public String getInstitutionUID() {
+        return institutionUID;
+    }
+
+    public void setInstitutionUID(String institutionUID) {
+        this.institutionUID = institutionUID;
+    }
+
+    public String getHospitalUID() {
+        return hospitalUID;
+    }
+
+    public void setHospitalUID(String hospitalUID) {
+        this.hospitalUID = hospitalUID;
+    }
+
+    public String getSiteUID() {
+        return siteUID;
+    }
+
+    public void setSiteUID(String siteUID) {
+        this.siteUID = siteUID;
+    }
 	    
     public Date getCheckinTime() {
         return checkinTime;
@@ -155,22 +192,6 @@ public class V2_WorkOrder extends JHipAbstractAuditingEntity implements Serializ
 
     public void setCheckinTime(Date checkinTime) {
         this.checkinTime = checkinTime;
-    }
-
-    public Integer getNearestDays() {
-        return nearestDays;
-    }
-
-    public void setNearestDays(Integer nearestDays) {
-        this.nearestDays = nearestDays;
-    }
-
-    public String getNearestWoId() {
-        return nearestWoId;
-    }
-
-    public void setNearestWoId(String nearestWoId) {
-        this.nearestWoId = nearestWoId;
     }
 
     public String getId() {
