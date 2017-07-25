@@ -38,6 +38,13 @@ class Assets extends React.PureComponent {
     else if (diff > 0 && PAGE_SIZE + 1 > this.props.assets.data.length ) return
     else {
       this.props.dispatch({
+        type: 'filters/cursor/toggle',
+        payload: {
+          key: 'asset',
+          value: this.props.filters.cursor.asset
+        }
+      })
+      this.props.dispatch({
         type: 'assets/page/change',
         payload: diff
       })

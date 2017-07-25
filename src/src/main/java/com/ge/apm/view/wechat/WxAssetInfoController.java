@@ -152,7 +152,7 @@ public class WxAssetInfoController extends JpaCRUDController<AssetInfo> {
                 }
             }
         } else {
-            List<OrgInfo> depts = acService.getOrgListByHospital(currentUser.getHospitalId());
+            List<OrgInfo> depts = acService.getClinicalDeptList(currentUser.getHospitalId());
             for (OrgInfo item : depts) {
                 Object[] o = {item.getName(), item.getId()};
                 res.add(o);
@@ -221,6 +221,8 @@ public class WxAssetInfoController extends JpaCRUDController<AssetInfo> {
 
         List<SearchFilter> sfs = new ArrayList();
         sfs.add(new SearchFilter("siteId", SearchFilter.Operator.EQ, UserContextService.getSiteId()));
+        sfs.add(new SearchFilter("isValid", SearchFilter.Operator.EQ, true));
+        sfs.add(new SearchFilter("isDeleted", SearchFilter.Operator.EQ, false));
         if (!userContextService.hasRole("MultiHospital")) {
             sfs.add(new SearchFilter("hospitalId", SearchFilter.Operator.EQ, UserContextService.getCurrentUserAccount().getHospitalId()));
         }
