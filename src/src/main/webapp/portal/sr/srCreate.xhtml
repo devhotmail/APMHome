@@ -19,7 +19,7 @@
                         <h:panelGroup >
                             <label class="label">#{msg.assetName}*</label>
                             <p:inputText id="assetName" readonly="true" value="#{serviceRequestController.selectedAsset.name}" placeholder="#{msg.noAssetSelected}" required="true" requiredMessage="#{msg.assetName} #{msg.ValidationRequire}"/>
-                            <p:commandButton class="popupIconButton" actionListener="#{selectAssetController.prepareDialogCallback(serviceRequestController, ':ServiceRequestCreateForm')}" process="@this" icon="ui-icon-arrow-drop-down" update=":selectAssetDlg assetstatus" oncomplete="PF('varSelectAssetDlg').show()"/>
+                            <p:commandButton class="popupIconButton" actionListener="#{selectAssetController.prepareDialogCallback(serviceRequestController, 'tabview:ServiceRequestCreateForm')}" process="@this" icon="ui-icon-arrow-drop-down" update="tabview:selectAssetDlg assetstatus" oncomplete="PF('varSelectAssetDlg').show()"/>
                         </h:panelGroup>
 
                         <h:panelGroup>
@@ -58,8 +58,8 @@
                         </h:panelGroup>
                     </p:panelGrid>
                     <h:panelGroup >
-                        <p:commandButton value="#{msg.Save}" icon="ui-icon-check" actionListener="#{serviceRequestController.saveServiceRequest()}" validateClient="true" update=":SRListForm :ServiceRequestCreateForm :growl" style="float:left"/>
-                        <p:commandButton value="#{msg.Return}" icon="ui-icon-arrow-back" actionListener="#{serviceRequestController.cancel()}" immediate="true"  update=":ServiceRequestCreateForm :growl" style="float:left"/>
+                        <p:commandButton value="#{msg.Save}" icon="ui-icon-check" actionListener="#{serviceRequestController.saveServiceRequest()}" validateClient="true" update="tabview:SRListForm tabview:ServiceRequestCreateForm :growl" style="float:left"/>
+                        <p:commandButton value="#{msg.Return}" icon="ui-icon-arrow-back" actionListener="#{serviceRequestController.cancel()}" immediate="true"  update="tabview:ServiceRequestCreateForm :growl" style="float:left"/>
                     </h:panelGroup>
                 </p:fieldset>
             </h:form>

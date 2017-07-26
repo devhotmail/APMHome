@@ -5,7 +5,12 @@
  */
 package com.ge.apm.service.wo;
 
-import com.ge.apm.dao.*;
+import com.ge.apm.dao.AssetInfoRepository;
+import com.ge.apm.dao.ServiceRequestRepository;
+import com.ge.apm.dao.UserAccountRepository;
+import com.ge.apm.dao.V2_WorkOrderRepository;
+import com.ge.apm.dao.V2_WorkOrderStepRepository;
+import com.ge.apm.dao.WorkOrderDetailRepository;
 import com.ge.apm.domain.AssetInfo;
 import com.ge.apm.domain.UserAccount;
 import com.ge.apm.domain.V2_ServiceRequest;
@@ -34,6 +39,7 @@ public class V2_WorkOrderService {
 
     @Autowired
     private V2_WorkOrderRepository woDao;
+
 
     @Autowired
     private AssetInfoRepository assetDao;
@@ -285,4 +291,28 @@ public class V2_WorkOrderService {
             WebUtil.addErrorMessage(WebUtil.getMessage("OperationFail"),"创建");
         }
     }
+/*
+    public void ackWorkOrder(V2_WorkOrder selectedWorkOrder) {
+        String token = UserContextService.getAccessToken();
+        String res = srApi.ackWorkOrderAction(token,selectedWorkOrder.getId(),selectedWorkOrder.getCurrentStepId());
+        if (res==null || !res.contains("success")) {
+            WebUtil.addErrorMessage("Fail to do accept operation");
+        }
+    }
+
+    public void rejectWorkOrder(V2_WorkOrder selectedWorkOrder,String reason, Integer status, Date confirmedDowntime) {
+        String token = UserContextService.getAccessToken();
+        String res = srApi.rejectWorkOrderAction(token,selectedWorkOrder.getId(),selectedWorkOrder.getCurrentStepId(),reason,status,confirmedDowntime);
+        if (res==null || !res.contains("success")) {
+            WebUtil.addErrorMessage("Fail to do reject operation");
+        }
+    }
+
+    public void rateWorkOrder(V2_WorkOrder selectedWorkOrder, Integer rating, String comments) {
+        String token = UserContextService.getAccessToken();
+        String res = srApi.rateWorkOrderAction(token,selectedWorkOrder.getId(),selectedWorkOrder.getCurrentStepId(),rating,comments);
+        if (res==null || !res.contains("success")) {
+            WebUtil.addErrorMessage("Fail to do rating operation");
+        }
+    }*/
 }

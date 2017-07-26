@@ -153,7 +153,7 @@
                                 </h:panelGroup>
                             </p:panelGrid>
                             <h:panelGroup >
-                                <p:commandButton value="#{msg.Cancel}" icon="ui-icon-arrow-back" actionListener="#{serviceRequestController.cancelWorkOrder(woItem.id)}" validateClient="true"  update=":SRListForm :WorkOrderEditForm :growl" style="float:left" 
+                                <p:commandButton value="#{msg.Cancel}" icon="ui-icon-arrow-back" actionListener="#{serviceRequestController.cancelWorkOrder(woItem.id)}" validateClient="true"  update="tabview:SRListForm tabview:WorkOrderEditForm :growl" style="float:left" 
                                                  rendered="#{woItem.currentStepId le 3}">
                                     <p:confirm header="#{msg.DeleteConformation}" message="#{msg.CancelWorkOrderConformationMsg}" icon="ui-icon-warning"/>
                                 </p:commandButton>
