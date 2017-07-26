@@ -27,12 +27,38 @@
                 <p:messages autoUpdate="true" closable="true" showDetail="false"/>
 
                 <h:form id="dispatchListForm">
-                    <h:panelGrid id="buttonSet" columns="6" cellpadding="5">
-                        <p:commandButton value="#{fieldMsg.fieldValue('woSteps',2)}" id="btnCreate" process="@this" update="datalist buttonSet :dispatchDetailForm " actionListener="#{workOrderDispatchController.searchList(2)}" disabled="#{workOrderDispatchController.queryIndex==2}" />
+                    <h:panelGrid id="buttonSet" columns="7" cellpadding="5">
+                       <!-- <p:commandButton value="#{fieldMsg.fieldValue('woSteps',2)}" id="btnCreate" process="@this" update="datalist buttonSet :dispatchDetailForm " actionListener="#{workOrderDispatchController.searchList(2)}" disabled="#{workOrderDispatchController.queryIndex==2}" />-->
                         <p:commandButton value="#{fieldMsg.fieldValue('woSteps',3)}" id="btn1" process="@this" update="datalist buttonSet :dispatchDetailForm " actionListener="#{workOrderDispatchController.searchList(3)}"  disabled="#{workOrderDispatchController.queryIndex==3}" />
                         <p:commandButton value="#{fieldMsg.fieldValue('woSteps',4)}" id="btn2" process="@this" update="datalist buttonSet :dispatchDetailForm " actionListener="#{workOrderDispatchController.searchList(4)}" disabled="#{workOrderDispatchController.queryIndex==4}"/>
-                        <p:commandButton value="已取消" id="btn5" process="@this" update="datalist buttonSet :dispatchDetailForm " actionListener="#{workOrderDispatchController.searchList(5)}" disabled="#{workOrderDispatchController.queryIndex==5}"/>
+
+
+                        <p:commandButton value="已取消" id="btn5" process="@this" update="datalist buttonSet :dispatchDetailForm " actionListener="#{workOrderDispatchController.searchList(10)}" disabled="#{workOrderDispatchController.queryIndex==10}"/>
+
+                        <p:commandButton value="已关单" id="btn6" process="@this" update="datalist buttonSet :dispatchDetailForm " actionListener="#{workOrderDispatchController.searchList(7)}" disabled="#{workOrderDispatchController.queryIndex==7}"/>
+                        <!--<p:commandButton value="待验收" id="btn7" process="@this" update="datalist buttonSet :dispatchDetailForm " actionListener="#{workOrderDispatchController.searchList(5)}" disabled="#{workOrderDispatchController.queryIndex==5}"/>-->
+                        <p:commandButton value="待关单" id="btn8" process="@this" update="datalist buttonSet :dispatchDetailForm " actionListener="#{workOrderDispatchController.searchList(6)}" disabled="#{workOrderDispatchController.queryIndex==6}"/>
+
+                        <!--    <p:commandButton value="我的xx" id="btn21" rendered="#{workOrderDispatchController.queryIndex==3}" process="@this" update="datalist buttonSet :dispatchDetailForm" actionListener="#{workOrderDispatchController.defineCategory(11)}" disabled="#{workOrderDispatchController.category==11}"/>
+
+                          <p:commandButton value="我的" id="btn11" rendered="#{workOrderDispatchController.queryIndex==3}" process="@this" update="datalist buttonSet :dispatchDetailForm" actionListener="#{workOrderDispatchController.searchList(6)}" disabled="#{workOrderDispatchController.queryIndex==6}"/>
+
+
+                        <p:commandButton value="同组" id="btn12" rendered="#{workOrderDispatchController.queryIndex==3}"  process="@this" update="datalist buttonSet :dispatchDetailForm " actionListener="#{workOrderDispatchController.defineCategory(12)}" disabled="#{workOrderDispatchController.category==12}"/>
+
+                        <p:commandButton value="同院" id="btn13" rendered="#{workOrderDispatchController.queryIndex==3}" process="@this" update="datalist buttonSet :dispatchDetailForm " actionListener="#{workOrderDispatchController.searchList(13)}" disabled="#{workOrderDispatchController.queryIndex==6}"/>
+                        <p:commandButton value="他院" id="btn14"  rendered="#{workOrderDispatchController.queryIndex==3}" process="@this" update="datalist buttonSet :dispatchDetailForm " actionListener="#{workOrderDispatchController.searchList(14)}" disabled="#{workOrderDispatchController.queryIndex==6}"/>-->
                     </h:panelGrid>
+                  <!--  <h:panelGroup>
+                        <label class="label">xxxx</label>
+                        <p:selectOneMenu  value="4" required="true" >
+                            <f:selectItem itemLabel="a" itemValue="1"></f:selectItem>
+                            <f:selectItem itemLabel="b" itemValue="2"></f:selectItem>
+                            <f:selectItem itemLabel="c" itemValue="3"></f:selectItem>
+                            <f:selectItem itemLabel="d" itemValue="4"></f:selectItem>
+                        </p:selectOneMenu>
+                    </h:panelGroup>-->
+
                     <p:dataTable id="datalist" value="#{workOrderDispatchController.lazyModel}" var="item" widgetVar="varDataList"
                                  selectionMode="single" selection="#{workOrderDispatchController.selected}"
                                  lazy="true" paginator="true" paginatorPosition="top" paginatorAlwaysVisible="true"
