@@ -20,85 +20,187 @@
     <ui:define name="content">
         <div class="ui-g clearfix">
             <div class="ui-g-12 card cardTitle">
-                <p:outputLabel class="pageTitle" value="#{msg.WorkOrder} #{msg.List}"/>
+                <p:outputLabel class="pageTitle" value="报修 #{msg.List}"/>
             </div>
 
             <div class="ui-g-12 card">
                 <p:messages autoUpdate="true" closable="true" showDetail="false"/>
 
-                <h:form id="SRListForm">
-                    <h:panelGrid id="buttonSet" columns="6" cellpadding="5">
-                        <p:commandButton value="新增报修" id="btnCreate" process="@this" update="datalist buttonSet :WorkOrderEditForm :ServiceRequestCreateForm" actionListener="#{serviceRequestController.createServiceRequest()}" />
-                        <p:commandButton value="我的未完成" id="btn1" process="@this" update="datalist buttonSet :WorkOrderEditForm :ServiceRequestCreateForm" actionListener="#{serviceRequestController.searchList(1)}"  disabled="#{serviceRequestController.queryIndex==1}" />
-                        <p:commandButton value="我的已完成" id="btn2" process="@this" update="datalist buttonSet :WorkOrderEditForm :ServiceRequestCreateForm" actionListener="#{serviceRequestController.searchList(2)}" disabled="#{serviceRequestController.queryIndex==2}"/>
-                        <p:commandButton value="科室未完成" id="btn3" process="@this" update="datalist buttonSet :WorkOrderEditForm :ServiceRequestCreateForm" actionListener="#{serviceRequestController.searchList(3)}" disabled="#{serviceRequestController.queryIndex==3}"/>
-                        <p:commandButton value="科室已完成" id="btn4" process="@this" update="datalist buttonSet :WorkOrderEditForm :ServiceRequestCreateForm" actionListener="#{serviceRequestController.searchList(4)}" disabled="#{serviceRequestController.queryIndex==4}"/>
-                        <p:commandButton value="已取消" id="btn5" process="@this" update="datalist buttonSet :WorkOrderEditForm :ServiceRequestCreateForm" actionListener="#{serviceRequestController.searchList(5)}" disabled="#{serviceRequestController.queryIndex==5}"/>
-                    </h:panelGrid>
-                    <p:dataTable id="datalist" value="#{serviceRequestController.lazyModel}" var="item" widgetVar="varDataList"
-                                 selectionMode="single" selection="#{serviceRequestController.selected}"
-                                 lazy="true" paginator="true" paginatorPosition="top" paginatorAlwaysVisible="true"
-                                 rowKey="#{item.id}" sortMode="single" sortOrder="descending" sortBy="#{item.id}"
-                                 paginatorTemplate="{CurrentPageReport} {Toolbar} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} #{msg.RowsPerPage}: {RowsPerPageDropdown}"
-                                 currentPageReportTemplate="#{msg.recordCount}: {totalRecords}" pageLinks="5"
-                                 rows="10" emptyMessage="#{msg.noRecordFound}"
-                                 rowsPerPageTemplate="10,20,30,90">
+                <p:tabView class="ui-g-12" id="tabview"   dynamic="true"   cache="false">
+                    <p:tab title="报修" class="ui-g-12" >
 
-                        <p:ajax event="rowSelect" listener="#{serviceRequestController.onSelectServiceRequest}" update=":WorkOrderEditForm"/>
-                        <p:ajax event="filter" listener="#{serviceRequestController.onFilter}" update="datalist :WorkOrderEditForm"/>
 
-                        <p:column styleClass="textCenter"  headerText="#{msg.casePriority}" sortBy="#{item.casePriority}" filterBy="#{item.casePriority}" filterMatchMode="EQ">
-                            <f:facet name="filter">
-                                <p:selectOneMenu onchange="PF('varDataList').filter()" >
-                                    <f:selectItem itemLabel="#{msg.SelectOneMessage}" itemValue="#{null}" noSelectionOption="true" />
-                                    <f:selectItems value="#{fieldMsg.getFieldValueList('casePriority')}" var="item" itemLabel="#{item.value}" itemValue="#{item.msgKey}"/>
-                                </p:selectOneMenu>
-                            </f:facet>
-                            <h:outputText value="#{item.casePriority}" class="priorityItem priorityItem#{item.casePriority}"/>
-                        </p:column>
-                        <p:column headerText="#{msg.requestTime}" sortBy="#{item.requestTime}" filterBy="#{item.requestTime}" filterMatchMode="GTE">
-                            <f:facet name="filter">
-                                <p:inputText id="filterRequestTime" widgetVar="varFilterRequestTime"/>
-                            </f:facet>
-                            <h:outputText value="#{item.requestTime}">
-                                <f:convertDateTime timeZone="GMT+8" pattern="yyyy/MM/dd HH:mm" />
-                            </h:outputText>
-                        </p:column>
-                        <p:column headerText="#{msg.requestorName}" sortBy="#{item.requestorName}" filterBy="#{item.requestorId}" filterMatchMode="EQ">
-                            <f:facet name="filter">
-                                <p:selectOneMenu onchange="PF('varDataList').filter()" >
-                                    <f:selectItem itemLabel="#{msg.SelectOneMessage}" itemValue="#{null}" noSelectionOption="true" />
-                                    <f:selectItems value="#{serviceRequestController.usersInHospital}" var="item" itemLabel="#{item.name}" itemValue="#{item.id}"/>
-                                </p:selectOneMenu>
-                            </f:facet>
-                            <h:outputText value="#{item.requestorName}"/>
-                        </p:column>
-                        <p:column headerText="#{msg.assetName}" sortBy="#{item.assetName}" filterBy="#{item.assetName}" filterMatchMode="LIKE">
-                            <h:outputText value="#{item.assetName}"/>
-                        </p:column>               
-                        <p:column headerText="#{msg.requestReason}" sortBy="#{item.requestReason}" filterBy="#{item.requestReason}" filterMatchMode="LIKE">
-                            <h:outputText value="#{serviceRequestController.getRequestReasonInShort(item)}" title="#{item.requestReason}"/>
-                        </p:column>                 
-<!--                        <p:column headerText="#{msg.status}" sortBy="#{item.status}" filterBy="#{item.status}" filterMatchMode="EQ">
-                            <f:facet name="filter">
-                                <p:selectOneMenu onchange="PF('varDataList').filter()" >
-                                    <f:selectItem itemLabel="#{msg.SelectOneMessage}" itemValue="#{null}" noSelectionOption="true" />
-                                    <f:selectItems value="#{fieldMsg.getFieldValueList('status')}" var="item" itemLabel="#{item.value}" itemValue="#{item.msgKey}"/>
-                                </p:selectOneMenu>
-                            </f:facet>
-                            <h:outputText value="#{fieldMsg.fieldValue('status', item.status)}"/>
-                        </p:column>-->
-                        <f:facet name="{Toolbar}">
-                            <p:commandButton title="#{msg.exportToXLS}" icon="ui-icon-arrowstop-1-s" ajax="false">
-                                <p:dataExporter type="xls" target="datalist" fileName="WorkOrder_export"/>
-                            </p:commandButton>
-                        </f:facet>
-                    </p:dataTable>
-                </h:form>
+                        <h:form id="SRListForm">
+                            <h:panelGrid id="buttonSet" columns="6" cellpadding="5">
+                                <p:commandButton value="新增报修" id="btnCreate" process="@this" update="datalist buttonSet tabview:WorkOrderEditForm tabview:ServiceRequestCreateForm" actionListener="#{serviceRequestController.createServiceRequest()}" />
+                                <p:commandButton value="我的未完成" id="btn1" process="@this" update="datalist buttonSet tabview:WorkOrderEditForm tabview:ServiceRequestCreateForm" actionListener="#{serviceRequestController.searchList(1)}"  disabled="#{serviceRequestController.queryIndex==1}" />
+                                <p:commandButton value="我的已完成" id="btn2" process="@this" update="datalist buttonSet tabview:WorkOrderEditForm tabview:ServiceRequestCreateForm" actionListener="#{serviceRequestController.searchList(2)}" disabled="#{serviceRequestController.queryIndex==2}"/>
+                                <p:commandButton value="科室未完成" id="btn3" process="@this" update="datalist buttonSet tabview:WorkOrderEditForm tabview:ServiceRequestCreateForm" actionListener="#{serviceRequestController.searchList(3)}" disabled="#{serviceRequestController.queryIndex==3}"/>
+                                <p:commandButton value="科室已完成" id="btn4" process="@this" update="datalist buttonSet tabview:WorkOrderEditForm tabview:ServiceRequestCreateForm" actionListener="#{serviceRequestController.searchList(4)}" disabled="#{serviceRequestController.queryIndex==4}"/>
+                                <p:commandButton value="已取消" id="btn5" process="@this" update="datalist buttonSet tabview:WorkOrderEditForm tabview:ServiceRequestCreateForm" actionListener="#{serviceRequestController.searchList(5)}" disabled="#{serviceRequestController.queryIndex==5}"/>
+                            </h:panelGrid>
+                            <p:dataTable id="datalist" value="#{serviceRequestController.lazyModel}" var="item" widgetVar="varDataList"
+                                         selectionMode="single" selection="#{serviceRequestController.selected}"
+                                         lazy="true" paginator="true" paginatorPosition="top" paginatorAlwaysVisible="true"
+                                         rowKey="#{item.id}" sortMode="single" sortOrder="descending" sortBy="#{item.id}"
+                                         paginatorTemplate="{CurrentPageReport} {Toolbar} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} #{msg.RowsPerPage}: {RowsPerPageDropdown}"
+                                         currentPageReportTemplate="#{msg.recordCount}: {totalRecords}" pageLinks="5"
+                                         rows="10" emptyMessage="#{msg.noRecordFound}"
+                                         rowsPerPageTemplate="10,20,30,90">
 
-                <ui:include src="srView.xhtml"/>
-                <ui:include src="srCreate.xhtml"/>
-                <ui:include src="/portal/asset/selectAssetDialog.xhtml"/>
+                                <p:ajax  event="rowSelect" listener="#{serviceRequestController.onSelectServiceRequest}" update="tabview:WorkOrderEditForm" process="datalist"/>
+                                <p:ajax event="filter" listener="#{serviceRequestController.onFilter}" update="datalist tabview:WorkOrderEditForm"/>
+
+                                <p:column styleClass="textCenter"  headerText="#{msg.casePriority}" sortBy="#{item.casePriority}" filterBy="#{item.casePriority}" filterMatchMode="EQ">
+                                    <f:facet name="filter">
+                                        <p:selectOneMenu onchange="PF('varDataList').filter()" >
+                                            <f:selectItem itemLabel="#{msg.SelectOneMessage}" itemValue="#{null}" noSelectionOption="true" />
+                                            <f:selectItems value="#{fieldMsg.getFieldValueList('casePriority')}" var="item" itemLabel="#{item.value}" itemValue="#{item.msgKey}"/>
+                                        </p:selectOneMenu>
+                                    </f:facet>
+                                    <h:outputText value="#{item.casePriority}" class="priorityItem priorityItem#{item.casePriority}"/>
+                                </p:column>
+                                <p:column headerText="#{msg.requestTime}" sortBy="#{item.requestTime}" filterBy="#{item.requestTime}" filterMatchMode="GTE">
+                                    <f:facet name="filter">
+                                        <p:inputText id="filterRequestTime" widgetVar="varFilterRequestTime"/>
+                                    </f:facet>
+                                    <h:outputText value="#{item.requestTime}">
+                                        <f:convertDateTime timeZone="GMT+8" pattern="yyyy/MM/dd HH:mm" />
+                                    </h:outputText>
+                                </p:column>
+                                <p:column headerText="#{msg.requestorName}" sortBy="#{item.requestorName}" filterBy="#{item.requestorId}" filterMatchMode="EQ">
+                                    <f:facet name="filter">
+                                        <p:selectOneMenu onchange="PF('varDataList').filter()" >
+                                            <f:selectItem itemLabel="#{msg.SelectOneMessage}" itemValue="#{null}" noSelectionOption="true" />
+                                            <f:selectItems value="#{serviceRequestController.usersInHospital}" var="item" itemLabel="#{item.name}" itemValue="#{item.id}"/>
+                                        </p:selectOneMenu>
+                                    </f:facet>
+                                    <h:outputText value="#{item.requestorName}"/>
+                                </p:column>
+                                <p:column headerText="#{msg.assetName}" sortBy="#{item.assetName}" filterBy="#{item.assetName}" filterMatchMode="LIKE">
+                                    <h:outputText value="#{item.assetName}"/>
+                                </p:column>               
+                                <p:column headerText="#{msg.requestReason}" sortBy="#{item.requestReason}" filterBy="#{item.requestReason}" filterMatchMode="LIKE">
+                                    <h:outputText value="#{serviceRequestController.getRequestReasonInShort(item)}" title="#{item.requestReason}"/>
+                                </p:column>
+        <!--                        <p:column headerText="#{msg.status}" sortBy="#{item.status}" filterBy="#{item.status}" filterMatchMode="EQ">
+                                    <f:facet name="filter">
+                                        <p:selectOneMenu onchange="PF('varDataList').filter()" >
+                                            <f:selectItem itemLabel="#{msg.SelectOneMessage}" itemValue="#{null}" noSelectionOption="true" />
+                                            <f:selectItems value="#{fieldMsg.getFieldValueList('status')}" var="item" itemLabel="#{item.value}" itemValue="#{item.msgKey}"/>
+                                        </p:selectOneMenu>
+                                    </f:facet>
+                                    <h:outputText value="#{fieldMsg.fieldValue('status', item.status)}"/>
+                                </p:column>-->
+                                <f:facet name="{Toolbar}">
+                                    <p:commandButton title="#{msg.exportToXLS}" icon="ui-icon-arrowstop-1-s" ajax="false">
+                                        <p:dataExporter type="xls" target="datalist" fileName="WorkOrder_export"/>
+                                    </p:commandButton>
+                                </f:facet>
+                            </p:dataTable>
+                        </h:form>
+                        <ui:include src="srView.xhtml"/>
+                        <ui:include src="srCreate.xhtml"/>
+                        <ui:include src="/portal/asset/selectAssetDialog.xhtml"/>
+                    </p:tab>
+                    <p:tab title="验收" class="ui-g-12">
+                        <h:form id="WorkOrderAckForm">
+                            <p:dataTable id="datalist" value="#{workOrderAckController.lazyModel}" var="item" widgetVar="varDataList"
+                                         selectionMode="single" selection="#{workOrderAckController.selected}"
+                                         lazy="true" paginator="true" paginatorPosition="top" paginatorAlwaysVisible="true"
+                                         rowKey="#{item.id}" sortMode="single" sortOrder="descending" sortBy="#{item.id}"
+                                         paginatorTemplate="{CurrentPageReport} {Toolbar} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} #{msg.RowsPerPage}: {RowsPerPageDropdown}"
+                                         currentPageReportTemplate="#{msg.recordCount}: {totalRecords}" pageLinks="5"
+                                         rows="10" emptyMessage="#{msg.noRecordFound}"
+                                         rowsPerPageTemplate="10,20,30,90">
+
+                                <p:ajax event="rowSelect"  update="tabview:ackDetailForm"/>
+                                <p:ajax event="filter" listener="#{workOrderAckController.onFilter}" update="datalist tabview:ackDetailForm"/>
+
+                                <p:column headerText="#{msg.assetName}">
+                                    <h:outputText value="#{assetInfoService.getAssetInfoName(item.assetId)}"/>
+                                </p:column>  
+                                <p:column headerText="#{msg.requestorName}">
+                                    <h:outputText value="#{workOrderAckController.getServiceRequest(item.srId).requestorName}"/>
+                                </p:column>  
+                                <p:column headerText="#{msg.requestTime}">
+                                    <h:outputText value="#{workOrderAckController.getServiceRequest(item.srId).requestTime}">
+                                        <f:convertDateTime timeZone="GMT+8" pattern="yyyy/MM/dd HH:mm" />
+                                    </h:outputText>
+                                </p:column>  
+                                <p:column headerText="#{msg.status}">
+                                    <h:outputText value="#{item.currentStepName}"/>
+                                </p:column>  
+                                <p:column headerText="#{msg.intExtType}">
+                                    <h:outputText value="#{fieldMsg.fieldValue('intExtType',item.intExtType)}"/>
+                                </p:column>  
+                                <p:column headerText="#{msg.currentPersonName}">
+                                    <h:outputText value="#{item.currentPersonName}"/>
+                                </p:column>
+                                <p:column headerText="验收">
+                                    <p:commandButton value="验收" actionListener="#{workOrderAckController.prepareAck(item.id)}" update="tabview:ackDialogForm" oncomplete="PF('ackDialog').show()"/>
+                                </p:column>
+
+                                <f:facet name="{Toolbar}">
+                                    <p:commandButton title="#{msg.exportToXLS}" icon="ui-icon-arrowstop-1-s" ajax="false">
+                                        <p:dataExporter type="xls" target="ackDatalist" fileName="WorkOrder_export"/>
+                                    </p:commandButton>
+                                </f:facet>
+                            </p:dataTable>
+                        </h:form>
+                        <ui:include src="ackView.xhtml"/>
+
+                    </p:tab>
+                    <p:tab title="评价" class="ui-g-12">
+                        <h:form id="WorkOrderRateForm">
+                            <p:dataTable id="datalist" value="#{workOrderRateController.lazyModel}" var="item" widgetVar="varDataList"
+                                         selectionMode="single" selection="#{workOrderRateController.selected}"
+                                         lazy="true" paginator="true" paginatorPosition="top" paginatorAlwaysVisible="true"
+                                         rowKey="#{item.id}" sortMode="single" sortOrder="descending" sortBy="#{item.id}"
+                                         paginatorTemplate="{CurrentPageReport} {Toolbar} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} #{msg.RowsPerPage}: {RowsPerPageDropdown}"
+                                         currentPageReportTemplate="#{msg.recordCount}: {totalRecords}" pageLinks="5"
+                                         rows="10" emptyMessage="#{msg.noRecordFound}"
+                                         rowsPerPageTemplate="10,20,30,90">
+
+                                <p:ajax event="rowSelect"  update="tabview:rateDetailForm"/>
+                                <p:ajax event="filter" listener="#{workOrderRateController.onFilter}" update="datalist tabview:rateDetailForm"/>
+
+                                <p:column headerText="#{msg.assetName}">
+                                    <h:outputText value="#{assetInfoService.getAssetInfoName(item.assetId)}"/>
+                                </p:column>  
+                                <p:column headerText="#{msg.requestorName}">
+                                    <h:outputText value="#{workOrderRateController.getServiceRequest(item.srId).requestorName}"/>
+                                </p:column>  
+                                <p:column headerText="#{msg.requestTime}">
+                                    <h:outputText value="#{workOrderRateController.getServiceRequest(item.srId).requestTime}">
+                                        <f:convertDateTime timeZone="GMT+8" pattern="yyyy/MM/dd HH:mm" />
+                                    </h:outputText>
+                                </p:column>  
+                                <p:column headerText="#{msg.status}">
+                                    <h:outputText value="#{item.currentStepName}"/>
+                                </p:column>  
+                                <p:column headerText="#{msg.intExtType}">
+                                    <h:outputText value="#{fieldMsg.fieldValue('intExtType',item.intExtType)}"/>
+                                </p:column>  
+                                <p:column headerText="#{msg.currentPersonName}">
+                                    <h:outputText value="#{item.currentPersonName}"/>
+                                </p:column>
+                                <p:column headerText="评价">
+                                    <p:commandButton value="评价" actionListener="#{workOrderRateController.prepareRate(item.id)}" update="tabview:rateDialogForm" oncomplete="PF('rateDialog').show()"/>
+                                </p:column>
+
+                                <f:facet name="{Toolbar}">
+                                    <p:commandButton title="#{msg.exportToXLS}" icon="ui-icon-arrowstop-1-s" ajax="false">
+                                        <p:dataExporter type="xls" target="rateDatalist" fileName="WorkOrder_export"/>
+                                    </p:commandButton>
+                                </f:facet>
+                            </p:dataTable>
+                        </h:form>
+                        <ui:include src="rateView.xhtml"/>
+                    </p:tab>
+                </p:tabView>
+
+
 
             </div>
         </div>

@@ -9,6 +9,8 @@ import com.ge.apm.domain.AssetInfo;
 import com.ge.apm.domain.V2_BlobObject;
 import com.ge.apm.domain.V2_ServiceRequest;
 import com.ge.apm.service.utils.*;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.List;
@@ -31,14 +33,12 @@ public class ServiceRequestApiService extends MicroServiceInvoker {
 //    @Value("#{urlProperties.url_workOrdersForDispatcher}")
 //    private String url_workOrdersForDispatcher;
 
-    
-    
-    public String cancelWorkOrderAction(String token, String woId, String reason,Integer stepId) {
+    public String cancelWorkOrderAction(String token, String woId, String reason, Integer stepId) {
         WorkOrderActionForm formData = new WorkOrderActionForm();
         formData.setDesc(reason);
         formData.setCurrentStepId(stepId);
         HttpEntity<WorkOrderActionForm> requestEntity = new HttpEntity<WorkOrderActionForm>(formData, createHttpHeaders(token));
-        
+
         String url = url_workOrderAction.replace("{workOrderId}", woId).concat("?type=cancel");
         ResponseEntity<LinkedHashMap> response = template.postForEntity(url, requestEntity, LinkedHashMap.class);
         if (isOkay(response)) {
@@ -48,14 +48,14 @@ public class ServiceRequestApiService extends MicroServiceInvoker {
             return null;
         }
     }
-    
-    public String dispatchWorkOrderAction(String token,String woId, String assigneeId, String intExtType,Integer stepId) {
+
+    public String dispatchWorkOrderAction(String token, String woId, String assigneeId, String intExtType, Integer stepId) {
         WorkOrderActionForm formData = new WorkOrderActionForm();
         formData.setAssigneeId(assigneeId);
         formData.setIntExtType(intExtType);
         formData.setCurrentStepId(stepId);
         HttpEntity<WorkOrderActionForm> requestEntity = new HttpEntity<WorkOrderActionForm>(formData, createHttpHeaders(token));
-        
+
         String url = url_workOrderAction.replace("{workOrderId}", woId).concat("?type=assign");
         ResponseEntity<LinkedHashMap> response = template.postForEntity(url, requestEntity, LinkedHashMap.class);
         if (isOkay(response)) {
@@ -65,7 +65,7 @@ public class ServiceRequestApiService extends MicroServiceInvoker {
             return null;
         }
     }
-    
+
     public Map<String, Object> createServiceRequest(String token, V2_ServiceRequest newServiceRequest, AssetInfo asset) {
         ServiceRequestForm formData = new ServiceRequestForm();
         formData.setAssetId(asset.getId());
@@ -75,7 +75,7 @@ public class ServiceRequestApiService extends MicroServiceInvoker {
         }
         formData.setPriority(newServiceRequest.getCasePriority());
         formData.setRequestReason(newServiceRequest.getRequestReason());
-        
+
         HttpEntity<ServiceRequestForm> requestEntity = new HttpEntity<>(formData, createHttpHeaders(token));
         ResponseEntity<LinkedHashMap> response = template.postForEntity(url_serviceRequestCreate, requestEntity, LinkedHashMap.class);
         if (isOkay(response)) {
@@ -85,7 +85,59 @@ public class ServiceRequestApiService extends MicroServiceInvoker {
             return null;
         }
     }
-    
+
+    String ackWorkOrderAction(String token, String woId, Integer stepId) {
+        WorkOrderActionForm formData = new WorkOrderActionForm();
+        formData.setCurrentStepId(stepId);
+        HttpEntity<WorkOrderActionForm> requestEntity = new HttpEntity<WorkOrderActionForm>(formData, createHttpHeaders(token));
+
+        String url = url_workOrderAction.replace("{workOrderId}", woId).concat("?type=ack");
+        ResponseEntity<LinkedHashMap> response = template.postForEntity(url, requestEntity, LinkedHashMap.class);
+        if (isOkay(response)) {
+            LinkedHashMap<String, Object> responseMap = (LinkedHashMap<String, Object>) response.getBody();
+            return (String) responseMap.get("data");
+        } else {
+            return null;
+        }
+    }
+
+    String rejectWorkOrderAction(String token, String woId, Integer stepId, String reason, Integer status, Date confirmedDowntime) {
+        WorkOrderActionForm formData = new WorkOrderActionForm();
+        formData.setCurrentStepId(stepId);
+        formData.setDesc(reason);
+        formData.setAssetStatus(String.valueOf(status));
+        if (null != confirmedDowntime) {
+            formData.setConfirmedDownTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(confirmedDowntime));
+        }
+        HttpEntity<WorkOrderActionForm> requestEntity = new HttpEntity<WorkOrderActionForm>(formData, createHttpHeaders(token));
+
+        String url = url_workOrderAction.replace("{workOrderId}", woId).concat("?type=ackFailed");
+        ResponseEntity<LinkedHashMap> response = template.postForEntity(url, requestEntity, LinkedHashMap.class);
+        if (isOkay(response)) {
+            LinkedHashMap<String, Object> responseMap = (LinkedHashMap<String, Object>) response.getBody();
+            return (String) responseMap.get("data");
+        } else {
+            return null;
+        }
+    }
+
+    String rateWorkOrderAction(String token, String woId, Integer currentStepId, Integer rating, String comments) {
+        WorkOrderActionForm formData = new WorkOrderActionForm();
+        formData.setCurrentStepId(currentStepId);
+        formData.setDesc(comments);
+        formData.setFeedbackRating(String.valueOf(rating));
+        HttpEntity<WorkOrderActionForm> requestEntity = new HttpEntity<WorkOrderActionForm>(formData, createHttpHeaders(token));
+
+        String url = url_workOrderAction.replace("{workOrderId}", woId).concat("?type=rate");
+        ResponseEntity<LinkedHashMap> response = template.postForEntity(url, requestEntity, LinkedHashMap.class);
+        if (isOkay(response)) {
+            LinkedHashMap<String, Object> responseMap = (LinkedHashMap<String, Object>) response.getBody();
+            return (String) responseMap.get("data");
+        } else {
+            return null;
+        }
+    }
+
 }
 
 class ServiceRequestForm {
@@ -192,8 +244,9 @@ class ServiceRequestForm {
 }
 
 class WorkOrderActionForm {
-	String serviceRequestId;
-    String  strDate;
+
+    String serviceRequestId;
+    String strDate;
     String desc;
     String estimatedCloseTime;
     String assigneeId;
@@ -209,19 +262,19 @@ class WorkOrderActionForm {
     Object stepDetail;
     Integer currentStepId;
     String equipmentTaker;
-    String takeTime;    
+    String takeTime;
     Integer repairType;
     List<V2_BlobObject> attachments;
-    
+
     public String getServiceRequestId() {
-		return serviceRequestId;
-	}
+        return serviceRequestId;
+    }
 
-	public void setServiceRequestId(String serviceRequestId) {
-		this.serviceRequestId = serviceRequestId;
-	}
+    public void setServiceRequestId(String serviceRequestId) {
+        this.serviceRequestId = serviceRequestId;
+    }
 
-	public String getStrDate() {
+    public String getStrDate() {
         return strDate;
     }
 
@@ -372,5 +425,5 @@ class WorkOrderActionForm {
     public void setRepairType(Integer repairType) {
         this.repairType = repairType;
     }
-    
+
 }

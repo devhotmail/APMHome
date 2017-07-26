@@ -65,8 +65,8 @@
                         <p:column headerText="#{msg.currentPersonName}">
                             <h:outputText value="#{item.currentPersonName}"/>
                         </p:column>
-                        <p:column headerText="dispatchWorkOrder" rendered="#{workOrderDispatchController.queryIndex==2}">
-                            <p:commandButton value="dispatchWorkOrder" actionListener="#{workOrderDispatchController.prepareDispatch(item.id)}" update=":dispatchDialogForm" oncomplete="PF('dispatchDialog').show()"/>
+                        <p:column headerText="#{msg.dispatchWorkOrder}" rendered="#{workOrderDispatchController.queryIndex==2}">
+                            <p:commandButton value="#{msg.dispatchWorkOrder}" actionListener="#{workOrderDispatchController.prepareDispatch(item.id)}" update=":dispatchDialogForm" oncomplete="PF('dispatchDialog').show()"/>
                         </p:column>
 
                         <f:facet name="{Toolbar}">

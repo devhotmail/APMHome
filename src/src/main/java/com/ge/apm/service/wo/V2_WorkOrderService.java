@@ -5,6 +5,7 @@
  */
 package com.ge.apm.service.wo;
 
+import com.ge.apm.dao.AssetInfoRepository;
 import com.ge.apm.dao.ServiceRequestRepository;
 import com.ge.apm.dao.UserAccountRepository;
 import com.ge.apm.dao.V2_WorkOrderRepository;
@@ -17,6 +18,7 @@ import com.ge.apm.domain.V2_WorkOrder;
 import com.ge.apm.domain.V2_WorkOrder_Detail;
 import com.ge.apm.domain.V2_WorkOrder_Step;
 import com.ge.apm.view.sysutil.UserContextService;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +34,9 @@ public class V2_WorkOrderService {
 
     @Autowired
     private V2_WorkOrderRepository woDao;
+    
+    @Autowired
+    private AssetInfoRepository assetDao;
 
     @Autowired
     private ServiceRequestRepository srDao;
@@ -84,12 +89,40 @@ public class V2_WorkOrderService {
     public List<UserAccount> getWorkerList() {
         return userDao.getUsersWithAssetStaffRole(UserContextService.getCurrentUserAccount().getHospitalId());
     }
+    
+    public AssetInfo getAssetInfo(Integer assetId){
+        return assetDao.findById(assetId);
+    }
 
     public void dispatchWorkOrder(V2_WorkOrder selectedWorkOrder) {
         String token = UserContextService.getAccessToken();
         String res = srApi.dispatchWorkOrderAction(token, selectedWorkOrder.getId(), selectedWorkOrder.getCurrentPersonId().toString(),selectedWorkOrder.getIntExtType().toString(), selectedWorkOrder.getCurrentStepId());
         if (res==null || !res.contains("success")) {
             WebUtil.addErrorMessage("Fail to do dispatch operation");
+        }
+    }
+
+    public void ackWorkOrder(V2_WorkOrder selectedWorkOrder) {
+        String token = UserContextService.getAccessToken();
+        String res = srApi.ackWorkOrderAction(token,selectedWorkOrder.getId(),selectedWorkOrder.getCurrentStepId());
+        if (res==null || !res.contains("success")) {
+            WebUtil.addErrorMessage("Fail to do accept operation");
+        }
+    }
+
+    public void rejectWorkOrder(V2_WorkOrder selectedWorkOrder,String reason, Integer status, Date confirmedDowntime) {
+        String token = UserContextService.getAccessToken();
+        String res = srApi.rejectWorkOrderAction(token,selectedWorkOrder.getId(),selectedWorkOrder.getCurrentStepId(),reason,status,confirmedDowntime);
+        if (res==null || !res.contains("success")) {
+            WebUtil.addErrorMessage("Fail to do reject operation");
+        }
+    }
+
+    public void rateWorkOrder(V2_WorkOrder selectedWorkOrder, Integer rating, String comments) {
+        String token = UserContextService.getAccessToken();
+        String res = srApi.rateWorkOrderAction(token,selectedWorkOrder.getId(),selectedWorkOrder.getCurrentStepId(),rating,comments);
+        if (res==null || !res.contains("success")) {
+            WebUtil.addErrorMessage("Fail to do rating operation");
         }
     }
 }
