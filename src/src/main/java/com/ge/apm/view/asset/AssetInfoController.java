@@ -272,6 +272,12 @@ public class AssetInfoController extends JpaCRUDController<AssetInfo> {
         if (null != object.getClinicalDeptId()) {
             OrgInfo org = orgDao.findById(object.getClinicalDeptId());
             object.setClinicalDeptName(org.getName());
+
+            object.setTenantUID(org.getTenantUID());
+            object.setHospitalUID(org.getHospitalUID());
+            object.setInstitutionUID(org.getInstitutionUID());
+            object.setSiteUID(org.getSiteUID());
+            object.setClinicalDeptUID(org.getUid());
         }
         DateTime temp;
         if (null != object.getManufactDate()) {
