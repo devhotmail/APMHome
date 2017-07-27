@@ -9,8 +9,6 @@ import com.ge.apm.domain.AssetInfo;
 import com.ge.apm.domain.V2_BlobObject;
 import com.ge.apm.domain.V2_ServiceRequest;
 import com.ge.apm.service.utils.*;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.List;
@@ -30,41 +28,8 @@ public class ServiceRequestApiService extends MicroServiceInvoker {
     private String url_serviceRequestCreate;
     @Value("#{urlProperties.url_workOrderAction}")
     private String url_workOrderAction;
-//    @Value("#{urlProperties.url_workOrdersForDispatcher}")
-//    private String url_workOrdersForDispatcher;
-
-    public String cancelWorkOrderAction(String token, String woId, String reason, Integer stepId) {
-        WorkOrderActionForm formData = new WorkOrderActionForm();
-        formData.setDesc(reason);
-        formData.setCurrentStepId(stepId);
-        HttpEntity<WorkOrderActionForm> requestEntity = new HttpEntity<WorkOrderActionForm>(formData, createHttpHeaders(token));
-
-        String url = url_workOrderAction.replace("{workOrderId}", woId).concat("?type=cancel");
-        ResponseEntity<LinkedHashMap> response = template.postForEntity(url, requestEntity, LinkedHashMap.class);
-        if (isOkay(response)) {
-            LinkedHashMap<String, Object> responseMap = (LinkedHashMap<String, Object>) response.getBody();
-            return (String) responseMap.get("data");
-        } else {
-            return null;
-        }
-    }
-
-    public String dispatchWorkOrderAction(String token, String woId, String assigneeId, String intExtType, Integer stepId) {
-        WorkOrderActionForm formData = new WorkOrderActionForm();
-        formData.setAssigneeId(assigneeId);
-        formData.setIntExtType(intExtType);
-        formData.setCurrentStepId(stepId);
-        HttpEntity<WorkOrderActionForm> requestEntity = new HttpEntity<WorkOrderActionForm>(formData, createHttpHeaders(token));
-
-        String url = url_workOrderAction.replace("{workOrderId}", woId).concat("?type=assign");
-        ResponseEntity<LinkedHashMap> response = template.postForEntity(url, requestEntity, LinkedHashMap.class);
-        if (isOkay(response)) {
-            LinkedHashMap<String, Object> responseMap = (LinkedHashMap<String, Object>) response.getBody();
-            return (String) responseMap.get("data");
-        } else {
-            return null;
-        }
-    }
+    @Value("#{urlProperties.url_createWorkOrder}")
+    private String url_createWorkOrder;
 
     public Map<String, Object> createServiceRequest(String token, V2_ServiceRequest newServiceRequest, AssetInfo asset) {
         ServiceRequestForm formData = new ServiceRequestForm();
@@ -86,12 +51,9 @@ public class ServiceRequestApiService extends MicroServiceInvoker {
         }
     }
 
-    String ackWorkOrderAction(String token, String woId, Integer stepId) {
-        WorkOrderActionForm formData = new WorkOrderActionForm();
-        formData.setCurrentStepId(stepId);
+    public String invokeWorkOrderAction(String token, WorkOrderActionForm formData, String actionName, String woId) {
         HttpEntity<WorkOrderActionForm> requestEntity = new HttpEntity<WorkOrderActionForm>(formData, createHttpHeaders(token));
-
-        String url = url_workOrderAction.replace("{workOrderId}", woId).concat("?type=ack");
+        String url = url_workOrderAction.replace("{workOrderId}", woId).concat("?type=").concat(actionName);
         ResponseEntity<LinkedHashMap> response = template.postForEntity(url, requestEntity, LinkedHashMap.class);
         if (isOkay(response)) {
             LinkedHashMap<String, Object> responseMap = (LinkedHashMap<String, Object>) response.getBody();
@@ -101,35 +63,9 @@ public class ServiceRequestApiService extends MicroServiceInvoker {
         }
     }
 
-    String rejectWorkOrderAction(String token, String woId, Integer stepId, String reason, Integer status, Date confirmedDowntime) {
-        WorkOrderActionForm formData = new WorkOrderActionForm();
-        formData.setCurrentStepId(stepId);
-        formData.setDesc(reason);
-        formData.setAssetStatus(String.valueOf(status));
-        if (null != confirmedDowntime) {
-            formData.setConfirmedDownTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(confirmedDowntime));
-        }
-        HttpEntity<WorkOrderActionForm> requestEntity = new HttpEntity<WorkOrderActionForm>(formData, createHttpHeaders(token));
-
-        String url = url_workOrderAction.replace("{workOrderId}", woId).concat("?type=ackFailed");
-        ResponseEntity<LinkedHashMap> response = template.postForEntity(url, requestEntity, LinkedHashMap.class);
-        if (isOkay(response)) {
-            LinkedHashMap<String, Object> responseMap = (LinkedHashMap<String, Object>) response.getBody();
-            return (String) responseMap.get("data");
-        } else {
-            return null;
-        }
-    }
-
-    String rateWorkOrderAction(String token, String woId, Integer currentStepId, Integer rating, String comments) {
-        WorkOrderActionForm formData = new WorkOrderActionForm();
-        formData.setCurrentStepId(currentStepId);
-        formData.setDesc(comments);
-        formData.setFeedbackRating(String.valueOf(rating));
-        HttpEntity<WorkOrderActionForm> requestEntity = new HttpEntity<WorkOrderActionForm>(formData, createHttpHeaders(token));
-
-        String url = url_workOrderAction.replace("{workOrderId}", woId).concat("?type=rate");
-        ResponseEntity<LinkedHashMap> response = template.postForEntity(url, requestEntity, LinkedHashMap.class);
+    String createWorkOrder(String token, WorkOrderForm formData) {
+        HttpEntity<WorkOrderForm> requestEntity = new HttpEntity<WorkOrderForm>(formData, createHttpHeaders(token));
+        ResponseEntity<LinkedHashMap> response = template.postForEntity(url_createWorkOrder, requestEntity, LinkedHashMap.class);
         if (isOkay(response)) {
             LinkedHashMap<String, Object> responseMap = (LinkedHashMap<String, Object>) response.getBody();
             return (String) responseMap.get("data");
@@ -424,6 +360,74 @@ class WorkOrderActionForm {
 
     public void setRepairType(Integer repairType) {
         this.repairType = repairType;
+    }
+
+}
+
+class WorkOrderForm {
+
+    Integer assetId;
+    String requestReason;
+    String serviceRequestId;
+    String assigneeId;
+    Integer intExtType;
+    List<V2_BlobObject> attachments;
+    String assetStatus;
+
+    public Integer getAssetId() {
+        return assetId;
+    }
+
+    public String getServiceRequestId() {
+        return serviceRequestId;
+    }
+
+    public void setServiceRequestId(String serviceRequestId) {
+        this.serviceRequestId = serviceRequestId;
+    }
+
+    public void setAssetId(Integer assetId) {
+        this.assetId = assetId;
+    }
+
+    public String getRequestReason() {
+        return requestReason;
+    }
+
+    public void setRequestReason(String requestReason) {
+        this.requestReason = requestReason;
+    }
+
+    public String getAssigneeId() {
+        return assigneeId;
+    }
+
+    public void setAssigneeId(String assigneeId) {
+        this.assigneeId = assigneeId;
+    }
+
+    public Integer getIntExtType() {
+        return intExtType;
+    }
+
+    public void setIntExtType(Integer intExtType) {
+        this.intExtType = intExtType;
+    }
+
+    public List<V2_BlobObject> getAttachments() {
+        return attachments;
+    }
+
+    public void setAttachments(List<V2_BlobObject> attachments) {
+        this.attachments = attachments;
+    }
+
+    public String getAssetStatus() {
+        return assetStatus;
+    }
+
+    public void setAssetStatus(String assetStatus) {
+        this.assetStatus = assetStatus;
     }
 
 }
