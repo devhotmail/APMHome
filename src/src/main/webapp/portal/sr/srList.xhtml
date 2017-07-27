@@ -20,7 +20,7 @@
     <ui:define name="content">
         <div class="ui-g clearfix">
             <div class="ui-g-12 card cardTitle">
-                <p:outputLabel class="pageTitle" value="报修 #{msg.List}"/>
+                <p:outputLabel class="pageTitle" value="#{msg.MyWorkOrder} #{msg.List}"/>
             </div>
 
             <div class="ui-g-12 card">
@@ -103,7 +103,7 @@
                         <ui:include src="srCreate.xhtml"/>
                         <ui:include src="/portal/asset/selectAssetDialog.xhtml"/>
                     </p:tab>
-                    <p:tab title="验收" class="ui-g-12">
+                    <p:tab title="#{msg.Acknowledge}" class="ui-g-12">
                         <h:form id="WorkOrderAckForm">
                             <p:dataTable id="datalist" value="#{workOrderAckController.lazyModel}" var="item" widgetVar="varDataList"
                                          selectionMode="single" selection="#{workOrderAckController.selected}"
@@ -137,8 +137,8 @@
                                 <p:column headerText="#{msg.currentPersonName}">
                                     <h:outputText value="#{item.currentPersonName}"/>
                                 </p:column>
-                                <p:column headerText="验收">
-                                    <p:commandButton value="验收" actionListener="#{workOrderAckController.prepareAck(item.id)}" update="tabview:ackDialogForm" oncomplete="PF('ackDialog').show()"/>
+                                <p:column headerText="#{msg.Acknowledge}">
+                                    <p:commandButton value="#{msg.Acknowledge}" actionListener="#{workOrderAckController.prepareAck(item.id)}" update="tabview:ackDialogForm" oncomplete="PF('ackDialog').show()"/>
                                 </p:column>
 
                                 <f:facet name="{Toolbar}">
@@ -151,7 +151,7 @@
                         <ui:include src="ackView.xhtml"/>
 
                     </p:tab>
-                    <p:tab title="评价" class="ui-g-12">
+                    <p:tab title="#{msg.feedbackComment}" class="ui-g-12">
                         <h:form id="WorkOrderRateForm">
                             <p:dataTable id="datalist" value="#{workOrderRateController.lazyModel}" var="item" widgetVar="varDataList"
                                          selectionMode="single" selection="#{workOrderRateController.selected}"
@@ -185,8 +185,8 @@
                                 <p:column headerText="#{msg.currentPersonName}">
                                     <h:outputText value="#{item.currentPersonName}"/>
                                 </p:column>
-                                <p:column headerText="评价">
-                                    <p:commandButton value="评价" actionListener="#{workOrderRateController.prepareRate(item.id)}" update="tabview:rateDialogForm" oncomplete="PF('rateDialog').show()"/>
+                                <p:column headerText="#{msg.feedbackComment}">
+                                    <p:commandButton value="#{msg.feedbackComment}" actionListener="#{workOrderRateController.prepareRate(item.id)}" update="tabview:rateDialogForm" oncomplete="PF('rateDialog').show()"/>
                                 </p:column>
 
                                 <f:facet name="{Toolbar}">
