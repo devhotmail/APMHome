@@ -82,7 +82,7 @@ public class V2_WorkOrderService {
         Integer stepId = woDao.findById(workOrderId).getCurrentStepId();
         String res = srApi.cancelWorkOrderAction(token, workOrderId, reason, stepId);
         if (res==null || !res.contains("success")) {
-            WebUtil.addErrorMessage("Fail to do cancel operation");
+            WebUtil.addErrorMessage(WebUtil.getMessage("OperationFail"),WebUtil.getMessage("Cancel"));
         }
     }
 
@@ -98,7 +98,7 @@ public class V2_WorkOrderService {
         String token = UserContextService.getAccessToken();
         String res = srApi.dispatchWorkOrderAction(token, selectedWorkOrder.getId(), selectedWorkOrder.getCurrentPersonId().toString(),selectedWorkOrder.getIntExtType().toString(), selectedWorkOrder.getCurrentStepId());
         if (res==null || !res.contains("success")) {
-            WebUtil.addErrorMessage("Fail to do dispatch operation");
+            WebUtil.addErrorMessage(WebUtil.getMessage("OperationFail"),WebUtil.getMessage("dispatchWorkOrder"));
         }
     }
 
@@ -106,7 +106,7 @@ public class V2_WorkOrderService {
         String token = UserContextService.getAccessToken();
         String res = srApi.ackWorkOrderAction(token,selectedWorkOrder.getId(),selectedWorkOrder.getCurrentStepId());
         if (res==null || !res.contains("success")) {
-            WebUtil.addErrorMessage("Fail to do accept operation");
+            WebUtil.addErrorMessage(WebUtil.getMessage("OperationFail"),WebUtil.getMessage("Acknowledge"));
         }
     }
 
@@ -114,7 +114,7 @@ public class V2_WorkOrderService {
         String token = UserContextService.getAccessToken();
         String res = srApi.rejectWorkOrderAction(token,selectedWorkOrder.getId(),selectedWorkOrder.getCurrentStepId(),reason,status,confirmedDowntime);
         if (res==null || !res.contains("success")) {
-            WebUtil.addErrorMessage("Fail to do reject operation");
+            WebUtil.addErrorMessage(WebUtil.getMessage("OperationFail"),WebUtil.getMessage("Acknowledge"));
         }
     }
 
@@ -122,7 +122,7 @@ public class V2_WorkOrderService {
         String token = UserContextService.getAccessToken();
         String res = srApi.rateWorkOrderAction(token,selectedWorkOrder.getId(),selectedWorkOrder.getCurrentStepId(),rating,comments);
         if (res==null || !res.contains("success")) {
-            WebUtil.addErrorMessage("Fail to do rating operation");
+            WebUtil.addErrorMessage(WebUtil.getMessage("OperationFail"),WebUtil.getMessage("feedbackComment"));
         }
     }
 }

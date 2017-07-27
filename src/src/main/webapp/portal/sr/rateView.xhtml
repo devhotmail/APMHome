@@ -123,12 +123,12 @@
 
         </div>
 
-        <p:dialog id="rateDialog" widgetVar="rateDialog" modal="true" width="500"  resizable="true" draggable="true" appendTo="@(body)" header="评价">
+        <p:dialog id="rateDialog" widgetVar="rateDialog" modal="true" width="500"  resizable="true" draggable="true" appendTo="@(body)" header="#{msg.feedbackComment}">
             <h:form id="rateDialogForm" >
                 <h:panelGroup id="display" rendered="#{not empty workOrderRateController.selectedWorkOrder}">
                     <p:panelGrid columns="2" layout="grid" styleClass="ui-panelgrid-blank form-group">
                         <h:panelGroup >
-                            <label class="label">评价</label>
+                            <label class="label">#{msg.feedbackComment}</label>
                             <p:rating value="#{workOrderRateController.rating}"  cancel="false"/>
                         </h:panelGroup>
                         <h:panelGroup >
@@ -138,7 +138,7 @@
                     </p:panelGrid>
                     <br/>
                     <h:panelGroup>
-                        <p:commandButton immediate="false" validateClient="false" actionListener="#{workOrderRateController.rateWorkOrder()}" value="#{msg.rateWorkOrder}" update="tabview:WorkOrderRateForm tabview:rateDetailForm :growl" icon="ui-icon-check" oncomplete="handleSubmit(args, 'rateDialog');"/>
+                        <p:commandButton immediate="false" validateClient="false" actionListener="#{workOrderRateController.rateWorkOrder()}" value="#{msg.feedbackComment}" update="tabview:WorkOrderRateForm tabview:rateDetailForm :growl" icon="ui-icon-check" oncomplete="handleSubmit(args, 'rateDialog');"/>
                         <p:commandButton immediate="true" value="#{msg.Cancel}" icon="ui-icon-cancel" onclick="PF('rateDialog').hide()"/>
                     </h:panelGroup>
                 </h:panelGroup>

@@ -123,7 +123,7 @@
 
         </div>
 
-        <p:dialog id="ackDialog" widgetVar="ackDialog" modal="true" width="500"  resizable="true" draggable="true" appendTo="@(body)" header="验收">
+        <p:dialog id="ackDialog" widgetVar="ackDialog" modal="true" width="500"  resizable="true" draggable="true" appendTo="@(body)" header="#{msg.Acknowledge}">
             <h:form id="ackDialogForm" >
                 <h:panelGroup id="display" rendered="#{not empty workOrderAckController.selectedWorkOrder}">
                     <p:panelGrid columns="2" layout="grid" styleClass="ui-panelgrid-blank form-group">
@@ -143,8 +143,8 @@
                     </p:panelGrid>
                     <br/>
                     <h:panelGroup>
-                        <p:commandButton immediate="true" validateClient="false" actionListener="#{workOrderAckController.ackWorkOrder()}" value="#{msg.ackWorkOrder}" update="tabview:WorkOrderAckForm tabview:ackDetailForm :growl" icon="ui-icon-check" oncomplete="handleSubmit(args, 'ackDialog');"/>
-                        <p:commandButton validateClient="true" actionListener="#{workOrderAckController.rejectWorkOrder()}" value="#{msg.rejectWorkOrder}" update="tabview:WorkOrderAckForm tabview:ackDetailForm :growl" icon="ui-icon-check" oncomplete="handleSubmit(args, 'ackDialog');"/>
+                        <p:commandButton immediate="true" validateClient="false" actionListener="#{workOrderAckController.ackWorkOrder()}" value="#{msg.AckPass}" update="tabview:WorkOrderAckForm tabview:ackDetailForm :growl" icon="ui-icon-check" oncomplete="handleSubmit(args, 'ackDialog');"/>
+                        <p:commandButton validateClient="true" actionListener="#{workOrderAckController.rejectWorkOrder()}" value="#{msg.AckNoPass}" update="tabview:WorkOrderAckForm tabview:ackDetailForm :growl"  oncomplete="handleSubmit(args, 'ackDialog');"/>
                         <p:commandButton immediate="true" value="#{msg.Cancel}" icon="ui-icon-cancel" onclick="PF('ackDialog').hide()"/>
                     </h:panelGroup>
                 </h:panelGroup>
