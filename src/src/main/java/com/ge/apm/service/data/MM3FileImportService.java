@@ -36,7 +36,7 @@ public class MM3FileImportService {
     private static Pattern PATTERN_Percentage = Pattern.compile("([0-9. ]+)%");
 
     public static enum ImportStatus {
-        New, Exist, Created, Failure, NoAsset
+        New, Exist, Created, Failure, NoAsset,Expired
     }
 
     private Integer siteId = UserContextService.getCurrentUserAccount().getSiteId();
@@ -98,7 +98,10 @@ public class MM3FileImportService {
         importMM3DataMap.values().forEach(item -> {
             MM3DataRecord recordItem = (MM3DataRecord) item.get("record");
             if(item.get("status").equals(MM3FileImportService.ImportStatus.New)){
-                 mm3Dao.save(recordItem);
+                List<MM3DataRecord> oldList = getMM3RecordsListBySystemId(recordItem);
+                oldList.forEach(olditem -> olditem.setStatus(ImportStatus.Expired.toString()));
+                mm3Dao.save(oldList);
+                mm3Dao.save(recordItem);
                 item.put("status", MM3FileImportService.ImportStatus.Created);
             }
         });
@@ -110,6 +113,14 @@ public class MM3FileImportService {
         assetFilters.add(new SearchFilter("systemId", SearchFilter.Operator.EQ, systemId));
         return assetDao.findBySearchFilter(assetFilters);
     }
+    
+     private List<MM3DataRecord> getMM3RecordsListBySystemId(MM3DataRecord record) {
+        List<SearchFilter> mm3Filters = new ArrayList<>();
+        mm3Filters.add(new SearchFilter("systemId", SearchFilter.Operator.EQ, record.getSystemId()));
+        mm3Filters.add(new SearchFilter("status", SearchFilter.Operator.EQ, ImportStatus.New.toString()));
+        return mm3Dao.findBySearchFilter(mm3Filters);
+     }
+    
 
     private List<MM3DataRecord> getMM3RecordsList(MM3DataRecord record) {
         List<SearchFilter> mm3Filters = new ArrayList<>();
