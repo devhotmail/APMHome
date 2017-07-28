@@ -168,7 +168,6 @@ public class V2_WorkOrderService {
         formData.setCurrentStepId(selectedWorkOrder.getCurrentStepId());
         formData.setTakeTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(takeTime));
         formData.setEquipmentTaker(taker);
-
         String res = srApi.invokeWorkOrderAction(token,formData,"take",selectedWorkOrder.getId());
         if (res==null || !res.contains("success")) {
             WebUtil.addErrorMessage(WebUtil.getMessage("OperationFail"),"接单");
