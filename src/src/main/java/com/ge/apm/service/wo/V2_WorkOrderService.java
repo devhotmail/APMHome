@@ -157,6 +157,19 @@ public class V2_WorkOrderService {
         }
     }
     
+    public void takeWorkOrder(V2_WorkOrder selectedWorkOrder, Date takeTime, String taker) {
+        String token = UserContextService.getAccessToken();
+        WorkOrderActionForm formData = new WorkOrderActionForm();
+        formData.setCurrentStepId(selectedWorkOrder.getCurrentStepId());
+        formData.setTakeTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(takeTime));
+        formData.setEquipmentTaker(taker);
+        
+        String res = srApi.invokeWorkOrderAction(token,formData,"take",selectedWorkOrder.getId());
+        if (res==null || !res.contains("success")) {
+            WebUtil.addErrorMessage(WebUtil.getMessage("OperationFail"),"接单");
+        }
+    }
+    
     public void reassignWorkOrder(V2_WorkOrder selectedWorkOrder, Integer assigneeId,String comments) {
         String token = UserContextService.getAccessToken();
         WorkOrderActionForm formData = new WorkOrderActionForm();
@@ -190,7 +203,7 @@ public class V2_WorkOrderService {
         }
     }
     
-    public void closeWorkOrder(V2_WorkOrder selectedWorkOrder, Date confirmedUpTime,Integer assetStatus,List<V2_WorkOrder_Detail> details) {
+    public void closeWorkOrder(V2_WorkOrder selectedWorkOrder, List<V2_WorkOrder_Detail> details) {
         String token = UserContextService.getAccessToken();
         WorkOrderActionForm formData = new WorkOrderActionForm();
         formData.setCurrentStepId(selectedWorkOrder.getCurrentStepId());
@@ -199,9 +212,7 @@ public class V2_WorkOrderService {
         formData.setPatActions(selectedWorkOrder.getPatActions());
         formData.setPatProblems(selectedWorkOrder.getPatProblems());
         formData.setPatTests(selectedWorkOrder.getPatTests());
-        formData.setConfirmedUpTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(confirmedUpTime));
         formData.setCaseType(selectedWorkOrder.getCaseType().toString());
-        formData.setAssetStatus(assetStatus.toString());
         formData.setStepDetail(details);
         
         String res = srApi.invokeWorkOrderAction(token,formData,"close",selectedWorkOrder.getId());
