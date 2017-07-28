@@ -543,9 +543,11 @@ public class AssetInfoController extends JpaCRUDController<AssetInfo> {
     }
 
     public List<OrgInfo> getClinicalDeptList() {
-        List<SearchFilter> OrgInfoFilters = new ArrayList<>();
-        OrgInfoFilters.add(new SearchFilter("hospitalId", SearchFilter.Operator.EQ, selected.getHospitalId()));
-        return orgDao.findBySearchFilter(OrgInfoFilters);
+        OrgInfo hospital = orgDao.findById(selected.getHospitalId());
+        List<SearchFilter> orgInfoFilters = new ArrayList<>();
+        orgInfoFilters.add(new SearchFilter("siteUID", SearchFilter.Operator.EQ, hospital.getSiteUID()));
+        orgInfoFilters.add(new SearchFilter("orgType", SearchFilter.Operator.EQ, 4));
+        return orgDao.findBySearchFilter(orgInfoFilters);
     }
 
     public List<UserAccount> getOwnerList() {
