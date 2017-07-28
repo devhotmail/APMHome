@@ -5,7 +5,7 @@
     xmlns:ui="http://java.sun.com/jsf/facelets"
     xmlns:p="http://primefaces.org/ui"
     xmlns:pu="http://primefaces.org/ultima">
-    
+
     <h:form id="menuform"> 
         <div class="layout-menu #{guestPreferences.menuClass}">
             <ui:include src="./ge-logo.xhtml" />
@@ -14,5 +14,11 @@
             </a>
             <ui:include src="./menu-content.xhtml"/>
         </div>
+        <script>
+            window.onload = function () {
+                var token = "#{userContextService.getAccessToken()}";
+                localStorage.setItem("accessToken", token);
+            }
+        </script>
     </h:form>
 </ui:composition>
