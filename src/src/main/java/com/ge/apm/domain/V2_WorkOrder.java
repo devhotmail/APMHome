@@ -154,6 +154,11 @@ public class V2_WorkOrder implements Serializable {
     @Column(name = "site_uid", columnDefinition = "CHAR(32)")
     private String siteUID;
 
+    @Column(name = "created_date")
+    @Temporal(TemporalType.TIMESTAMP)
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
+    private Date createdDate;
+
     public String getTenantUID() {
         return tenantUID;
     }
@@ -402,7 +407,15 @@ public class V2_WorkOrder implements Serializable {
         this.checkin = checkin;
     }
 
-//		public V2_ServiceRequest getServiceRequest() {
+    public Date getCreatedDate() {
+        return createdDate;
+    }
+
+    public void setCreatedDate(Date createdDate) {
+        this.createdDate = createdDate;
+    }
+
+    //		public V2_ServiceRequest getServiceRequest() {
 //			return serviceRequest;
 //		}
 //

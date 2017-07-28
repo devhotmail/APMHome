@@ -1,0 +1,67 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/WEB-INF/template.xhtml"
+                xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+
+
+    <ui:define name="content">
+        <div class="ui-g">
+            <div class="ui-g-12 card cardTitle">
+                <p:outputLabel class="pageTitle" value="维修工单报表导出"/>
+            </div>
+            <div class="ui-g-12 card ">
+                <h:form id="exportDataForm">
+                    <p:fieldset legend="#{msg.FilterCondition}">
+                        <p:panelGrid columns="4" layout="grid" styleClass="ui-panelgrid-blank form-group">
+                            <h:panelGroup >
+                                <label class="label">集团</label>
+                                <p:selectOneMenu id="institution" value="#{workOrderReportExportController.currentInstitutionUID}" disabled="true">
+                                    <f:selectItem itemLabel="#{msg.selectOneMessage}" itemValue=""/>
+                                    <f:selectItems value="#{workOrderReportExportController.getInstitutionList()}" var="item" itemLabel="#{item.name}" itemValue="#{item.uid}"/>
+                                </p:selectOneMenu>
+                            </h:panelGroup>
+                            <h:panelGroup >
+                                <label class="label">医院</label>
+                                <p:selectOneMenu id="hospital" value="#{workOrderReportExportController.currentHospitalUID}">
+                                    <p:ajax  listener="#{workOrderReportExportController.filterSiteByHospital()}" update="site" />
+                                    <f:selectItem itemLabel="#{msg.selectOneMessage}" itemValue=""/>
+                                    <f:selectItems value="#{workOrderReportExportController.getHospitalList()}" var="item" itemLabel="#{item.name}" itemValue="#{item.uid}"/>
+                                </p:selectOneMenu>
+                            </h:panelGroup>
+                            <h:panelGroup >
+                                <label class="label">院区</label>
+                                <p:selectOneMenu id="site" value="#{workOrderReportExportController.currentSiteUID}">
+                                    <f:selectItem itemLabel="#{msg.selectOneMessage}" itemValue=""/>
+                                    <f:selectItems value="#{workOrderReportExportController.getSiteList()}" var="item" itemLabel="#{item.name}" itemValue="#{item.uid}"/>
+                                </p:selectOneMenu>
+                            </h:panelGroup>
+                        </p:panelGrid>
+                    </p:fieldset>
+                    <p:fieldset legend="#{msg.FilterCondition}">
+                        <p:panelGrid columns="4" layout="grid" styleClass="ui-panelgrid-blank form-group">
+                            <h:panelGroup>
+                                <label class="label">*开始时间</label>
+                                <p:calendar timeZone="GMT+8"  id="startTime" value="#{workOrderReportExportController.startTime}" pattern="yyyy/MM/dd" required="true" requiredMessage="开始时间 #{msg.ValidationRequire}" showOn="button" Input="false" showButtonPanel="true" navigator="true" mask="true"/>
+                            </h:panelGroup>
+                            <h:panelGroup>
+                                <label class="label">*结束时间</label>
+                                <p:calendar timeZone="GMT+8"  id="endTime" value="#{workOrderReportExportController.endTime}" pattern="yyyy/MM/dd" required="true" requiredMessage="结束时间 #{msg.ValidationRequire}" showOn="button" Input="false" showButtonPanel="true" navigator="true" mask="true"/>
+                            </h:panelGroup>
+                        </p:panelGrid>
+                    </p:fieldset>
+
+                    <p:panelGrid columns="2" layout="grid" styleClass="ui-panelgrid-blank form-group" >
+                        <h:panelGroup>
+                        <p:commandButton ajax="false" value="#{msg.Export}" actionListener="#{workOrderReportExportController.exportData()}" oncomplete="PrimeFaces.monitorDownload(start, stop);" icon="ui-icon-arrowthick-1-s" validateClient="true">
+                            <p:fileDownload value="#{workOrderReportExportController.exportFile}" />
+                        </p:commandButton>
+                        </h:panelGroup>
+                    </p:panelGrid>
+                </h:form>
+            </div>
+        </div>
+    </ui:define>
+</ui:composition>
