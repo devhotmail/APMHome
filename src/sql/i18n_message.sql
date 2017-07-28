@@ -206,9 +206,7 @@ INSERT INTO "public"."i18n_message" VALUES ('425', 'label', 'MM3Import', '冷头
 INSERT INTO "public"."i18n_message" VALUES ('426', 'label', 'equipmentTaker', '取件人', 'EquipmentTaker', null, '-1');
 INSERT INTO "public"."i18n_message" VALUES ('427', 'label', 'feedbackRating', '评分', 'Feedback Rating', null, '-1');
 INSERT INTO "public"."i18n_message" VALUES ('428', 'label', 'feedbackComment', '评价', 'Feedback Comment', null, '-1');
-INSERT INTO "public"."i18n_message" VALUES ('429', 'label', 'patProblems', 'PAT问题', 'PAT Problems', null, '-1');
-INSERT INTO "public"."i18n_message" VALUES ('430', 'label', 'patActions', 'PAT处理', 'PAT Actions', null, '-1');
-INSERT INTO "public"."i18n_message" VALUES ('431', 'label', 'patTests', 'PAT测试', 'PAT Tests', null, '-1');
+
 INSERT INTO "public"."i18n_message" VALUES ('432', 'label', 'confirmedDownTime', '停机时间', 'Confirmed DownTime', null, '-1');
 INSERT INTO "public"."i18n_message" VALUES ('433', 'label', 'dispatchMgmt', '派工管理', 'Dispatch Management', null, '-1');
 INSERT INTO "public"."i18n_message" VALUES ('434', 'label', 'dispatchWorkOrder', '派工', 'Dispatch Work Order', null, '-1');
