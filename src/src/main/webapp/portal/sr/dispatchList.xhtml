@@ -20,7 +20,7 @@
     <ui:define name="content">
         <div class="ui-g clearfix">
             <div class="ui-g-12 card cardTitle">
-                <p:outputLabel class="pageTitle" value="#{msg.WorkOrder} #{msg.List}"/>
+                <p:outputLabel class="pageTitle" value="#{msg.dispatchWorkOrder} #{msg.List}"/>
             </div>
 
             <div class="ui-g-12 card">
@@ -65,8 +65,8 @@
                         <p:column headerText="#{msg.currentPersonName}">
                             <h:outputText value="#{item.currentPersonName}"/>
                         </p:column>
-                        <p:column headerText="dispatchWorkOrder" rendered="#{workOrderDispatchController.queryIndex==2}">
-                            <p:commandButton value="dispatchWorkOrder" actionListener="#{workOrderDispatchController.prepareDispatch(item.id)}" update=":dispatchDialogForm" oncomplete="PF('dispatchDialog').show()"/>
+                        <p:column headerText="#{msg.dispatchWorkOrder}" rendered="#{workOrderDispatchController.queryIndex==2}">
+                            <p:commandButton value="#{msg.dispatchWorkOrder}" actionListener="#{workOrderDispatchController.prepareDispatch(item.id)}" update=":dispatchDialogForm" oncomplete="PF('dispatchDialog').show()"/>
                         </p:column>
 
                         <f:facet name="{Toolbar}">
@@ -84,7 +84,7 @@
 
 
 
-        <p:dialog id="dispatchDialog" widgetVar="dispatchDialog" modal="true" width="500"  resizable="true" draggable="true" appendTo="@(body)" header="派工">
+        <p:dialog id="dispatchDialog" widgetVar="dispatchDialog" modal="true" width="500"  resizable="true" draggable="true" appendTo="@(body)" header="#{msg.dispatchWorkOrder}">
             <h:form id="dispatchDialogForm" >
                 <h:panelGroup id="display" rendered="#{not empty workOrderDispatchController.selectedWorkOrder}">
                     <p:panelGrid columns="2" layout="grid" styleClass="ui-panelgrid-blank form-group">

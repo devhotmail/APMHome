@@ -95,6 +95,8 @@ public class AssetInfo implements Serializable {
     private String locationName;
     @Column(name = "clinical_dept_id")
     private Integer clinicalDeptId;//设备使用科室
+    @Column(name = "clinical_dept_uid" , columnDefinition = "CHAR(32)")
+    private String clinicalDeptUID;//设备使用科室
     @Size(max = 64)
     @Column(name = "clinical_dept_name")
     private String clinicalDeptName;
@@ -844,6 +846,15 @@ public class AssetInfo implements Serializable {
     public void setAssetCode68(String assetCode68) {
         this.assetCode68 = assetCode68;
     }
+
+    public String getClinicalDeptUID() {
+        return clinicalDeptUID;
+    }
+
+    public void setClinicalDeptUID(String clinicalDeptUID) {
+        this.clinicalDeptUID = clinicalDeptUID;
+    }
+    
 
     @Override
     public int hashCode() {

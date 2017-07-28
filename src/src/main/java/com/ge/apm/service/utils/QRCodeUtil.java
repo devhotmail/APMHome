@@ -233,7 +233,7 @@ public class QRCodeUtil {
         textSB.insert(14, "-");
 
         String os = System.getProperty("os.name").toLowerCase();
-        int textX = os.indexOf("windows") != -1? 85 * size / 472 : 70 * size / 472 ;
+        int textX = os.indexOf("windows") != -1? 85 * size / 472 : 58 * size / 472 ;
         int textY = 425 * size / 472;
         
         int sizeOfBackGround = size;

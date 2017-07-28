@@ -272,6 +272,12 @@ public class AssetInfoController extends JpaCRUDController<AssetInfo> {
         if (null != object.getClinicalDeptId()) {
             OrgInfo org = orgDao.findById(object.getClinicalDeptId());
             object.setClinicalDeptName(org.getName());
+
+            object.setTenantUID(org.getTenantUID());
+            object.setHospitalUID(org.getHospitalUID());
+            object.setInstitutionUID(org.getInstitutionUID());
+            object.setSiteUID(org.getSiteUID());
+            object.setClinicalDeptUID(org.getUid());
         }
         DateTime temp;
         if (null != object.getManufactDate()) {
@@ -537,9 +543,11 @@ public class AssetInfoController extends JpaCRUDController<AssetInfo> {
     }
 
     public List<OrgInfo> getClinicalDeptList() {
-        List<SearchFilter> OrgInfoFilters = new ArrayList<>();
-        OrgInfoFilters.add(new SearchFilter("hospitalId", SearchFilter.Operator.EQ, selected.getHospitalId()));
-        return orgDao.findBySearchFilter(OrgInfoFilters);
+        OrgInfo hospital = orgDao.findById(selected.getHospitalId());
+        List<SearchFilter> orgInfoFilters = new ArrayList<>();
+        orgInfoFilters.add(new SearchFilter("siteUID", SearchFilter.Operator.EQ, hospital.getSiteUID()));
+        orgInfoFilters.add(new SearchFilter("orgType", SearchFilter.Operator.EQ, 4));
+        return orgDao.findBySearchFilter(orgInfoFilters);
     }
 
     public List<UserAccount> getOwnerList() {

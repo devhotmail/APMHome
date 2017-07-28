@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+
+    <ui:composition>
+
+        <div class="ui-g-12 card">
+
+            <h:form id="ackDetailForm">
+                <p:fieldset legend="#{msg.WorkOrder}" rendered="#{not empty workOrderAckController.selected}">
+
+                    <p:panelGrid columns="3" layout="grid" styleClass="ui-panelgrid-blank form-group">
+
+                        <h:panelGroup>
+                            <label class="label">#{msg.status}</label>
+                            <p:outputLabel value="#{workOrderAckController.selected.currentStepName}" />
+                        </h:panelGroup>
+                        <h:panelGroup>
+                            <label class="label">#{msg.caseType}</label>
+                            <p:outputLabel value="#{workOrderAckController.selected.caseType}"/>
+                        </h:panelGroup>
+                        <h:panelGroup>
+                            <label class="label">#{msg.totalManHour}</label>
+                            <p:outputLabel value="#{workOrderAckController.selected.totalManHour}"/>
+                        </h:panelGroup>
+                        <h:panelGroup>
+                            <label class="label">#{msg.totalPrice}</label>
+                            <p:outputLabel value="#{workOrderAckController.selected.totalPrice}"/>
+                        </h:panelGroup>
+                        <h:panelGroup>
+                            <label class="label">#{msg.currentPersonName}</label>
+                            <p:outputLabel value="#{workOrderAckController.selected.currentPersonName}"/>
+                        </h:panelGroup>
+                        <h:panelGroup>
+                            <label class="label">#{msg.status}</label>
+                            <p:outputLabel value="#{fieldMsg.fieldValue('status',workOrderAckController.selected.status)}"/>
+                        </h:panelGroup>
+                        <h:panelGroup>
+                            <label class="label">#{msg.feedbackRating}</label>
+                            <p:outputLabel value="#{workOrderAckController.selected.feedbackRating}"/>
+                        </h:panelGroup>
+                        <h:panelGroup>
+                            <label class="label">#{msg.feedbackComment}</label>
+                            <p:outputLabel value="#{workOrderAckController.selected.feedbackComment}"/>
+                        </h:panelGroup>
+                        <h:panelGroup>
+                            <label class="label">#{msg.endTime}</label>
+                            <p:outputLabel value="#{workOrderAckController.selected.closeTime}">
+                                <f:convertDateTime timeZone="GMT+8" pattern="yyyy/MM/dd HH:mm" />
+                            </p:outputLabel>
+                        </h:panelGroup>
+                        <h:panelGroup>
+                            <label class="label">#{msg.patProblems}</label>
+                            <p:outputLabel value="#{workOrderAckController.selected.patProblems}"/>
+                        </h:panelGroup>
+                        <h:panelGroup>
+                            <label class="label">#{msg.patActions}</label>
+                            <p:outputLabel value="#{workOrderAckController.selected.patActions}"/>
+                        </h:panelGroup>
+                        <h:panelGroup>
+                            <label class="label">#{msg.patTests}</label>
+                            <p:outputLabel value="#{workOrderAckController.selected.patTests}"/>
+                        </h:panelGroup>
+
+                    </p:panelGrid>
+
+
+                    <p:dataTable value="#{workOrderAckController.getWOrkOrderStep(workOrderAckController.selected.id)}" var="stepItem">
+                        <p:column headerText="#{msg.stepName}">
+                            <h:outputText value="#{stepItem.stepName}" />
+                        </p:column>
+                        <p:column headerText="#{msg.ownerName}">
+                            <h:outputText value="#{stepItem.ownerName}" />
+                        </p:column>
+                        <p:column headerText="#{msg.startTime}">
+                            <h:outputText value="#{stepItem.startTime}" >
+                                <f:convertDateTime timeZone="GMT+8" pattern="yyyy/MM/dd HH:mm" />
+                            </h:outputText>
+                        </p:column>
+                        <p:column headerText="#{msg.endTime}">
+                            <h:outputText value="#{stepItem.endTime}" >
+                                <f:convertDateTime timeZone="GMT+8" pattern="yyyy/MM/dd HH:mm" />
+                            </h:outputText>
+                        </p:column>
+                        <p:column headerText="#{msg.description}">
+                            <h:outputText value="#{stepItem.comments}" />
+                        </p:column>
+
+                    </p:dataTable>
+
+                    <br/>
+
+                    <p:dataTable value="#{workOrderAckController.getWOrkOrderDetail(workOrderAckController.selected.id)}" var="detailItem"  rendered="#{not empty workOrderAckController.getWOrkOrderDetail(workOrderAckController.selected.id)}">
+                        <p:column headerText="#{msg.manHours}">
+                            <h:outputText value="#{detailItem.manHours}" />
+                        </p:column>
+                        <p:column headerText="#{msg.accessory}">
+                            <h:outputText value="#{detailItem.parts}" />
+                        </p:column>
+                        <p:column headerText="#{msg.accessoryQuantity}">
+                            <h:outputText value="#{detailItem.apartsQuantity}" />
+                        </p:column>
+                        <p:column headerText="#{msg.accessoryPrice}">
+                            <h:outputText value="#{detailItem.partsPrice}" />
+                        </p:column>
+                        <p:column headerText="#{msg.otherExpense}">
+                            <h:outputText value="#{detailItem.otherExpense}" />
+                        </p:column>
+                        <p:column headerText="#{msg.cowokerUserName}">
+                            <h:outputText value="#{detailItem.cowokerUserName}" />
+                        </p:column>
+
+                    </p:dataTable>
+                </p:fieldset>
+
+
+            </h:form>
+
+        </div>
+
+        <p:dialog id="ackDialog" widgetVar="ackDialog" modal="true" width="500"  resizable="true" draggable="true" appendTo="@(body)" header="#{msg.Acknowledge}">
+            <h:form id="ackDialogForm" >
+                <h:panelGroup id="display" rendered="#{not empty workOrderAckController.selectedWorkOrder}">
+                    <p:panelGrid columns="2" layout="grid" styleClass="ui-panelgrid-blank form-group">
+                        <h:panelGroup >
+                            <label class="label">#{msg.cancelWorkOrderReason}</label>
+                            <p:inputTextarea value="#{workOrderAckController.failReason}" maxlength="256"  required="true" requiredMessage="#{msg.cancelWorkOrderReason}#{msg.ValidationRequire}"/>
+                        </h:panelGroup>
+                        <h:panelGroup id="assetstatus">
+                            <label class="label">#{msg.status}</label>
+                            <p:selectOneRadio id="status" value="#{workOrderAckController.currentStatus}" required="true" requiredMessage="#{msg.status} #{msg.ValidationRequire}">
+                                <p:ajax  listener="#{workOrderAckController.onStatusChange()}"  update="assetstatus" />
+                                <f:selectItems value="#{fieldMsg.getFieldValueList('assetStatus')}" var="item" itemLabel="#{item.value}" itemValue="#{item.msgKey}"/>
+                            </p:selectOneRadio>
+                            <p:calendar timeZone="GMT+8" label="#{msg.confirmedDownTime}" rendered="#{workOrderAckController.needConfirmTime}"  id="confirmedDownTime" pattern="yyyy/MM/dd HH:mm" value="#{workOrderAckController.confirmedDownTime}" showOn="button" 
+                                        readonlyInput="false" showButtonPanel="true" navigator="true" mask="true" required="true" requiredMessage="#{msg.confirmedDownTime} #{msg.ValidationRequire}"/>
+                        </h:panelGroup>
+                    </p:panelGrid>
+                    <br/>
+                    <h:panelGroup>
+                        <p:commandButton immediate="true" validateClient="false" actionListener="#{workOrderAckController.ackWorkOrder()}" value="#{msg.AckPass}" update="tabview:WorkOrderAckForm tabview:ackDetailForm :growl" icon="ui-icon-check" oncomplete="handleSubmit(args, 'ackDialog');"/>
+                        <p:commandButton validateClient="true" actionListener="#{workOrderAckController.rejectWorkOrder()}" value="#{msg.AckNoPass}" update="tabview:WorkOrderAckForm tabview:ackDetailForm :growl"  oncomplete="handleSubmit(args, 'ackDialog');"/>
+                        <p:commandButton immediate="true" value="#{msg.Cancel}" icon="ui-icon-cancel" onclick="PF('ackDialog').hide()"/>
+                    </h:panelGroup>
+                </h:panelGroup>
+            </h:form>
+        </p:dialog>
+    </ui:composition>
+</html>

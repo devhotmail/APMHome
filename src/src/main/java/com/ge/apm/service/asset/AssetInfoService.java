@@ -7,6 +7,7 @@ package com.ge.apm.service.asset;
 
 import com.ge.apm.dao.AssetContractRepository;
 import com.ge.apm.dao.AssetInfoRepository;
+import com.ge.apm.dao.OrgInfoRepository;
 import com.ge.apm.domain.AssetContract;
 import com.ge.apm.domain.AssetInfo;
 import com.ge.apm.domain.OrgInfo;
@@ -30,6 +31,7 @@ public class AssetInfoService {
 
     AssetInfoRepository assetInfoDao = WebUtil.getBean(AssetInfoRepository.class);
     AssetContractRepository contractDao = WebUtil.getBean(AssetContractRepository.class);
+    OrgInfoRepository orgDao = WebUtil.getBean(OrgInfoRepository.class);
     
     UaaService uaaService = WebUtil.getBean(UaaService.class);
 
@@ -57,6 +59,26 @@ public class AssetInfoService {
     }
     
     public List<OrgInfo> getHospitalList(){
-        return uaaService.getHospitalListBySiteId(UserContextService.getCurrentUserAccount().getSiteId());
+        UserAccount user = UserContextService.getCurrentUserAccount();
+        List<SearchFilter> orgInfoFilters = new ArrayList<>();
+        if(user.getOrgLevel()==null) {
+            return null;
+        }
+        switch (user.getOrgLevel()){
+            case 0: orgInfoFilters.add(new SearchFilter("tenantUID", SearchFilter.Operator.EQ, user.getTenantUID())); break;
+            case 1: orgInfoFilters.add(new SearchFilter("institutionUID", SearchFilter.Operator.EQ, user.getInstitutionUID())); break;
+            case 2: orgInfoFilters.add(new SearchFilter("hospitalUID", SearchFilter.Operator.EQ, user.getHospitalUID())); break;
+            case 3: orgInfoFilters.add(new SearchFilter("siteUID", SearchFilter.Operator.EQ, user.getSiteUID())); break;
+            default : return null;
+        }
+        orgInfoFilters.add(new SearchFilter("orgType", SearchFilter.Operator.NE, 4));
+        return orgDao.findBySearchFilter(orgInfoFilters);
+    }
+    
+    public List<OrgInfo> getOrgDeptList(String siteUid){
+        List<SearchFilter> orgInfoFilters = new ArrayList<>();
+        orgInfoFilters.add(new SearchFilter("siteUID", SearchFilter.Operator.EQ, siteUid));
+        orgInfoFilters.add(new SearchFilter("orgType", SearchFilter.Operator.EQ, 4));
+        return orgDao.findBySearchFilter(orgInfoFilters);
     }
 }
