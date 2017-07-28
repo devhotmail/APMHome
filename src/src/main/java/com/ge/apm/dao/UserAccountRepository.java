@@ -45,6 +45,17 @@ public interface UserAccountRepository extends GenericRepository<UserAccount> {
     UserAccount getByWeChatId(String weChatId);
     List<UserAccount> getByOrgInfoId(int orgInfoId);
 
+
+    @Query(value="select ua.* from user_account ua right join (select user_id from biomed_group_user where group_id in (select biomed_group_id from asset_tag_biomed_group where tag_id in (select tag_id from asset_tag_rule where asset_id = ?1)) ) tb1 on ua.id = tb1.user_id",nativeQuery = true)
+    List<UserAccount> getResponserByAssetId(Integer assetId);
+
+    /*select ua.* from asset_tag_rule atr,asset_tag ast,asset_tag_biomed_group atbg, biomed_group bg,biomed_group_user bgu, user_account ua where atr.asset_id=23 and atr.tag_id = ast.id and ast.id= atbg.tag_id and atbg.biomed_group_id =bg.id and bg.id=bgu.group_id and bgu.user_id = ua.id -- same as below*/
+    @Query(value="select ua.* from user_account ua where id in (select asset_owner_id from asset_info where id = ?1 union select asset_owner_id2 from asset_info where id = ?1)",nativeQuery = true)
+    List<UserAccount> getResponserWithAsset(Integer assetId);
+
+    //如果没有对某资产配置过对应的医院工，那么就通过标签中的siteId获取默认的医工
+    @Query(value="select ua.* from user_account ua, asset_info ai, user_role r where ai.id = ?1 and ai.site_id = ua.site_id and ua.id = r.user_id and r.role_id = 3",nativeQuery=true)
+    List<UserAccount> getDefaultUsers(int assetId);
     /* sysrole.id=2*/
 
 }

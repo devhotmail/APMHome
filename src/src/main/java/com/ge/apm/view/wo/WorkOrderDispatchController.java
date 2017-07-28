@@ -5,17 +5,13 @@
  */
 package com.ge.apm.view.wo;
 
-import com.ge.apm.dao.BiomedGroupRepository;
-import com.ge.apm.dao.ServiceRequestRepository;
-import com.ge.apm.dao.V2_WorkOrderRepository;
-import com.ge.apm.domain.UserAccount;
-import com.ge.apm.domain.V2_ServiceRequest;
-import com.ge.apm.domain.V2_WorkOrder;
-import com.ge.apm.domain.V2_WorkOrder_Detail;
-import com.ge.apm.domain.V2_WorkOrder_Step;
+import com.ge.apm.dao.*;
+import com.ge.apm.domain.*;
 import com.ge.apm.service.wo.V2_WorkOrderService;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 import com.ge.apm.view.sysutil.UserContextService;
@@ -39,10 +35,11 @@ import webapp.framework.web.WebUtil;
 public class WorkOrderDispatchController extends GenericCRUDUUIDController<V2_WorkOrder> implements Serializable {
 
     V2_WorkOrderRepository dao;
-
+    I18nMessageRepository i18nDao;
     private ServiceRequestRepository srDao;
     private V2_WorkOrderService woService;
-
+    private V2_WorkOrderStepRepository workOrderStepRepository;
+    private List<I18nMessage>   msgModeList;
     //status：0-待派工/1-待接单/2-维修中/3-已完成/4-已派工/10-已取消  待验收-5, 待关单-6, 已关单-7
     private Integer queryIndex;
 
@@ -57,10 +54,39 @@ public class WorkOrderDispatchController extends GenericCRUDUUIDController<V2_Wo
         srDao = WebUtil.getBean(ServiceRequestRepository.class);
         woService = WebUtil.getBean(V2_WorkOrderService.class);
         groupDao = WebUtil.getBean(BiomedGroupRepository.class);
+        workOrderStepRepository = WebUtil.getBean(V2_WorkOrderStepRepository.class);
         this.filterBySite = true;
         queryIndex = 2;
         ua = UserContextService.getCurrentUserAccount();
 
+    }
+
+    private String testMethod;
+    private String solution;
+    private String problemDes;
+
+    public String getTestMethod() {
+        return testMethod;
+    }
+
+    public void setTestMethod(String testMethod) {
+        this.testMethod = testMethod;
+    }
+
+    public String getSolution() {
+        return solution;
+    }
+
+    public void setSolution(String solution) {
+        this.solution = solution;
+    }
+
+    public String getProblemDes() {
+        return problemDes;
+    }
+
+    public void setProblemDes(String problemDes) {
+        this.problemDes = problemDes;
     }
 
     @Override
@@ -111,7 +137,46 @@ public class WorkOrderDispatchController extends GenericCRUDUUIDController<V2_Wo
 
 
     }
+private String comments;
 
+    public void setComments(String comments) {
+        this.comments = comments;
+    }
+
+    public List<UserAccount> getRepairPerson(){
+    List<UserAccount> assetResponser = woService.getAssetResponser(this.selectedWorkOrder.getAssetId());
+    return assetResponser;
+}
+public String getComments(){
+    V2_WorkOrder_Step wostep = workOrderStepRepository
+            .getByWorkOrderIdAndStepIdAndEndTimeIsNull(this.selectedWorkOrder.getId(), queryIndex);
+        return wostep.getComments();
+
+}
+public List<I18nMessage> getRepairType(){
+    List<I18nMessage> i18nList = i18nDao.getByMsgType("repairType");
+    return i18nList;
+   /* List<String> repairType= new ArrayList<String>();
+    for(I18nMessage i18n: i18nList) {
+        repairType.add(i18n.getValueZh());
+    }
+    return repairType;*/
+}
+
+Date esTime;
+
+    public Date getEsTime() {
+        return esTime;
+    }
+
+    public void setEsTime(Date esTime) {
+        this.esTime = esTime;
+    }
+
+    public Date getEstimatedClosedTime(){
+        V2_ServiceRequest sr = srDao.findById(this.selectedWorkOrder.getSrId());
+        return sr.getEstimatedCloseTime();
+    }
     public void defineCategory(Integer cate){
         this.category = cate;
         cancel();
@@ -152,6 +217,7 @@ public class WorkOrderDispatchController extends GenericCRUDUUIDController<V2_Wo
     
     public void prepareDispatch(String woid){
         selectedWorkOrder = dao.findById(woid);
+
     }
     
     
@@ -162,6 +228,14 @@ public class WorkOrderDispatchController extends GenericCRUDUUIDController<V2_Wo
     public void dispatchWorkOrder(){
         woService.dispatchWorkOrder(selectedWorkOrder);
         cancel();
+    }
+
+    public void takeWorkOrder(){
+//this.getEsTime()
+        //acceptWorkOrder(selectedWorkOrder, estimeClosetime, extype, comments)
+    }
+    public void transferWorkOrder(){
+//reassignWorkOrder(selectWorkOrderer, assigneId, comments);
     }
     
 

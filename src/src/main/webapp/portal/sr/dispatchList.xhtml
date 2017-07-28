@@ -28,7 +28,7 @@
 
                 <h:form id="dispatchListForm">
                     <h:panelGrid id="buttonSet" columns="7" cellpadding="5">
-                       <!-- <p:commandButton value="#{fieldMsg.fieldValue('woSteps',2)}" id="btnCreate" process="@this" update="datalist buttonSet :dispatchDetailForm " actionListener="#{workOrderDispatchController.searchList(2)}" disabled="#{workOrderDispatchController.queryIndex==2}" />-->
+                        <p:commandButton value="#{fieldMsg.fieldValue('woSteps',2)}" id="btnCreate" process="@this" update="datalist buttonSet :dispatchDetailForm " actionListener="#{workOrderDispatchController.searchList(2)}" disabled="#{workOrderDispatchController.queryIndex==2}" />
                         <p:commandButton value="#{fieldMsg.fieldValue('woSteps',3)}" id="btn1" process="@this" update="datalist buttonSet :dispatchDetailForm " actionListener="#{workOrderDispatchController.searchList(3)}"  disabled="#{workOrderDispatchController.queryIndex==3}" />
                         <p:commandButton value="#{fieldMsg.fieldValue('woSteps',4)}" id="btn2" process="@this" update="datalist buttonSet :dispatchDetailForm " actionListener="#{workOrderDispatchController.searchList(4)}" disabled="#{workOrderDispatchController.queryIndex==4}"/>
 
@@ -93,7 +93,14 @@
                         </p:column>
                         <p:column headerText="dispatchWorkOrder" rendered="#{workOrderDispatchController.queryIndex==2}">
                             <p:commandButton value="dispatchWorkOrder" actionListener="#{workOrderDispatchController.prepareDispatch(item.id)}" update=":dispatchDialogForm" oncomplete="PF('dispatchDialog').show()"/>
+
                         </p:column>
+
+                        <p:column headerText="接单/转单" rendered="#{workOrderDispatchController.queryIndex==3}">
+                            <p:commandButton value="接单" actionListener="#{workOrderDispatchController.prepareDispatch(item.id)}" update=":takeOrderDialogForm" oncomplete="PF('takeOrderDialog').show()"/>
+                            <p:commandButton value="转单" actionListener="#{workOrderDispatchController.prepareDispatch(item.id)}" update=":transferOrderDialogForm" oncomplete="PF('transferOrderDialog').show()"/>
+                        </p:column>
+
 
                         <f:facet name="{Toolbar}">
                             <p:commandButton title="#{msg.exportToXLS}" icon="ui-icon-arrowstop-1-s" ajax="false">
@@ -107,8 +114,60 @@
 
             </div>
         </div>
+        <p:dialog id="takeOrderDialog" widgetVar="takeOrderDialog" modal="true" width="500"  resizable="true" draggable="true" appendTo="@(body)" header="接单">
+            <h:form id="takeOrderDialogForm" >
+                <h:panelGroup id="display1" rendered="#{not empty workOrderDispatchController.selectedWorkOrder}">
+                    <p:panelGrid columns="3" layout="grid" styleClass="ui-panelgrid-blank form-group">
+                        <h:panelGroup>
+                            <label class="label">预估时间</label>
+                                <p:calendar timeZone="GMT+8" id="fillDate" pattern="yyyy/MM/dd"  value="#{workOrderDispatchController.esTime}" showOn="button" showButtonPanel="true" navigator="true" readonlyInput="false" locale= "zh" required="true" requiredMessage="预估时间 #{msg.ValidationRequire}"></p:calendar>
+                        </h:panelGroup>
+                <h:panelGroup>
+                            <label class="label">维修类型</label>
+                            <p:selectOneMenu  value="#{workOrderDispatchController.selectedWorkOrder.repairType}" required="true" requiredMessage="#{msg.intExtType} #{msg.ValidationRequire}">
+                                <f:selectItem itemLabel="#{msg.selectOneMessage}"/>
+                                <f:selectItems value="#{fieldMsg.getFieldValueList('repairType')}" var="item" itemLabel="#{item.value}" itemValue="#{item.msgKey}"/>
 
+                            </p:selectOneMenu>
+                </h:panelGroup>
+                <h:panelGroup>
+                            <label class="label">备注</label>
+                    <p:inputTextarea value="#{workOrderDispatchController.comments}" rows="3"  cols="40"  queryDelay="750" minQueryLength="4"/>
+                </h:panelGroup>
 
+                    </p:panelGrid>
+                    <br/>
+                    <h:panelGroup>
+                        <p:commandButton validateClient="true" actionListener="#{workOrderDispatchController.takeWorkOrder()}" value="接单" update=":takeOrderDialogForm :growl" icon="ui-icon-check" oncomplete="handleSubmit(args, 'takeOrderDialog');"/>
+                       <p:commandButton immediate="true" value="#{msg.Cancel}" icon="ui-icon-cancel" onclick="PF('takeOrderDialog').hide()"/>
+                    </h:panelGroup>
+                </h:panelGroup>
+            </h:form>
+        </p:dialog>
+
+        <p:dialog id="transferOrderDialog" widgetVar="transferOrderDialog" modal="true" width="500"  resizable="true" draggable="true" appendTo="@(body)" header="接单">
+            <h:form id="transferOrderDialogForm" >
+                <h:panelGroup id="display2" rendered="#{not empty workOrderDispatchController.selectedWorkOrder}">
+                    <p:panelGrid columns="1" layout="grid" styleClass="ui-panelgrid-blank form-group">
+
+                        <h:panelGroup>
+                            <label class="label">维修人员</label>
+                            <p:selectOneMenu  value="#{workOrderDispatchController.selectedWorkOrder.currentPersonId}" required="true" requiredMessage="#{msg.currentPersonId} #{msg.ValidationRequire}">
+                                <f:selectItem itemLabel="#{msg.selectOneMessage}"/>
+                                <f:selectItems value="#{workOrderDispatchController.getRepairPerson()}" var="item" itemLabel="#{item.name}" itemValue="#{item.id}"/>
+
+                            </p:selectOneMenu>
+                        </h:panelGroup>
+                    </p:panelGrid>
+                    <br/>
+
+                </h:panelGroup>
+                <h:panelGroup>
+                    <p:commandButton validateClient="true" actionListener="#{workOrderDispatchController.transferWorkOrder()}" value="转单" update=":transferOrderDialogForm :growl" icon="ui-icon-check" oncomplete="handleSubmit(args, 'transferOrderDialog');"/>
+                    <p:commandButton immediate="true" value="#{msg.Cancel}" icon="ui-icon-cancel" onclick="PF('transferOrderDialog').hide()"/>
+                </h:panelGroup>
+            </h:form>
+        </p:dialog>
 
         <p:dialog id="dispatchDialog" widgetVar="dispatchDialog" modal="true" width="500"  resizable="true" draggable="true" appendTo="@(body)" header="派工">
             <h:form id="dispatchDialogForm" >
@@ -135,6 +194,44 @@
                 </h:panelGroup>
             </h:form>
         </p:dialog>
+
+        <!--维修完成对话框-->
+        <p:dialog id="finishDialog" widgetVar="dispatchDialog" modal="true" width="500"  resizable="true" draggable="true" appendTo="@(body)" header="派工">
+            <h:form id="finishDialogDialogForm" >
+                <h:panelGroup id="display3" rendered="#{not empty workOrderDispatchController.selectedWorkOrder}">
+                    <p:panelGrid columns="5" layout="grid" styleClass="ui-panelgrid-blank form-group">
+                        <h:panelGroup>
+                            <label class="label">#{msg.WorkOrderAssignee}*</label>
+                            <p:selectOneMenu  value="#{workOrderDispatchController.selectedWorkOrder.currentPersonId}" required="true" requiredMessage="#{msg.intExtType} #{msg.ValidationRequire}">
+                                <f:selectItems value="#{workOrderDispatchController.getWorkerList()}" var="item" itemLabel="#{item.name}" itemValue="#{item.id}"/>
+                            </p:selectOneMenu>
+                        </h:panelGroup>
+                        <h:panelGroup>
+                            <label class="label">备注</label>
+                            <p:inputTextarea value="#{workOrderDispatchController.comments}" rows="3"  cols="40"  queryDelay="750" minQueryLength="4"/>
+                        </h:panelGroup>
+                        <h:panelGroup>
+                            <label class="label">备注</label>
+                            <p:inputTextarea value="#{workOrderDispatchController.comments}" rows="3"  cols="40"  queryDelay="750" minQueryLength="4"/>
+                        </h:panelGroup>
+                        <h:panelGroup>
+                            <label class="label">测试方法</label>
+                            <p:inputTextarea value="#{workOrderDispatchController.comments}" rows="3"  cols="40"  queryDelay="750" minQueryLength="4"/>
+                        </h:panelGroup>
+                        <h:panelGroup>
+                            <label class="label">备注</label>
+                            <p:inputTextarea value="#{workOrderDispatchController.comments}" rows="3"  cols="40"  queryDelay="750" minQueryLength="4"/>
+                        </h:panelGroup>
+                    </p:panelGrid>
+                    <br/>
+                    <h:panelGroup>
+                        <p:commandButton validateClient="true" actionListener="#{workOrderDispatchController.dispatchWorkOrder()}" value="#{msg.dispatchWorkOrder}" update=":dispatchListForm :dispatchDetailForm :growl" icon="ui-icon-check" oncomplete="handleSubmit(args, 'dispatchDialog');"/>
+                        <p:commandButton immediate="true" value="#{msg.Cancel}" icon="ui-icon-cancel" onclick="PF('dispatchDialog').hide()"/>
+                    </h:panelGroup>
+                </h:panelGroup>
+            </h:form>
+        </p:dialog>
+
 
     </ui:define> 
 

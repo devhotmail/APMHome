@@ -1,5 +1,6 @@
 package com.ge.apm.dao;
 
+import com.ge.apm.domain.V2_ServiceRequest;
 import com.ge.apm.domain.V2_WorkOrder;
 
 import java.util.Collection;
@@ -27,7 +28,6 @@ public interface V2_WorkOrderRepository extends GenericRepositoryUUID<V2_WorkOrd
 
     @Query(value = "select  wo.* from V2_Work_Order wo where wo.current_Person_Id in (select distinct bgu2.user_Id from Biomed_Group_User bgu2 where bgu2.group_Id in (select  bgu3.group_Id from Biomed_Group_User bgu3 where bgu2.user_Id=?1)) and wo.current_Step_Id=3 and wo.status=1 order by ?#{#pageable}",countQuery ="select  wo.* from V2_Work_Order wo where wo.current_Person_Id in (select distinct bgu2.user_Id from Biomed_Group_User bgu2 where bgu2.group_Id in (select  bgu3.group_Id from Biomed_Group_User bgu3 where bgu2.user_Id=?1)) and wo.current_Step_Id=3 and wo.status=1" ,nativeQuery = true)
     Page<V2_WorkOrder> fetchAvailableSameGroupWorkOrderByUser(Integer userId,Pageable pageable);
-
 
     /* select distinct wo.* from v2_work_order wo where wo.asset_id in  (select distinct(tr.asset_id) from biomed_group_user bgu,asset_tag_biomed_group tbg,asset_tag_rule tr where tbg.biomed_group_Id=bgu.group_Id and tbg.tag_id =tr.tag_id and bgu.user_id=?1) and wo.current_person_id='-1' and wo.current_step_id=3 and wo.status=1 or wo.current_person_id=?1 and wo.current_step_id=3 and wo.status=1 */
 }

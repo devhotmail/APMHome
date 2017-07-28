@@ -29,4 +29,6 @@ public interface ServiceRequestRepository extends GenericRepositoryUUID<V2_Servi
 
     public List<V2_ServiceRequest> findByAssetIdAndStatus(int assetId, int srStatus);
 
+
+
 }
