@@ -1,0 +1,130 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/WEB-INF/template.xhtml">
+
+    <ui:define name="preRenderView">
+        <!--        <f:metadata>
+                    <f:viewParam name="isClosed" value="#{workOrderController.filterIsClosed}"/>
+                    <f:viewParam name="aid" value="#{workOrderController.filterAssetId}"/>
+                </f:metadata>
+                <f:event type="preRenderView" listener="#{workOrderController.setViewFilter()}"/>-->
+    </ui:define>
+
+    <ui:define name="head">
+        <h:outputStylesheet name="css/wo_steps.css" />
+    </ui:define>
+
+    <ui:define name="content">
+        <div class="ui-g clearfix">
+            <div class="ui-g-12 card cardTitle">
+                <p:outputLabel class="pageTitle" value="#{msg.WorkOrder} #{msg.List}"/>
+            </div>
+
+            <div class="ui-g-12 card">
+                <p:messages autoUpdate="true" closable="true" showDetail="false"/>
+
+                <h:form id="processListForm">
+                    <h:panelGrid id="buttonSet" columns="7" cellpadding="5">
+                        <p:commandButton value="#{fieldMsg.fieldValue('woSteps',2)}" id="btnCreate" process="@this" update="datalist buttonSet :processDetailForm " actionListener="#{workOrderListController.searchList(2)}" disabled="#{workOrderListController.queryIndex==2}" />
+                        <p:commandButton value="#{fieldMsg.fieldValue('woSteps',3)}" id="btn1" process="@this" update="datalist buttonSet :processDetailForm " actionListener="#{workOrderListController.searchList(3)}"  disabled="#{workOrderListController.queryIndex==3}" />
+                        <p:commandButton value="#{fieldMsg.fieldValue('woSteps',4)}" id="btn2" process="@this" update="datalist buttonSet :processDetailForm " actionListener="#{workOrderListController.searchList(4)}" disabled="#{workOrderListController.queryIndex==4}"/>
+
+
+                        <p:commandButton value="已取消" id="btn5" process="@this" update="datalist buttonSet :processDetailForm " actionListener="#{workOrderListController.searchList(10)}" disabled="#{workOrderListController.queryIndex==10}"/>
+
+                        <p:commandButton value="已关单" id="btn6" process="@this" update="datalist buttonSet :processDetailForm " actionListener="#{workOrderListController.searchList(7)}" disabled="#{workOrderListController.queryIndex==7}"/>
+                        <!--<p:commandButton value="待验收" id="btn7" process="@this" update="datalist buttonSet :processDetailForm " actionListener="#{workOrderListController.searchList(5)}" disabled="#{workOrderListController.queryIndex==5}"/>-->
+                        <p:commandButton value="待关单" id="btn8" process="@this" update="datalist buttonSet :processDetailForm " actionListener="#{workOrderListController.searchList(6)}" disabled="#{workOrderListController.queryIndex==6}"/>
+
+                        <!--    <p:commandButton value="我的xx" id="btn21" rendered="#{workOrderListController.queryIndex==3}" process="@this" update="datalist buttonSet :processDetailForm" actionListener="#{workOrderListController.defineCategory(11)}" disabled="#{workOrderListController.category==11}"/>
+
+                          <p:commandButton value="我的" id="btn11" rendered="#{workOrderListController.queryIndex==3}" process="@this" update="datalist buttonSet :processDetailForm" actionListener="#{workOrderListController.searchList(6)}" disabled="#{workOrderListController.queryIndex==6}"/>
+
+
+                        <p:commandButton value="同组" id="btn12" rendered="#{workOrderListController.queryIndex==3}"  process="@this" update="datalist buttonSet :processDetailForm " actionListener="#{workOrderListController.defineCategory(12)}" disabled="#{workOrderListController.category==12}"/>
+
+                        <p:commandButton value="同院" id="btn13" rendered="#{workOrderListController.queryIndex==3}" process="@this" update="datalist buttonSet :processDetailForm " actionListener="#{workOrderListController.searchList(13)}" disabled="#{workOrderListController.queryIndex==6}"/>
+                        <p:commandButton value="他院" id="btn14"  rendered="#{workOrderListController.queryIndex==3}" process="@this" update="datalist buttonSet :processDetailForm " actionListener="#{workOrderListController.searchList(14)}" disabled="#{workOrderListController.queryIndex==6}"/>-->
+                    </h:panelGrid>
+                  <!--  <h:panelGroup>
+                        <label class="label">xxxx</label>
+                        <p:selectOneMenu  value="4" required="true" >
+                            <f:selectItem itemLabel="a" itemValue="1"></f:selectItem>
+                            <f:selectItem itemLabel="b" itemValue="2"></f:selectItem>
+                            <f:selectItem itemLabel="c" itemValue="3"></f:selectItem>
+                            <f:selectItem itemLabel="d" itemValue="4"></f:selectItem>
+                        </p:selectOneMenu>
+                    </h:panelGroup>-->
+
+                    <p:dataTable id="datalist" value="#{workOrderListController.lazyModel}" var="item" widgetVar="varDataList"
+                                 selectionMode="single" selection="#{workOrderListController.selected}"
+                                 lazy="true" paginator="true" paginatorPosition="top" paginatorAlwaysVisible="true"
+                                 rowKey="#{item.id}" sortMode="single" sortOrder="descending" sortBy="#{item.id}"
+                                 paginatorTemplate="{CurrentPageReport} {Toolbar} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} #{msg.RowsPerPage}: {RowsPerPageDropdown}"
+                                 currentPageReportTemplate="#{msg.recordCount}: {totalRecords}" pageLinks="5"
+                                 rows="10" emptyMessage="#{msg.noRecordFound}"
+                                 rowsPerPageTemplate="10,20,30,90">
+
+                        <p:ajax event="rowSelect" listener="#{workOrderListController.onSelectWorkOrder}" update=":processDetailForm"/>
+                        <p:ajax event="filter" listener="#{workOrderListController.onFilter}" update="datalist :processDetailForm"/>
+
+                        <p:column headerText="#{msg.assetName}">
+                            <h:outputText value="#{assetInfoService.getAssetInfoName(item.assetId)}"/>
+                        </p:column>  
+                        <p:column headerText="#{msg.requestorName}">
+                            <h:outputText value="#{workOrderListController.getServiceRequest(item.srId).requestorName}"/>
+                        </p:column>  
+                        <p:column headerText="#{msg.requestTime}">
+                            <h:outputText value="#{workOrderListController.getServiceRequest(item.srId).requestTime}">
+                                <f:convertDateTime timeZone="GMT+8" pattern="yyyy/MM/dd HH:mm" />
+                            </h:outputText>
+                        </p:column>  
+                        <p:column headerText="#{msg.status}">
+                            <h:outputText value="#{item.currentStepName}"/>
+                        </p:column>  
+                        <p:column headerText="#{msg.intExtType}">
+                            <h:outputText value="#{fieldMsg.fieldValue('intExtType',item.intExtType)}"/>
+                        </p:column>  
+                        <p:column headerText="#{msg.currentPersonName}">
+                            <h:outputText value="#{item.currentPersonName}"/>
+                        </p:column>
+
+
+                        <p:column headerText="接单/转单" rendered="#{workOrderListController.queryIndex==3}">
+                            <p:commandButton value="接单" actionListener="#{workOrderListController.prepareDispatch(item.id)}" update=":takeOrderDialogForm" oncomplete="PF('takeOrderDialog').show()"/>
+                            <p:commandButton value="转单" actionListener="#{workOrderListController.prepareDispatch(item.id)}" update=":transferOrderDialogForm" oncomplete="PF('transferOrderDialog').show()"/>
+                        </p:column>
+
+                        <p:column headerText="" rendered="#{workOrderListController.queryIndex==4}">
+                            <p:commandButton value="维修完成" actionListener="#{workOrderListController.prepareDispatch(item.id)}" update=":repairCompleteDialogForm" oncomplete="PF('repairCompleteDialog').show()"/>
+                        </p:column>
+
+                        <p:column headerText="" rendered="#{workOrderListController.queryIndex==6}">
+                            <p:commandButton value="关单" actionListener="#{workOrderListController.closeOrderClick(item.id)}" update=":toCloseDialogForm" oncomplete="PF('toCloseDialog').show()"/>
+                        </p:column>
+
+                        <f:facet name="{Toolbar}">
+                            <p:commandButton title="#{msg.exportToXLS}" icon="ui-icon-arrowstop-1-s" ajax="false">
+                                <p:dataExporter type="xls" target="datalist" fileName="WorkOrder_export"/>
+                            </p:commandButton>
+                        </f:facet>
+                    </p:dataTable>
+                </h:form>
+            </div>
+        </div>
+
+        <ui:include src="processView.xhtml"/>
+        <ui:include src="dlg/takeOrderDialog.xhtml"/>
+        <ui:include src="dlg/transferDialog.xhtml"/>
+        <ui:include src="dlg/repairCompleteDlg.xhtml"/>
+        <ui:include src="dlg/toCloseDlg.xhtml"/>
+
+
+
+
+    </ui:define> 
+
+</ui:composition>

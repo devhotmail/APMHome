@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+<ui:composition>
+    <p:dialog id="takeOrderDialog" widgetVar="takeOrderDialog" modal="true" width="500"  resizable="true" draggable="true" appendTo="@(body)" header="接单">
+        <h:form id="takeOrderDialogForm" >
+            <h:panelGroup id="display1" rendered="#{not empty workOrderListController.selectedWorkOrder}">
+                <p:panelGrid columns="3" layout="grid" styleClass="ui-panelgrid-blank form-group">
+                    <h:panelGroup>
+                        <label class="label">预估时间</label>
+                        <p:calendar timeZone="GMT+8" id="fillDate" pattern="yyyy/MM/dd"  value="#{workOrderListController.esTime}" showOn="button" showButtonPanel="true" navigator="true" readonlyInput="false" locale= "zh" required="true" requiredMessage="预估时间 #{msg.ValidationRequire}"></p:calendar>
+                    </h:panelGroup>
+                    <h:panelGroup>
+                        <label class="label">维修类型</label>
+                        <p:selectOneMenu  value="#{workOrderListController.selectedWorkOrder.repairType}" required="true" requiredMessage="#{msg.repairType} #{msg.ValidationRequire}">
+                            <f:selectItem itemLabel="#{msg.selectOneMessage}"/>
+                            <f:selectItems value="#{fieldMsg.getFieldValueList('repairType')}" var="item" itemLabel="#{item.value}" itemValue="#{item.msgKey}"/>
+                        </p:selectOneMenu>
+                    </h:panelGroup>
+                    <h:panelGroup>
+                        <label class="label">备注</label>
+                        <p:inputTextarea value="#{workOrderListController.comments}" rows="3"  cols="40"  queryDelay="750" minQueryLength="4"/>
+                    </h:panelGroup>
+
+                </p:panelGrid>
+                <br/>
+                <h:panelGroup>
+                    <p:commandButton validateClient="true" actionListener="#{workOrderListController.acceptWorkOrder()}" value="接单" update=":takeOrderDialogForm :growl" icon="ui-icon-check" oncomplete="handleSubmit(args, 'takeOrderDialog');"/>
+                    <p:commandButton immediate="true" value="#{msg.Cancel}" icon="ui-icon-cancel" onclick="PF('takeOrderDialog').hide()"/>
+                </h:panelGroup>
+            </h:panelGroup>
+        </h:form>
+    </p:dialog>
+
+</ui:composition>
+</html>

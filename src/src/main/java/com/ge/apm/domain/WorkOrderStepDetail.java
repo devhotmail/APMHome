@@ -74,6 +74,7 @@ public class WorkOrderStepDetail implements Serializable {
         this.siteId = siteId;
     }
 
+
     public Integer getId() {
         return id;
     }

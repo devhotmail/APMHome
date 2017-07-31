@@ -31,6 +31,9 @@
                 <p:menuitem id="um89" value="维修工单" outcome="/portal/workorder/repaireWorkOrder.xhtml" rendered="false"/>
                 <p:menuitem id="um10" value="#{msg.ServiceRequestMgmt}" outcome="/portal/sr/srList.xhtml" />
                 <p:menuitem  value="#{msg.dispatchMgmt}" outcome="/portal/sr/dispatchList.xhtml" rendered="#{userContextService.isDispatcher()}"/>
+
+               <!-- <p:menuitem id="um12" value="我的维修工单" outcome="/portal/sr/processList.xhtml" rendered="#{userContextService.isDispatcher()}"/>-->
+                <p:menuitem id="um12" value="我的维修工单" outcome="/portal/sr/processList.xhtml" rendered="true"/>
                 <p:menuitem id="um11" value="#{msg.MyWorkOrder}" rendered="false" outcome="/portal/wo/myWoList.xhtml"/>
                 <p:menuitem id="um085" value="#{msg.AssetTagMsgSubscriber}" outcome="/portal/asset/assetTag/TagSubscribeList.xhtml"/>
             </p:submenu>

@@ -28,44 +28,9 @@ public class ServiceRequestApiService extends MicroServiceInvoker {
     private String url_serviceRequestCreate;
     @Value("#{urlProperties.url_workOrderAction}")
     private String url_workOrderAction;
-//    @Value("#{urlProperties.url_workOrdersForDispatcher}")
-//    private String url_workOrdersForDispatcher;
+    @Value("#{urlProperties.url_createWorkOrder}")
+    private String url_createWorkOrder;
 
-    
-    
-    public String cancelWorkOrderAction(String token, String woId, String reason,Integer stepId) {
-        WorkOrderActionForm formData = new WorkOrderActionForm();
-        formData.setDesc(reason);
-        formData.setCurrentStepId(stepId);
-        HttpEntity<WorkOrderActionForm> requestEntity = new HttpEntity<WorkOrderActionForm>(formData, createHttpHeaders(token));
-        
-        String url = url_workOrderAction.replace("{workOrderId}", woId).concat("?type=cancel");
-        ResponseEntity<LinkedHashMap> response = template.postForEntity(url, requestEntity, LinkedHashMap.class);
-        if (isOkay(response)) {
-            LinkedHashMap<String, Object> responseMap = (LinkedHashMap<String, Object>) response.getBody();
-            return (String) responseMap.get("data");
-        } else {
-            return null;
-        }
-    }
-    
-    public String dispatchWorkOrderAction(String token,String woId, String assigneeId, String intExtType,Integer stepId) {
-        WorkOrderActionForm formData = new WorkOrderActionForm();
-        formData.setAssigneeId(assigneeId);
-        formData.setIntExtType(intExtType);
-        formData.setCurrentStepId(stepId);
-        HttpEntity<WorkOrderActionForm> requestEntity = new HttpEntity<WorkOrderActionForm>(formData, createHttpHeaders(token));
-        
-        String url = url_workOrderAction.replace("{workOrderId}", woId).concat("?type=assign");
-        ResponseEntity<LinkedHashMap> response = template.postForEntity(url, requestEntity, LinkedHashMap.class);
-        if (isOkay(response)) {
-            LinkedHashMap<String, Object> responseMap = (LinkedHashMap<String, Object>) response.getBody();
-            return (String) responseMap.get("data");
-        } else {
-            return null;
-        }
-    }
-    
     public Map<String, Object> createServiceRequest(String token, V2_ServiceRequest newServiceRequest, AssetInfo asset) {
         ServiceRequestForm formData = new ServiceRequestForm();
         formData.setAssetId(asset.getId());
@@ -75,7 +40,7 @@ public class ServiceRequestApiService extends MicroServiceInvoker {
         }
         formData.setPriority(newServiceRequest.getCasePriority());
         formData.setRequestReason(newServiceRequest.getRequestReason());
-        
+
         HttpEntity<ServiceRequestForm> requestEntity = new HttpEntity<>(formData, createHttpHeaders(token));
         ResponseEntity<LinkedHashMap> response = template.postForEntity(url_serviceRequestCreate, requestEntity, LinkedHashMap.class);
         if (isOkay(response)) {
@@ -85,7 +50,30 @@ public class ServiceRequestApiService extends MicroServiceInvoker {
             return null;
         }
     }
-    
+
+    public String invokeWorkOrderAction(String token, WorkOrderActionForm formData, String actionName, String woId) {
+        HttpEntity<WorkOrderActionForm> requestEntity = new HttpEntity<WorkOrderActionForm>(formData, createHttpHeaders(token));
+        String url = url_workOrderAction.replace("{workOrderId}", woId).concat("?type=").concat(actionName);
+        ResponseEntity<LinkedHashMap> response = template.postForEntity(url, requestEntity, LinkedHashMap.class);
+        if (isOkay(response)) {
+            LinkedHashMap<String, Object> responseMap = (LinkedHashMap<String, Object>) response.getBody();
+            return (String) responseMap.get("data");
+        } else {
+            return null;
+        }
+    }
+
+    String createWorkOrder(String token, WorkOrderForm formData) {
+        HttpEntity<WorkOrderForm> requestEntity = new HttpEntity<WorkOrderForm>(formData, createHttpHeaders(token));
+        ResponseEntity<LinkedHashMap> response = template.postForEntity(url_createWorkOrder, requestEntity, LinkedHashMap.class);
+        if (isOkay(response)) {
+            LinkedHashMap<String, Object> responseMap = (LinkedHashMap<String, Object>) response.getBody();
+            return (String) responseMap.get("data");
+        } else {
+            return null;
+        }
+    }
+
 }
 
 class ServiceRequestForm {
@@ -192,8 +180,9 @@ class ServiceRequestForm {
 }
 
 class WorkOrderActionForm {
-	String serviceRequestId;
-    String  strDate;
+
+    String serviceRequestId;
+    String strDate;
     String desc;
     String estimatedCloseTime;
     String assigneeId;
@@ -209,19 +198,19 @@ class WorkOrderActionForm {
     Object stepDetail;
     Integer currentStepId;
     String equipmentTaker;
-    String takeTime;    
+    String takeTime;
     Integer repairType;
     List<V2_BlobObject> attachments;
-    
+
     public String getServiceRequestId() {
-		return serviceRequestId;
-	}
+        return serviceRequestId;
+    }
 
-	public void setServiceRequestId(String serviceRequestId) {
-		this.serviceRequestId = serviceRequestId;
-	}
+    public void setServiceRequestId(String serviceRequestId) {
+        this.serviceRequestId = serviceRequestId;
+    }
 
-	public String getStrDate() {
+    public String getStrDate() {
         return strDate;
     }
 
@@ -372,5 +361,73 @@ class WorkOrderActionForm {
     public void setRepairType(Integer repairType) {
         this.repairType = repairType;
     }
-    
+
+}
+
+class WorkOrderForm {
+
+    Integer assetId;
+    String requestReason;
+    String serviceRequestId;
+    String assigneeId;
+    Integer intExtType;
+    List<V2_BlobObject> attachments;
+    String assetStatus;
+
+    public Integer getAssetId() {
+        return assetId;
+    }
+
+    public String getServiceRequestId() {
+        return serviceRequestId;
+    }
+
+    public void setServiceRequestId(String serviceRequestId) {
+        this.serviceRequestId = serviceRequestId;
+    }
+
+    public void setAssetId(Integer assetId) {
+        this.assetId = assetId;
+    }
+
+    public String getRequestReason() {
+        return requestReason;
+    }
+
+    public void setRequestReason(String requestReason) {
+        this.requestReason = requestReason;
+    }
+
+    public String getAssigneeId() {
+        return assigneeId;
+    }
+
+    public void setAssigneeId(String assigneeId) {
+        this.assigneeId = assigneeId;
+    }
+
+    public Integer getIntExtType() {
+        return intExtType;
+    }
+
+    public void setIntExtType(Integer intExtType) {
+        this.intExtType = intExtType;
+    }
+
+    public List<V2_BlobObject> getAttachments() {
+        return attachments;
+    }
+
+    public void setAttachments(List<V2_BlobObject> attachments) {
+        this.attachments = attachments;
+    }
+
+    public String getAssetStatus() {
+        return assetStatus;
+    }
+
+    public void setAssetStatus(String assetStatus) {
+        this.assetStatus = assetStatus;
+    }
+
 }

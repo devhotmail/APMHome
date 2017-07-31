@@ -1,0 +1,25 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui">
+   <!-- <h:form id="dataListForm">-->
+    <p:dataTable id="datalist" class="uiTransparent" value="#{workOrderListController.workOrderDetailsList}" var="item" widgetVar="varStepDetailDataList" lazy="false" paginator="false"
+                 rowKey="#{item.id}" rows="1000" emptyMessage="#{msg.noRecordFound}">
+
+        <p:column headerText="#{msg.manHours}">
+            <h:outputText value="#{item.manHours}"/>
+        </p:column>
+
+        <p:column headerText="action"><!--:expenseDlgForm:datalist-->
+            <p:commandButton process="@this" icon="ui-icon-add" style="zoom:0.8;" title="#{msg.Create}" actionListener="#{workOrderListController.prepareCreateDetail()}" update=":toCloseDialogForm :toCloseDialogForm:datalist" oncomplete="PF('expenseDlg').show()" rendered="#{!workOrderListController.isWoListEmpty()}"/>
+            <p:commandButton process="@this" icon="ui-icon-pencil" style="zoom:0.8;" title="#{msg.Edit}" actionListener="#{workOrderListController.prepareEditDetail(item)}" update=":expenseDlg" oncomplete="PF('expenseDlg').show()" rendered="#{!workOrderListController.isWoListEmpty()}" />
+
+
+             <p:commandButton process="@this" icon="ui-icon-close" style="zoom:0.8;" title="#{msg.Delete}" actionListener="#{workOrderListController.deleteWoDetail(item.id)}" update=":toCloseDialogForm :toCloseDialogForm:datalist" rendered="#{!workOrderListController.isWoListEmpty()}">
+                 <p:confirm header="#{msg.DeleteConformation}" message="#{msg.DeleteConformationMsg}" icon="ui-icon-alert"/>
+             </p:commandButton>
+        </p:column>
+    </p:dataTable>
+    <!--</h:form>-->
+</ui:composition>
