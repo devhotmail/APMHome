@@ -363,7 +363,7 @@
             <div class="ui-g-12">
                 <div class="block">
                     <h3 class="block-title">#{msg.deviceExpohd}</h3>
-                    <p:chart id="exposure_bar" type="line" model="#{assetUsageSingleController.deviceExpo}"
+                    <p:chart id="exposure_bar" type="line" model="#{assetUsageSingleController.deviceExpo}" 
                            responsive="true"/>
                 </div>
             </div>
@@ -440,5 +440,10 @@
                 <p:commandButton id="returnButton" value="#{msg.Return}" icon="ui-icon-arrow-back" action="#{assetInfoController.getListPageLink()}" immediate="true"  update=":growl" style="float:left"/>
             </h:panelGroup>
         </div>
+        <script>
+            window.onload = function(){
+                $(".jqplot-table-legend").css("display","none");   
+            }
+        </script>
     </ui:define>
 </ui:composition>
