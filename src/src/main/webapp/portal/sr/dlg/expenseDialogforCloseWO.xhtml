@@ -25,7 +25,7 @@
                         <label class="label">其他费用(元)</label>
                         <p:inputText id="otherExpense" value="#{workOrderListController.itemDetail.otherExpense}" />
                         <label class="label">协作者</label>
-                        <p:selectOneMenu  value="#{workOrderListController.selectedWorkOrder.currentPersonId}">
+                        <p:selectOneMenu id="selectEmployee" value="#{workOrderListController.itemDetail.cowokerUserId}">
                             <f:selectItem itemLabel="#{msg.selectOneMessage}"/>
                             <f:selectItems value="#{workOrderListController.findRepairPerson()}" var="item1" itemLabel="#{item1.name}" itemValue="#{item1.id}"/>
                         </p:selectOneMenu>
@@ -36,10 +36,11 @@
                 </p:panelGrid>
                 <br/>
                 <h:panelGroup>
-                    <p:commandButton validateClient="true" actionListener="#{workOrderListController.saveDetail}" value="addExpense" update=":toCloseDialogForm :toCloseDialogForm:datalist :growl" icon="ui-icon-check" oncomplete="handleSubmit(args, 'expenseDlg');"/>
+                    <p:commandButton validateClient="true" actionListener="#{workOrderListController.saveDetail}" value="添加" update=":toCloseDialogForm :toCloseDialogForm:datalist :growl" rendered="#{workOrderListController.renderAddUpdate()}" icon="ui-icon-check" oncomplete="handleSubmit(args, 'expenseDlg');"/>
 
-                    <p:commandButton validateClient="true" actionListener="#{workOrderListController.editDetailConfirm(item)}" value="updateExpense" update="toCloseDialogForm :growl" icon="ui-icon-check" oncomplete="handleSubmit(args, 'expenseDlg');"/>
+                    <p:commandButton validateClient="true" actionListener="#{workOrderListController.updateEditDetail}" value="更新" update=":toCloseDialogForm :toCloseDialogForm:datalist :growl" rendered="#{!workOrderListController.renderAddUpdate()}" icon="ui-icon-check" oncomplete="handleSubmit(args, 'expenseDlg');"/>
 
+                    <p:commandButton validateClient="true" actionListener="#{workOrderListController.cancel}" value="取消" update="toCloseDialogForm :growl" icon="ui-icon-check" oncomplete="handleSubmit(args, 'expenseDlg');"/>
                 </h:panelGroup>
             </h:panelGroup>
         </h:form>

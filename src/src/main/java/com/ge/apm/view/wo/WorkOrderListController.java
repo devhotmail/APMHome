@@ -37,45 +37,47 @@ public class WorkOrderListController extends GenericCRUDUUIDController<V2_WorkOr
     I18nMessageRepository i18nDao;
     private ServiceRequestRepository srDao;
     private V2_WorkOrderService woService;
-
-    private V2_WorkOrderStepRepository workOrderStepRepository;
+   // private V2_WorkOrderStepRepository workOrderStepRepository;
     private List<I18nMessage>   msgModeList;
     //status：0-待派工/1-待接单/2-维修中/3-已完成/4-已派工/10-已取消  待验收-5, 待关单-6, 已关单-7
     private Integer queryIndex;
 
     private Integer category;
-    
+    private boolean addOrUpdate;
     private V2_ServiceRequest selectedServiceRequest;
     private BiomedGroupRepository groupDao;
     private V2_WorkOrder selectedWorkOrder;
     AssetFaultTypeService assetFaultTypeService;
-    ServiceRequestApiService serviceRequestApiService;
+    //ServiceRequestApiService serviceRequestApiService;
     AssetInfoRepository assetInfoRepository;
     UserAccount ua;
     List<V2_WorkOrder_Detail> workOrderDetailsList;
     V2_WorkOrder_Detail itemDetail ;
     WorkOrderMsgService workOrderMsgService;
     V2WorkOrderService  v2WorkOrderService;
+    UserAccountRepository userAccountRepository;
     protected void init() {
         dao = WebUtil.getBean(V2_WorkOrderRepository.class);
         srDao = WebUtil.getBean(ServiceRequestRepository.class);
         woService = WebUtil.getBean(V2_WorkOrderService.class);
         v2WorkOrderService = WebUtil.getBean(V2WorkOrderService.class);
         groupDao = WebUtil.getBean(BiomedGroupRepository.class);
-        workOrderStepRepository = WebUtil.getBean(V2_WorkOrderStepRepository.class);
+      //  workOrderStepRepository = WebUtil.getBean(V2_WorkOrderStepRepository.class);
         this.filterBySite = true;
         queryIndex = 2;
         ua = UserContextService.getCurrentUserAccount();
         assetFaultTypeService=WebUtil.getBean(AssetFaultTypeService.class);
         assetInfoRepository=WebUtil.getBean(AssetInfoRepository.class);
-
+        userAccountRepository=WebUtil.getBean(UserAccountRepository.class);
+        initWorkOrderDetailList();
+    }
+    public void initWorkOrderDetailList(){
         itemDetail = new V2_WorkOrder_Detail();
         workOrderDetailsList = new ArrayList<V2_WorkOrder_Detail>();
         woUid=UUID.randomUUID().toString().replace("-", "");
         itemDetail.setId(woUid);
         itemDetail.setManHours(0);
         workOrderDetailsList.add(itemDetail);
-
     }
     public boolean isManHours(){
         if(itemDetail.getManHours()==null)
@@ -85,7 +87,7 @@ public class WorkOrderListController extends GenericCRUDUUIDController<V2_WorkOr
     }
 
 public void saveDetail(){
-    System.out.println(this.selectedWorkOrder);
+    String username=null;
     if(woUid!=null){
         Iterator<V2_WorkOrder_Detail> sListIterator = workOrderDetailsList.iterator();
         while(sListIterator.hasNext()){
@@ -102,23 +104,37 @@ public void saveDetail(){
     v2.setParts(itemDetail.getParts());
     v2.setPartsPrice(itemDetail.getPartsPrice());
     v2.setApartsQuantity(itemDetail.getApartsQuantity());
+    v2.setOtherExpense(itemDetail.getOtherExpense());
     v2.setCowokerUserId(itemDetail.getCowokerUserId());
 
+    username=userAccountRepository.findById(itemDetail.getCowokerUserId()).getName();
+    v2.setCowokerUserName(username);
 
     workOrderDetailsList.add(v2);
 
 }
-public void editDetailConfirm(V2_WorkOrder_Detail itemDetail){
-this.itemDetail =itemDetail;
+
+public void clickNewWorkOrder(){
+    System.out.println(selectedWorkOrder);
+    //V2_WorkOrder selectedWorkOrder,Integer assigneeId, Integer assetSuatus,String reason,Integer extType
+   // selectedWorkOrder = dao.findById(woId);
+   /* selectedWorkOrder.getSrId();*/
+
+/*
+    woService.reCreateWorkOrder(selectedWorkOrder,selectedWorkOrder.getCurrentPersonId(),2,comments,selectedWorkOrder.getIntExtType());*/
+
+}
+public void createWorkOrder(){
+    selectedWorkOrder.setComment(comments);
+    V2_ServiceRequest sr = srDao.findById(selectedWorkOrder.getSrId());
+    sr.setRequestReason(comments);
+
+    woService.reCreateWorkOrder(selectedWorkOrder,selectedWorkOrder.getCurrentPersonId(),2,comments,selectedWorkOrder.getIntExtType());
 }
 
-public void newWorkOrder(){
-    //V2_WorkOrder selectedWorkOrder,Integer assigneeId, Integer assetSuatus,String reason,Integer extType
-    System.out.println();
-}
 public void repairWorkOrder(){
     //V2_WorkOrder selectedWorkOrder, Date confirmedUpTime,Integer assetStatus,List<V2_WorkOrder_Detail> details
-   //gl:question status是1？
+   //gl:1表示是正常
     woService.repairWorkOrder(selectedWorkOrder,confirmedUpDate,1,workOrderDetailsList);
 }
     public V2_WorkOrder_Detail getItemDetail() {
@@ -147,52 +163,22 @@ public void repairWorkOrder(){
 
     }
 
-    public void closeOrderClick(String woid){
+    public void clickCloseOrder(String woid){
         selectedWorkOrder = dao.findById(woid);
-
-
     }
-
     public void prepareEditDetail(V2_WorkOrder_Detail workOrderDetail){
         itemDetail =workOrderDetail;
+        System.out.println(itemDetail);
+        setAddOrUpdate(false);
 
     }
+    public void updateEditDetail(){
+        itemDetail.setCowokerUserName(userAccountRepository.getById(itemDetail.getCowokerUserId()).getName());
+        setAddOrUpdate(false);
+    }
     public void prepareCreateDetail(){
-        findRepairPerson();
-        //selectedWorkOrder = dao.findById(woid);
-   //     System.out.println();
-        //itemDetail =workOrderDetail;
-      /*  itemDetail.setId(UUID.randomUUID().toString().replace("-", ""));
-        workOrderDetailsList.add(itemDetail);*/
-       // workOrderDetailsList.add(itemDetail);
-        /*if(workOrderDetailsList.size()>=1){
-            workOrderDetailsList.add(itemDetail);
-        }else{
-            itemDetail = new V2_WorkOrder_Detail();
-            itemDetail.setId(UUID.randomUUID().toString().replace("-", ""));
-            workOrderDetailsList.add(itemDetail);
-        }*/
-
-         /*if(woUid!=null){
-             Iterator<V2_WorkOrder_Detail> sListIterator = workOrderDetailsList.iterator();
-             while(sListIterator.hasNext()){
-                 V2_WorkOrder_Detail workOrderDetail = sListIterator.next();
-                 if(workOrderDetail.getId().equals(woUid)){
-                     sListIterator.remove();
-                 }
-             }
-             woUid=null;
-             itemDetail = new V2_WorkOrder_Detail();
-             itemDetail.setId(UUID.randomUUID().toString().replace("-", ""));
-             workOrderDetailsList.add(itemDetail);
-         }else{
-             itemDetail = new V2_WorkOrder_Detail();
-             itemDetail.setId(UUID.randomUUID().toString().replace("-", ""));
-             workOrderDetailsList.add(itemDetail);
-         }*/
-          // deleteWoDetail(woUid);
-
-
+        itemDetail = new V2_WorkOrder_Detail();
+        setAddOrUpdate(true);
     }
 
    public void deleteWoDetail(String itemId){
@@ -202,6 +188,7 @@ public void repairWorkOrder(){
            workOrderDetailsList = new ArrayList<V2_WorkOrder_Detail>();
            woUid=UUID.randomUUID().toString().replace("-", "");
            v.setId(woUid);
+           v.setManHours(0);
            workOrderDetailsList.add(v);
        }
        else {
@@ -396,6 +383,7 @@ Date esTime;
     public void closeWorkOrder(){
         woService.closeWorkOrder(selectedWorkOrder,workOrderDetailsList);
     }
+
     public void test(){
         //维修完成  V2_WorkOrder selectedWorkOrder, Date confirmedUpTime,Integer assetStatus,List<V2_WorkOrder_Detail> details   confirmedUpTime:恢复时间
       //  woService.repairWorkOrder(selectedWorkOrder,null,1,workOrderDetailsList); //1表示正常
@@ -414,8 +402,6 @@ Date esTime;
         //gl:question:1 为什么这里的esTime要比预估时间慢一天? 2 repairType到底传过去的是中文字符还是就数值型?
         String repairType =selectedWorkOrder.getRepairType().toString();
         woService.acceptWorkOrder(selectedWorkOrder,esTime,repairType,comments);
-//this.getEsTime()
-        //acceptWorkOrder(selectedWorkOrder, estimeClosetime, extype, comments)
     }
     public void reassignWorkOrder(){
         woService.reassignWorkOrder(selectedWorkOrder, selectedWorkOrder.getCurrentPersonId(), comments);
@@ -480,5 +466,16 @@ Date esTime;
 
     public void setDao(V2_WorkOrderRepository dao) {
         this.dao = dao;
+    }
+
+public boolean renderAddUpdate(){
+        return addOrUpdate;
+}
+    public boolean isAddOrUpdate() {
+        return addOrUpdate;
+    }
+
+    public void setAddOrUpdate(boolean addOrUpdate) {
+        this.addOrUpdate = addOrUpdate;
     }
 }

@@ -7,7 +7,7 @@
       xmlns:p="http://primefaces.org/ui">
 
 <ui:composition>
-    <p:dialog id="takeOrderDialog" widgetVar="takeOrderDialog" modal="true" width="500"  resizable="true" draggable="true" appendTo="@(body)" header="接单">
+    <p:dialog id="takeOrderDialog" widgetVar="takeOrderDialog" modal="true" width="800"  resizable="true" draggable="true" appendTo="@(body)" header="接单">
         <h:form id="takeOrderDialogForm" >
             <h:panelGroup id="display1" rendered="#{not empty workOrderListController.selectedWorkOrder}">
                 <p:panelGrid columns="3" layout="grid" styleClass="ui-panelgrid-blank form-group">

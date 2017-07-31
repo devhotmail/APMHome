@@ -103,7 +103,7 @@
                         </p:column>
 
                         <p:column headerText="" rendered="#{workOrderListController.queryIndex==6}">
-                            <p:commandButton value="关单" actionListener="#{workOrderListController.closeOrderClick(item.id)}" update=":toCloseDialogForm" oncomplete="PF('toCloseDialog').show()"/>
+                            <p:commandButton value="关单" actionListener="#{workOrderListController.clickCloseOrder(item.id)}" update=":toCloseDialogForm" oncomplete="PF('toCloseDialog').show()"/>
                         </p:column>
 
                         <f:facet name="{Toolbar}">

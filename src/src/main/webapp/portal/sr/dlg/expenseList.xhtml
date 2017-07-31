@@ -11,15 +11,38 @@
             <h:outputText value="#{item.manHours}"/>
         </p:column>
 
-        <p:column headerText="action"><!--:expenseDlgForm:datalist-->
-            <p:commandButton process="@this" icon="ui-icon-add" style="zoom:0.8;" title="#{msg.Create}" actionListener="#{workOrderListController.prepareCreateDetail()}" update=":toCloseDialogForm :toCloseDialogForm:datalist" oncomplete="PF('expenseDlg').show()" rendered="#{!workOrderListController.isWoListEmpty()}"/>
+        <p:column headerText="备件名称">
+            <h:outputText value="#{item.parts}"/>
+        </p:column>
+
+       <p:column headerText="备件数量">
+            <h:outputText value="#{item.apartsQuantity}"/>
+        </p:column>
+        <p:column headerText="备件单价(元)">
+            <h:outputText value="#{item.partsPrice}"/>
+        </p:column>
+        <p:column headerText="#{msg.otherExpense}">
+            <h:outputText value="#{item.otherExpense}"/>
+        </p:column>
+        <p:column headerText="协作者">
+            <h:outputText value="#{item.cowokerUserName}"/>
+        </p:column>
+
+
+
+        <p:column headerText="操作"><!--:expenseDlgForm:datalist-->
+            <p:commandButton process="@this" icon="ui-icon-add" style="zoom:0.8;" title="#{msg.Create}" actionListener="#{workOrderListController.prepareCreateDetail()}" update=" :toCloseDialogForm :toCloseDialogForm:datalist :expenseDlgForm" oncomplete="PF('expenseDlg').show()" rendered="#{!workOrderListController.isWoListEmpty()}"/>
             <p:commandButton process="@this" icon="ui-icon-pencil" style="zoom:0.8;" title="#{msg.Edit}" actionListener="#{workOrderListController.prepareEditDetail(item)}" update=":expenseDlg" oncomplete="PF('expenseDlg').show()" rendered="#{!workOrderListController.isWoListEmpty()}" />
 
 
-             <p:commandButton process="@this" icon="ui-icon-close" style="zoom:0.8;" title="#{msg.Delete}" actionListener="#{workOrderListController.deleteWoDetail(item.id)}" update=":toCloseDialogForm :toCloseDialogForm:datalist" rendered="#{!workOrderListController.isWoListEmpty()}">
-                 <p:confirm header="#{msg.DeleteConformation}" message="#{msg.DeleteConformationMsg}" icon="ui-icon-alert"/>
-             </p:commandButton>
+            <p:commandButton process="@this" icon="ui-icon-close" style="zoom:0.8;" title="#{msg.Delete}" actionListener="#{workOrderListController.deleteWoDetail(item.id)}" update=":toCloseDialogForm :toCloseDialogForm:datalist" rendered="#{!workOrderListController.isWoListEmpty()}">
+                <p:confirm header="#{msg.DeleteConformation}" message="#{msg.DeleteConformationMsg}" icon="ui-icon-alert"/>
+            </p:commandButton>
         </p:column>
     </p:dataTable>
     <!--</h:form>-->
+    
+
+
+
 </ui:composition>
