@@ -97,7 +97,7 @@ public class V2_WorkOrderService {
     public List<UserAccount> getWorkerList() {
         return userDao.getUsersWithAssetStaffRole(UserContextService.getCurrentUserAccount().getHospitalId());
     }
-
+    
     public AssetInfo getAssetInfo(Integer assetId){
         return assetDao.findById(assetId);
     }
@@ -155,7 +155,6 @@ public class V2_WorkOrderService {
         formData.setEstimatedCloseTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(estimatedCloseTime));
         formData.setIntExtType(extType);
         formData.setDesc(comments);
-
         String res = srApi.invokeWorkOrderAction(token,formData,"accept",selectedWorkOrder.getId());
         if (res==null || !res.contains("success")) {
             WebUtil.addErrorMessage(WebUtil.getMessage("OperationFail"),"接单");
@@ -180,7 +179,6 @@ public class V2_WorkOrderService {
         formData.setCurrentStepId(selectedWorkOrder.getCurrentStepId());
         formData.setAssigneeId(String.valueOf(assigneeId));
         formData.setDesc(comments);
-
         String res = srApi.invokeWorkOrderAction(token,formData,"reassign",selectedWorkOrder.getId());
         if (res==null || !res.contains("success")) {
             WebUtil.addErrorMessage(WebUtil.getMessage("OperationFail"),"转单");
@@ -200,7 +198,6 @@ public class V2_WorkOrderService {
         formData.setCaseType(selectedWorkOrder.getCaseType().toString());
         formData.setAssetStatus(assetStatus.toString());
         formData.setStepDetail(details);
-
         String res = srApi.invokeWorkOrderAction(token,formData,"repair",selectedWorkOrder.getId());
         if (res==null || !res.contains("success")) {
             WebUtil.addErrorMessage(WebUtil.getMessage("OperationFail"),"完成");
@@ -284,3 +281,5 @@ public class V2_WorkOrderService {
     }
 
 }
+
+
