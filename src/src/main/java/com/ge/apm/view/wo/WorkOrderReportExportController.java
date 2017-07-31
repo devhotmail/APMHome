@@ -4,7 +4,7 @@ import com.ge.apm.dao.OrgInfoRepository;
 import com.ge.apm.domain.OrgInfo;
 import com.ge.apm.domain.UserAccount;
 import com.ge.apm.service.utils.ExcelDocument;
-import com.ge.apm.service.wo.WorkOrderImportService;
+import com.ge.apm.service.wo.WorkOrderExportService;
 import com.ge.apm.view.sysutil.UserContextService;
 import org.primefaces.model.DefaultStreamedContent;
 import org.primefaces.model.StreamedContent;
@@ -28,7 +28,7 @@ import java.util.logging.Logger;
 @ViewScoped
 public class WorkOrderReportExportController {
 
-    private WorkOrderImportService workOrderImportService;
+    private WorkOrderExportService workOrderExportService;
 
     private StreamedContent exportFile;
 
@@ -50,7 +50,7 @@ public class WorkOrderReportExportController {
     @PostConstruct
     protected void init() {
 
-        workOrderImportService = WebUtil.getBean(WorkOrderImportService.class);
+        workOrderExportService = WebUtil.getBean(WorkOrderExportService.class);
         orgDao = WebUtil.getBean(OrgInfoRepository.class);
 
         currentUser = UserContextService.getCurrentUserAccount();
@@ -68,7 +68,7 @@ public class WorkOrderReportExportController {
             InputStream stream = FacesContext.getCurrentInstance().getExternalContext().getResourceAsStream("/portal/wo/woExport/APM_WorkOrder_Template.xlsx");
 //          InputStream stream = this.file.getInputstream();
             ExcelDocument doc = new ExcelDocument(stream, ExcelDocument.ExcelType.XLSX);
-            Boolean exportFlag = workOrderImportService.exportData(doc, workOrderImportService.createData(currentInstitutionUID, currentHospitalUID, currentSiteUID, startTime, endTime));
+            Boolean exportFlag = workOrderExportService.exportData(doc, workOrderExportService.createData(currentInstitutionUID, currentHospitalUID, currentSiteUID, startTime, endTime));
             if(exportFlag){
                 exportFile = new DefaultStreamedContent(doc.getStream(), "application/vnd.ms-excel", "WorkOrderData.xlsx");
             }

@@ -15,6 +15,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 import webapp.framework.dao.SearchFilter;
 
+import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -30,7 +31,7 @@ import java.util.Map;
  */
 @Component
 @Scope("prototype")
-public class WorkOrderImportService {
+public class WorkOrderExportService {
 
     private static final String SHEET_WORKORDER = "WorkOrder List";
 
@@ -78,6 +79,8 @@ public class WorkOrderImportService {
         List<V2_WorkOrder> tempWorkOrderList = v2WorkOrderDao.findBySearchFilter(searchFilters);
         //List<V2_WorkOrder> tempWorkOrderList = v2WorkOrderDao.find();
 
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
         for (V2_WorkOrder workOrder: tempWorkOrderList) {
             V2_ServiceRequest serviceRequest = serviceRequestDao.findOne(workOrder.getSrId());
             List<V2_WorkOrder_Detail> workOrderDetailList = workOrderDetailDao.findByWoId(workOrder.getId());
@@ -92,17 +95,17 @@ public class WorkOrderImportService {
             workOrderMap.put("院区", serviceRequest.getHospitalName());
             workOrderMap.put("科室", serviceRequest.getFromDeptName());
             workOrderMap.put("报修人", serviceRequest.getRequestorName());
-            workOrderMap.put("报修时间", serviceRequest.getRequestTime());
+            workOrderMap.put("报修时间", serviceRequest.getRequestTime() != null ? sdf.format(serviceRequest.getRequestTime()) : "");
             workOrderMap.put("故障描述", serviceRequest.getRequestReason());
             if(sendStep != null){
                 workOrderMap.put("派工人", sendStep.getOwnerName());
-                workOrderMap.put("派工时间", sendStep.getEndTime());
+                workOrderMap.put("派工时间", sendStep.getEndTime() != null ? sdf.format(sendStep.getEndTime()) : "");
             }
             workOrderMap.put("工单类型", workOrder.getIntExtType());
             workOrderMap.put("上门维修/送修", workOrder.getRepairType());
             if(acceptStep != null){
                 workOrderMap.put("接单人", acceptStep.getOwnerName());
-                workOrderMap.put("接单时间", acceptStep.getEndTime());
+                workOrderMap.put("接单时间", acceptStep.getEndTime() != null ? sdf.format(acceptStep.getEndTime()) : "");
             }
             workOrderMap.put("签到时间", workOrder.getCheckin());
             workOrderMap.put("维修工时",workOrder.getTotalManHour());
@@ -114,11 +117,11 @@ public class WorkOrderImportService {
             workOrderMap.put("价格", workOrder.getTotalPrice());
             if(evaluateStep != null){
                 workOrderMap.put("验收人", evaluateStep.getOwnerName());
-                workOrderMap.put("验收时间", evaluateStep.getEndTime());
+                workOrderMap.put("验收时间", evaluateStep.getEndTime() != null ? sdf.format(evaluateStep.getEndTime()) : "");
             }
             if(closeStep != null){
                 workOrderMap.put("关单人", closeStep.getOwnerName());
-                workOrderMap.put("关单时间", closeStep.getEndTime());
+                workOrderMap.put("关单时间", closeStep.getEndTime() != null ? sdf.format(closeStep.getEndTime()) : "");
             }
             workOrderMap.put("最终评价", workOrder.getFeedbackRating());
             workOrderMap.put("故障类型", workOrder.getCaseType());
