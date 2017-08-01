@@ -1,6 +1,8 @@
 package com.ge.apm.dao;
 
 import com.ge.apm.domain.UserAccount;
+import com.ge.apm.view.sysutil.UserInfo;
+
 import java.util.List;
 import javax.persistence.QueryHint;
 import org.springframework.data.domain.Page;
@@ -45,7 +47,6 @@ public interface UserAccountRepository extends GenericRepository<UserAccount> {
     UserAccount getByWeChatId(String weChatId);
     List<UserAccount> getByOrgInfoId(int orgInfoId);
 
-
     @Query(value="select ua.* from user_account ua right join (select user_id from biomed_group_user where group_id in (select biomed_group_id from asset_tag_biomed_group where tag_id in (select tag_id from asset_tag_rule where asset_id = ?1)) ) tb1 on ua.id = tb1.user_id",nativeQuery = true)
     List<UserAccount> getResponserByAssetId(Integer assetId);
 
@@ -56,6 +57,8 @@ public interface UserAccountRepository extends GenericRepository<UserAccount> {
     //如果没有对某资产配置过对应的医院工，那么就通过标签中的siteId获取默认的医工
     @Query(value="select ua.* from user_account ua, asset_info ai, user_role r where ai.id = ?1 and ai.site_id = ua.site_id and ua.id = r.user_id and r.role_id = 3",nativeQuery=true)
     List<UserAccount> getDefaultUsers(int assetId);
+	List<UserInfo> findByInstitutionUID(String institutionUID);
+
     /* sysrole.id=2*/
 
 }

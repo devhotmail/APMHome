@@ -1,0 +1,104 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/WEB-INF/template.xhtml">
+
+    <ui:define name="content">
+        <div class="ui-g clearfix">
+            <div class="ui-g-12 card cardTitle">
+                <p:outputLabel class="pageTitle" value="#{msg.WorkflowConfig}"/>
+            </div>
+
+            <div class="ui-g-12 card">
+                <p:growl autoUpdate="true" life="3000"/>
+                <h:form id="V2_WorkflowConfigEditForm">
+ <!--                      <p:fieldset legend="#{msg.FilterCondition}">
+                        <p:panelGrid columns="4" layout="grid" styleClass="ui-panelgrid-blank form-group">
+                            <h:panelGroup >
+                                <label class="label">#{msg.assetGroup}*</label>
+                                <p:selectOneMenu id="assetGroup" value="#{assetOwnerSettingController.queryAsset.assetGroup}">
+                                    <p:ajax  listener="#{assetOwnerSettingController.getQueryAssetsList()}" update="AssetsPickList" />
+                                    <f:selectItem itemLabel="#{msg.selectOneMessage}"/>
+                                    <f:selectItems value="#{fieldMsg.getFieldValueList('assetGroup')}" var="item" itemLabel="#{item.value}" itemValue="#{item.msgKey}"/>
+                                </p:selectOneMenu>
+                            </h:panelGroup>
+                        </p:panelGrid>
+                    </p:fieldset> -->
+                
+                
+                <h:panelGroup id="display">
+                    <p:panelGrid columns="2" layout="grid" styleClass="ui-panelgrid-blank form-group" rendered="#{workflowConfigController.selected != null}">
+                        <h:panelGroup>
+                            <label class = "label">#{msg.dispatchMode}</label>
+                            <p:selectOneMenu value="#{workflowConfigController.selected.dispatchMode}" disabled="false">
+                                    <f:selectItems value="#{fieldMsg.getFieldValueList('dispatchMode')}" var="item"  itemLabel="#{item.value}" itemValue="#{item.msgKey}"/>
+                             </p:selectOneMenu>
+                        </h:panelGroup>
+                        <p:spacer/>
+                        <h:panelGroup rendered="false">
+                            <label class = "label">是否允许抢单?</label>
+                            <p:selectBooleanCheckbox value="#{workflowConfigController.selected.isTakeOrderEnabled}"/>
+                        </h:panelGroup >
+                        <h:panelGroup >
+                            <label class="label">#{msg.dispatchUserName}</label>
+                            <p:selectOneMenu id="dispatchUserId" value="#{workflowConfigController.selected.dispatchUserId}" 
+                            		 required="false" requiredMessage="#{msg.dispatchUserName} #{msg.ValidationRequire}" >
+                                <f:selectItem itemLabel="#{msg.SelectOneMessage}" itemValue="#{null}" noSelectionOption="true" />
+                                <f:selectItems value="#{workflowConfigController.userList}" var="item" itemLabel="#{item.name}" itemValue="#{item.id}"/>
+                            </p:selectOneMenu>
+                        </h:panelGroup>
+                        <h:panelGroup >
+                            <label class="label">#{msg.dispatchUserName}2</label>
+                            <p:selectOneMenu id="dispatchUserId2" value="#{workflowConfigController.selected.dispatchUserId2}" 
+                            		 required="false" requiredMessage="#{msg.dispatchUserName}2 #{msg.ValidationRequire}" >
+                                <f:selectItem itemLabel="#{msg.SelectOneMessage}" itemValue="#{null}" noSelectionOption="true" />
+                                <f:selectItems value="#{workflowConfigController.userList}" var="item" itemLabel="#{item.name}" itemValue="#{item.id}"/>
+                            </p:selectOneMenu>
+                        </h:panelGroup>
+                        <h:panelGroup >
+                            <label class = "label">工单完工不需要验收?</label>
+                            <p:selectBooleanCheckbox value="#{workflowConfigController.selected.autoAck}"/>
+                        </h:panelGroup >
+                        <p:spacer/>
+                        <h:panelGroup>
+                            <label class="label">#{msg.timeoutDispatch}</label>
+                            <p:inputText id="timeoutDispatch" value="#{workflowConfigController.selected.timeoutDispatch}" />
+                        </h:panelGroup>
+                        <h:panelGroup >
+                            <label class="label">#{msg.timeoutAccept}</label>
+                            <p:inputText id="timeoutAccept" value="#{workflowConfigController.selected.timeoutAccept}" />
+                        </h:panelGroup>
+<!--
+                        <h:panelGroup>
+                            <label class="label">#{msg.timeoutRepair}</label>
+                            <p:inputText id="timeoutRepair" value="#{workflowConfigController.selected.timeoutRepair}" />
+                        </h:panelGroup>
+-->
+                        <h:panelGroup>
+                            <label class="label">#{msg.timeoutClose}</label>
+                            <p:inputText id="timeoutClose" value="#{workflowConfigController.selected.timeoutClose}" />
+                        </h:panelGroup>
+                        <h:panelGroup>
+                            <label class="label">#{msg.maxMessageCount}</label>
+                            <p:inputText id="maxMessageCount" value="#{workflowConfigController.selected.maxMessageCount}" />
+                        </h:panelGroup>
+<!--
+                    <h:panelGroup>
+                            <label class="label">#{msg.orderReopenTimeframe}</label>
+                            <p:inputText id="orderReopenTimeframe" value="#{workflowConfigController.selected.orderReopenTimeframe}" required="true"/>
+                        </h:panelGroup>
+-->
+                    </p:panelGrid>
+                    <br/>
+                    <p:commandButton validateClient="true" actionListener="#{workflowConfigController.save}" value="#{msg.Save}" icon="ui-icon-check" rendered="#{workflowConfigController.selected != null}" update=":growl"/>
+                </h:panelGroup>
+            </h:form>
+
+            </div>
+        </div>
+    </ui:define>
+
+</ui:composition>
+

@@ -214,6 +214,7 @@ INSERT INTO "public"."i18n_message" VALUES ('435', 'label', 'WorkOrderAssignee',
 INSERT INTO "public"."i18n_message" VALUES ('436', 'label', 'AckPass', '验收通过', 'Acknowledge pass', null, '-1');
 INSERT INTO "public"."i18n_message" VALUES ('437', 'label', 'AckNoPass', '验收不通过', 'Acknowledge does not pass', null, '-1');
 INSERT INTO "public"."i18n_message" VALUES ('438', 'label', 'Acknowledge', '验收', 'Acknowledge', null, '-1');
+INSERT INTO "public"."i18n_message" VALUES ('439', 'label', 'startUsingDate', '启用时间', 'Start Using Date', null, '-1');
 
 INSERT INTO "public"."i18n_message" VALUES ('600', 'field_name', 'accessory', '备件', 'Accessory', null, '-1');
 INSERT INTO "public"."i18n_message" VALUES ('601', 'field_name', 'accessoryPrice', '单价(元)', 'Accessory Price', null, '-1');
