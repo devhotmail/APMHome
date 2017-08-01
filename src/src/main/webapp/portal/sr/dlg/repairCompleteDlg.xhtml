@@ -39,7 +39,6 @@
                         <h:panelGroup> <!--expenseList part-->
                             <p:dataTable id="datalist" class="uiTransparent" value="#{workOrderListController.workOrderDetailsList}" var="item" widgetVar="varStepDetailDataList" lazy="false" paginator="false"
                                          rowKey="#{item.id}" rows="1000" emptyMessage="#{msg.noRecordFound}">
-
                                 <p:column headerText="#{msg.manHours}">
                                     <h:outputText value="#{item.manHours}"/>
                                 </p:column>
@@ -70,12 +69,8 @@
                                     </p:commandButton>
                                 </p:column>
                             </p:dataTable>
-
                         </h:panelGroup>
-
                     </h:panelGroup>
-
-
 
                     <h:panelGroup>
                         <p:commandButton validateClient="true" actionListener="#{workOrderListController.repairWorkOrder()}" value="维修完成" update=":repairCompleteDialogForm :growl" icon="ui-icon-check" oncomplete="handleSubmit(args, 'repairCompleteDialog');"/>
@@ -85,8 +80,6 @@
                     </h:panelGroup>
                 </p:panelGrid>
                 <br/>
-
-
             </h:panelGroup>
         </h:form>
     </p:dialog>
