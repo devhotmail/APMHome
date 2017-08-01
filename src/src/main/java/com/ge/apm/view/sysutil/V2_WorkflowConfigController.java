@@ -1,60 +1,57 @@
 package com.ge.apm.view.sysutil;
 
-import com.ge.apm.dao.UserAccountRepository;
 import java.util.List;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-
-import com.ge.apm.dao.WorkflowConfigRepository;
+import com.ge.apm.dao.UserAccountRepository;
+import com.ge.apm.dao.V2_WorkflowConfigRepository;
+import com.ge.apm.domain.V2_DeviceType;
 import com.ge.apm.domain.UserAccount;
-import com.ge.apm.domain.WorkflowConfig;
-import com.ge.apm.service.uaa.UaaService;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import webapp.framework.dao.NativeSqlUtil;
+import com.ge.apm.domain.V2_WorkflowConfig;
 import webapp.framework.web.WebUtil;
 import webapp.framework.web.mvc.JpaCRUDController;
 
 @ManagedBean
 @ViewScoped
-public class WorkflowConfigController extends JpaCRUDController<WorkflowConfig> {
-
-	/**
-	 * 
-	 */
+public class V2_WorkflowConfigController extends JpaCRUDController<V2_WorkflowConfig> {
+	
 	private static final long serialVersionUID = 1L;
-	WorkflowConfigRepository dao = null;
+	V2_WorkflowConfigRepository dao = null;
 	private UserAccount user;
 	private List<UserAccount> dispatchUserList;
-	private UaaService uuaService;
-        private UserAccount owner;
+//	private UaaService uuaService;
+    private UserAccount owner;
+    private UserAccountRepository userDao;
+    private List<UserInfo> userList;
+    private List<V2_DeviceType> deviceType;
+    
 
 	@Override
 	protected void init() {
             user = UserContextService.getCurrentUserAccount();
-            dao = WebUtil.getBean(WorkflowConfigRepository.class);
-            uuaService =  (UaaService) WebUtil.getBean(UaaService.class);
-            dispatchUserList = uuaService.getUsersWithAssetHeadOrStaffRole(user.getHospitalId());
+            dao = WebUtil.getBean(V2_WorkflowConfigRepository.class);
+//            uuaService =  (UaaService) WebUtil.getBean(UaaService.class);
+            //dispatchUserList = uuaService.getUsersWithAssetHeadOrStaffRole(user.getHospitalId());
             
             initDispatchUserList();
-            
-            this.selected = dao.getBySiteIdAndHospitalId(user.getSiteId(), user.getHospitalId());
-            if (selected == null) {
-                initWorkflowConfig(user);
-            }
+            //deviceType = 
+            this.selected = dao.findByTenantUIDAndInstitutionUIDAndHospitalUIDAndSiteUID(user.getTenantUID(),user.getInstitutionUID(),user.getHospitalUID(), user.getSiteUID());
+//            if (selected == null) {
+//                initWorkflowConfig(user);
+//            }
 	}
         
-    private List<UserInfo> userList;
+
 
     private void initDispatchUserList(){
-        userList = new ArrayList<UserInfo>();
-        try{
+    	userList = userDao.findByInstitutionUID(user.getInstitutionUID());
+        //userList = new ArrayList<UserInfo>();
+/*        try{
             String sql = "select distinct u.id, u.name, o.name as hospital_name, o.id as hospital_id from user_account u, org_info o, user_role r where u.hospital_id=o.id and u.id=r.user_id and r.role_id in (2,3) and u.site_id=:#siteId and u.hospital_id=:#hospitalId " +
                          "union all " +
-                         	"select distinct u.id, u.name, o.name as hospital_name, o.id as hospital_id from user_account u, org_info o, user_role r where u.hospital_id=o.id and u.id=r.user_id and r.role_id in (2,3) and u.site_id=:#siteId and u.hospital_id<>:#hospitalId";
+                         "select distinct u.id, u.name, o.name as hospital_name, o.id as hospital_id from user_account u, org_info o, user_role r where u.hospital_id=o.id and u.id=r.user_id and r.role_id in (2,3) and u.site_id=:#siteId and u.hospital_id<>:#hospitalId";
 
             Map<String, Object> sqlParams = new HashMap<>();
             sqlParams.put("hospitalId", user.getHospitalId());
@@ -75,7 +72,7 @@ public class WorkflowConfigController extends JpaCRUDController<WorkflowConfig> 
             }
         }
         catch(Exception ex){
-        }
+        }*/
     }
 
     public List<UserInfo> getUserList() {
@@ -86,28 +83,28 @@ public class WorkflowConfigController extends JpaCRUDController<WorkflowConfig> 
         this.userList = userList;
     }
         
-        public void initWorkflowConfig(UserAccount user){
-            WorkflowConfig wfConfig = new WorkflowConfig();
-            wfConfig.setHospitalId(user.getHospitalId());
-            wfConfig.setSiteId(user.getSiteId());
+/*	public void initWorkflowConfig(UserAccount user) {
+		WorkflowConfig wfConfig = new WorkflowConfig();
+		wfConfig.setHospitalId(user.getHospitalId());
+		wfConfig.setSiteId(user.getSiteId());
 
-            wfConfig.setDispatchMode(3);
-            wfConfig.setTimeoutDispatch(30);
-            wfConfig.setTimeoutAccept(30);
-            wfConfig.setTimeoutRepair(300);  //5 hours
-            wfConfig.setTimeoutClose(30);
-            wfConfig.setOrderReopenTimeframe(7);
+		wfConfig.setDispatchMode(3);
+		wfConfig.setTimeoutDispatch(30);
+		wfConfig.setTimeoutAccept(30);
+		wfConfig.setTimeoutRepair(300); // 5 hours
+		wfConfig.setTimeoutClose(30);
+		wfConfig.setOrderReopenTimeframe(7);
 
-            this.selected = dao.save(wfConfig);
-        }
+		this.selected = dao.save(wfConfig);
+	}*/
 
 	@Override
-	protected WorkflowConfigRepository getDAO() {
+	protected V2_WorkflowConfigRepository getDAO() {
 		return dao;
 	}
 
 	@Override
-	protected Page<WorkflowConfig> loadData(PageRequest pageRequest) {
+	protected Page<V2_WorkflowConfig> loadData(PageRequest pageRequest) {
 		if (this.searchFilters == null) {
 			return dao.findAll(pageRequest);
 		} else {
@@ -123,7 +120,7 @@ public class WorkflowConfigController extends JpaCRUDController<WorkflowConfig> 
         }
 	
 	@Override
-	public List<WorkflowConfig> getItemList() {
+	public List<V2_WorkflowConfig> getItemList() {
 		return dao.find();
 	}
 
@@ -144,7 +141,7 @@ public class WorkflowConfigController extends JpaCRUDController<WorkflowConfig> 
 	}
 
 	@Override
-	public void onBeforeSave(WorkflowConfig config) {
+	public void onBeforeSave(V2_WorkflowConfig config) {
             UserAccountRepository uaDao = WebUtil.getBean(UserAccountRepository.class);
             try{
                 config.setDispatchUserName(uaDao.getById(selected.getDispatchUserId()).getName());
