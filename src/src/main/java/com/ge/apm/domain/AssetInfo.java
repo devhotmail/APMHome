@@ -213,6 +213,14 @@ public class AssetInfo implements Serializable {
     @Column(name = "asset_code68")
     private String assetCode68;
     
+    @Column(name = "comments")
+    @Size(min = 0, max = 256)
+    private String comments;
+    
+    @Column(name = "start_using_date")
+    @Temporal(TemporalType.DATE)
+    private Date startUsingDate;
+    
     @Column(name = "hospital_id")
     @Basic(optional = false)
     @NotNull
@@ -235,6 +243,15 @@ public class AssetInfo implements Serializable {
     @Column(name = "site_uid", columnDefinition = "CHAR(32)")
     private String siteUID;
 
+    public String getComments() {
+        return comments;
+    }
+
+    public void setComments(String comments) {
+        this.comments = comments;
+    }
+    
+    
     public String getTenantUID() {
         return tenantUID;
     }
@@ -854,8 +871,15 @@ public class AssetInfo implements Serializable {
     public void setClinicalDeptUID(String clinicalDeptUID) {
         this.clinicalDeptUID = clinicalDeptUID;
     }
-    
 
+    public Date getStartUsingDate() {
+        return startUsingDate;
+    }
+
+    public void setStartUsingDate(Date startUsingDate) {
+        this.startUsingDate = startUsingDate;
+    }
+    
     @Override
     public int hashCode() {
         int hash = 0;

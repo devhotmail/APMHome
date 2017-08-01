@@ -222,6 +222,11 @@
                                     <f:selectItems value="#{fieldMsg.getFieldValueList('assetStatus')}" var="item" itemLabel="#{item.value}" itemValue="#{item.msgKey}"/>
                                 </p:selectOneRadio>
                             </h:panelGroup>
+                            <p:spacer/>
+                            <h:panelGroup >
+                                <label class="label">#{msg.comments}</label>
+                                <p:inputTextarea value="#{assetInfoController.selected.comments}"  maxlength="256"/>
+                            </h:panelGroup>
                         </p:panelGrid>
                     </p:fieldset>
                     <p:fieldset  style="margin-bottom:20px">
@@ -239,11 +244,13 @@
                                 <p:calendar timeZone="GMT+8"  id="arriveDate" pattern="yyyy/MM/dd" value="#{assetInfoController.selected.arriveDate}" showOn="button" readonlyInput="false" showButtonPanel="true" navigator="true" mask="true"/>
                             </h:panelGroup>
 
-                            <p:spacer/>
-
                             <h:panelGroup>
                                 <label class="label">#{msg.installDate}</label>
                                 <p:calendar timeZone="GMT+8"  id="installDate" pattern="yyyy/MM/dd" value="#{assetInfoController.selected.installDate}" showOn="button" readonlyInput="false" showButtonPanel="true" navigator="true" mask="true" required="false" requiredMessage="#{msg.installDate} #{msg.ValidationRequire}"/>
+                            </h:panelGroup>
+                            <h:panelGroup>
+                                <label class="label">#{msg.startUsingDate}</label>
+                                <p:calendar timeZone="GMT+8"  id="startUsingDate" pattern="yyyy/MM/dd" value="#{assetInfoController.selected.startUsingDate}" showOn="button" readonlyInput="false" showButtonPanel="true" navigator="true" mask="true" required="false" requiredMessage="#{msg.startUsingDate} #{msg.ValidationRequire}"/>
                             </h:panelGroup>
                             <h:panelGroup>
                                 <label class="label">#{msg.factoryWarrantyDate}</label>
@@ -257,18 +264,6 @@
                                 <label class="label">#{msg.terminateDate}</label>
                                 <p:calendar timeZone="GMT+8"  id="terminateDate" pattern="yyyy/MM/dd" value="#{assetInfoController.selected.terminateDate}" showOn="button" readonlyInput="false" showButtonPanel="true" navigator="true" mask="true"/>
                             </h:panelGroup>
-                            <!--                            <h:panelGroup>
-                                                            <label class="label">#{msg.lastPmDate}</label>
-                                                            <p:calendar timeZone="GMT+8"  id="lastPmDate" pattern="yyyy/MM/dd" value="#{assetInfoController.selected.lastPmDate}" showOn="button" readonlyInput="false" showButtonPanel="true" navigator="true" mask="true"/>
-                                                        </h:panelGroup>
-                                                        <h:panelGroup>
-                                                            <label class="label">#{msg.lastQaDate}</label>
-                                                            <p:calendar timeZone="GMT+8"  pattern="yyyy/MM/dd" value="#{assetInfoController.selected.lastQaDate}" showOn="button" readonlyInput="false" showButtonPanel="false" navigator="true" mask="true"/>
-                                                        </h:panelGroup>
-                                                        <h:panelGroup>
-                                                            <label class="label">#{msg.lastMeteringDate}</label>
-                                                            <p:calendar timeZone="GMT+8"  pattern="yyyy/MM/dd" value="#{assetInfoController.selected.lastMeteringDate}" showOn="button" readonlyInput="false" showButtonPanel="false" navigator="true" mask="true"/>
-                                                        </h:panelGroup>-->
                         </p:panelGrid>
                     </p:fieldset>
                     <p:fieldset  style="margin-bottom:20px">

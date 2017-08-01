@@ -186,7 +186,12 @@
                         <p:inputText id="arriveDate" value="#{assetInfoController.selected.arriveDate}" readonly="true">
                             <f:convertDateTime timeZone="GMT+8" pattern="yyyy/MM/dd " />
                         </p:inputText>
-                        <!--<p:calendar timeZone="GMT+8"  id="arriveDate" pattern="yyyy/MM/dd" value="#{assetInfoController.selected.arriveDate}" showOn="button" readonlyInput="true" showButtonPanel="true" navigator="true"/>-->
+                    </h:panelGroup>
+                    <h:panelGroup>
+                        <label class="label">#{msg.startUsingDate}</label>
+                        <p:inputText  value="#{assetInfoController.selected.startUsingDate}" readonly="true">
+                            <f:convertDateTime timeZone="GMT+8" pattern="yyyy/MM/dd " />
+                        </p:inputText>
                     </h:panelGroup>
                     <h:panelGroup>
                         <label class="label">#{msg.installDate}</label>
@@ -241,6 +246,10 @@
                     <h:panelGroup>
                         <label class="label">#{msg.depreciationMethod}</label>
                         <p:inputText id="depreciationMethod" value="#{fieldMsg.fieldValue('depreciationMethodList', assetInfoController.selected.depreciationMethod)}" readonly="true"/>
+                    </h:panelGroup>
+                    <h:panelGroup>
+                        <label class="label">#{msg.comments}</label>
+                        <p:inputText  value="#{assetInfoController.selected.comments}" readonly="true"/>
                     </h:panelGroup>
 
                 </p:panelGrid>
