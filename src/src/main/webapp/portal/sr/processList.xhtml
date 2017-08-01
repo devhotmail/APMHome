@@ -28,7 +28,7 @@
 
                 <h:form id="processListForm">
                     <h:panelGrid id="buttonSet" columns="7" cellpadding="5">
-                        <p:commandButton value="#{fieldMsg.fieldValue('woSteps',2)}" id="btnCreate" process="@this" update="datalist buttonSet :processDetailForm " actionListener="#{workOrderListController.searchList(2)}" disabled="#{workOrderListController.queryIndex==2}" />
+                        <!--<p:commandButton value="#{fieldMsg.fieldValue('woSteps',2)}" id="btnCreate" process="@this" update="datalist buttonSet :processDetailForm " actionListener="#{workOrderListController.searchList(2)}" disabled="#{workOrderListController.queryIndex==2}" />-->
                         <p:commandButton value="#{fieldMsg.fieldValue('woSteps',3)}" id="btn1" process="@this" update="datalist buttonSet :processDetailForm " actionListener="#{workOrderListController.searchList(3)}"  disabled="#{workOrderListController.queryIndex==3}" />
                         <p:commandButton value="#{fieldMsg.fieldValue('woSteps',4)}" id="btn2" process="@this" update="datalist buttonSet :processDetailForm " actionListener="#{workOrderListController.searchList(4)}" disabled="#{workOrderListController.queryIndex==4}"/>
 

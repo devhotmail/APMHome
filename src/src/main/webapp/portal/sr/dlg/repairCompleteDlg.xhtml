@@ -7,34 +7,42 @@
       xmlns:p="http://primefaces.org/ui">
 
 <ui:composition>
-    <p:dialog id="repairCompleteDialog" widgetVar="repairCompleteDialog" modal="true" width="500"  resizable="true" draggable="true" appendTo="@(body)" header="维修完成">
+    <p:dialog id="repairCompleteDialog" widgetVar="repairCompleteDialog" modal="true"  width="800"  resizable="true" draggable="true" appendTo="@(body)" header="维修完成">
         <h:form id="repairCompleteDialogForm" >
             <h:panelGroup id="display5" rendered="#{not empty workOrderListController.selectedWorkOrder}">
-                <p:panelGrid columns="2" layout="grid" styleClass="ui-panelgrid-blank form-group">
+                <p:panelGrid columns="3" layout="grid" styleClass="ui-panelgrid-blank form-group">
+                    <h:panelGroup>
                         <label class="label">恢复时间</label>
                         <p:calendar timeZone="GMT+8" id="fillDate" pattern="yyyy/MM/dd"  value="#{workOrderListController.confirmedUpDate}" showOn="button" showButtonPanel="true" navigator="true" readonlyInput="false" locale= "zh" required="true" requiredMessage="恢复时间 #{msg.ValidationRequire}"></p:calendar>
+                       </h:panelGroup>
+                <h:panelGroup>
                         <label class="label">故障类别</label>
                         <p:selectOneMenu  value="#{workOrderListController.selectedWorkOrder.caseType}" required="true" requiredMessage="#{msg.intExtType} #{msg.ValidationRequire}">
                             <f:selectItems value="#{workOrderListController.getAssetFaultType()}" var="item" itemLabel="#{item.faultName}" itemValue="#{item.id}"/>
                         </p:selectOneMenu>
-
+                       </h:panelGroup>
                 </p:panelGrid>
-                <p:panelGrid columns="1" layout="grid" styleClass="ui-panelgrid-blank form-group">
+                <p:panelGrid columns="2" layout="grid" styleClass="ui-panelgrid-blank form-group">
 
 <h:panelGroup>
                         <label class="label">问题描述</label>
                         <p:inputTextarea value="#{workOrderListController.problemDes}" rows="3"  cols="40"  queryDelay="750" minQueryLength="4"/>
-                    <br/>
+                    </h:panelGroup>
+            <h:panelGroup>
                         <label class="label">解决方案</label>
                         <p:inputTextarea value="#{workOrderListController.solution}" rows="3"  cols="40"  queryDelay="750" minQueryLength="4"/>
-                    <br/>
+            </h:panelGroup>
+            <h:panelGroup>
+
                         <label class="label">测试方法</label>
                         <p:inputTextarea value="#{workOrderListController.testMethod}" rows="3"  cols="40"  queryDelay="750" minQueryLength="4"/>
-                    <br/>
+            </h:panelGroup>
+            <h:panelGroup>
                         <label class="label">备注</label>
                         <p:inputTextarea value="#{workOrderListController.comments}" rows="3"  cols="40"  queryDelay="750" minQueryLength="4"/>
 </h:panelGroup>
                    <!-- <ui:include src="expenseList.xhtml"/>-->
+                </p:panelGrid>
                     <h:panelGroup>
                         <h:panelGroup> <!--expenseList part-->
                             <p:dataTable id="datalist" class="uiTransparent" value="#{workOrderListController.workOrderDetailsList}" var="item" widgetVar="varStepDetailDataList" lazy="false" paginator="false"
@@ -62,8 +70,6 @@
                                     <!--<p:commandButton process="@this" icon="ui-icon-add" style="zoom:0.8;" title="#{msg.Create}" actionListener="#{workOrderListController.prepareCreateDetail()}" update=" :repairCompleteDialogForm :repairCompleteDialogForm:datalist :expenseDlgCompleteForm" oncomplete="PF('expenseCompleteDlg').show()" rendered="#{!workOrderListController.isWoListEmpty()}"/>-->
                                     <p:commandButton process="@this" icon="ui-icon-add" style="zoom:0.8;" title="#{msg.Create}" actionListener="#{workOrderListController.prepareCreateDetail()}" update=":expenseCompleteDlg :expenseDlgCompleteForm" oncomplete="PF('expenseCompleteDlg').show()" rendered="#{!workOrderListController.isWoListEmpty()}"/>
                                     <p:commandButton process="@this" icon="ui-icon-pencil" style="zoom:0.8;" title="#{msg.Edit}" actionListener="#{workOrderListController.prepareEditDetail(item)}" update=":expenseCompleteDlg" oncomplete="PF('expenseCompleteDlg').show()" rendered="#{!workOrderListController.isWoListEmpty()}" />
-
-
                                     <p:commandButton process="@this" icon="ui-icon-close" style="zoom:0.8;" title="#{msg.Delete}" actionListener="#{workOrderListController.deleteWoDetail(item.id)}" update=":repairCompleteDialogForm :repairCompleteDialogForm:datalist" rendered="#{!workOrderListController.isWoListEmpty()}">
                                         <p:confirm header="#{msg.DeleteConformation}" message="#{msg.DeleteConformationMsg}" icon="ui-icon-alert"/>
                                     </p:commandButton>
@@ -73,19 +79,19 @@
                     </h:panelGroup>
 
                     <h:panelGroup>
-                        <p:commandButton validateClient="true" actionListener="#{workOrderListController.repairWorkOrder()}" value="维修完成" update=":repairCompleteDialogForm :growl :repairCompleteDialogForm:datalist " icon="ui-icon-check" oncomplete="handleSubmit(args, 'repairCompleteDialog');"/>
-                        <p:commandButton value="转单"  update=":transferOrderDialogForm1" oncomplete="PF('transferOrderDialog1').show()"/>
-                        <p:commandButton  actionListener="#{workOrderListController.clickNewWorkOrder}" value="新建工单" update=":newWorkorderDlgForm :growl" icon="ui-icon-check" oncomplete="PF('newWorkorderDlg').show()"/>
+                        <p:commandButton validateClient="true" actionListener="#{workOrderListController.repairWorkOrder()}" value="维修完成" update=":repairCompleteDialogForm :growl :processListForm:datalist " icon="ui-icon-check" oncomplete="handleSubmit(args, 'repairCompleteDialog');"/>
+                        <p:commandButton value="转单" immediate="true" update=":transferOrderDialogForm1" oncomplete="PF('transferOrderDialog1').show()"/>
+                        <p:commandButton immediate="true" actionListener="#{workOrderListController.clickNewWorkOrder}" value="新建工单" update=":newWorkorderDlgForm :growl" icon="ui-icon-check" oncomplete="PF('newWorkorderDlg').show()"/>
                         <p:commandButton immediate="true" value="#{msg.Cancel}" actionListener="#{workOrderListController.initWorkOrderDetailList()}" icon="ui-icon-cancel" onclick="PF('repairCompleteDialog').hide()"/>
                     </h:panelGroup>
-                </p:panelGrid>
+
                 <br/>
             </h:panelGroup>
         </h:form>
 
 
     </p:dialog>
-    <p:dialog id="transferOrderDialog1" widgetVar="transferOrderDialog1" modal="true" width="500"  resizable="true" draggable="true" appendTo="@(body)" header="转单">
+    <p:dialog id="transferOrderDialog1" immediate="true" widgetVar="transferOrderDialog1" modal="true" width="500"  resizable="true" draggable="true" appendTo="@(body)" header="转单">
         <h:form id="transferOrderDialogForm1" >
             <!--<h:panelGroup id="display2" rendered="#{not empty workOrderListController.selectedWorkOrder}">-->
             <h:panelGroup id="display2" rendered="#{not empty workOrderListController.selectedWorkOrder}">

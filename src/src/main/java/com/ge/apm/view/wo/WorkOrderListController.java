@@ -8,8 +8,6 @@ package com.ge.apm.view.wo;
 import com.ge.apm.dao.*;
 import com.ge.apm.domain.*;
 import com.ge.apm.service.asset.AssetFaultTypeService;
-import com.ge.apm.service.wo.ServiceRequestApiService;
-import com.ge.apm.service.wo.V2WorkOrderService;
 import com.ge.apm.service.wo.V2_WorkOrderService;
 import com.ge.apm.service.wo.WorkOrderMsgService;
 import com.ge.apm.view.sysutil.UserContextService;
@@ -54,13 +52,11 @@ public class WorkOrderListController extends GenericCRUDUUIDController<V2_WorkOr
     List<V2_WorkOrder_Detail> workOrderDetailsList;
     V2_WorkOrder_Detail itemDetail ;
     WorkOrderMsgService workOrderMsgService;
-    V2WorkOrderService  v2WorkOrderService;
     UserAccountRepository userAccountRepository;
     protected void init() {
         dao = WebUtil.getBean(V2_WorkOrderRepository.class);
         srDao = WebUtil.getBean(ServiceRequestRepository.class);
         woService = WebUtil.getBean(V2_WorkOrderService.class);
-        v2WorkOrderService = WebUtil.getBean(V2WorkOrderService.class);
         groupDao = WebUtil.getBean(BiomedGroupRepository.class);
       //  workOrderStepRepository = WebUtil.getBean(V2_WorkOrderStepRepository.class);
         this.filterBySite = true;
@@ -132,10 +128,14 @@ public void createWorkOrder(){
     woService.reCreateWorkOrder(selectedWorkOrder,selectedWorkOrder.getCurrentPersonId(),2,comments,selectedWorkOrder.getIntExtType());
 }
 
+public void newOrderCancel(){
+comments =null;
+}
+
 public void repairWorkOrder(){
-    //V2_WorkOrder selectedWorkOrder, Date confirmedUpTime,Integer assetStatus,List<V2_WorkOrder_Detail> details
    //gl:1表示是正常
     woService.repairWorkOrder(selectedWorkOrder,confirmedUpDate,1,workOrderDetailsList);
+
 }
     public V2_WorkOrder_Detail getItemDetail() {
         return itemDetail;
@@ -159,12 +159,13 @@ public void repairWorkOrder(){
 
     public void prepareDispatch(String woid){
         selectedWorkOrder = dao.findById(woid);
-
+        initWorkOrderDetailList();
 
     }
 
     public void clickCloseOrder(String woid){
         selectedWorkOrder = dao.findById(woid);
+        initWorkOrderDetailList();
     }
     public void prepareEditDetail(V2_WorkOrder_Detail workOrderDetail){
         itemDetail =workOrderDetail;
@@ -341,8 +342,13 @@ Date esTime;
     public void cancel() {
         selected=null;
         selectedServiceRequest = null;
+        comments=null;
+        esTime=null;
+        selectedWorkOrder=null;
     }
-
+public void expenseDialogClose(){
+        itemDetail=null;
+}
     public Integer getCategory() {
         return category;
     }
@@ -387,6 +393,7 @@ Date esTime;
 
     public void closeWorkOrder(){
         woService.closeWorkOrder(selectedWorkOrder,workOrderDetailsList);
+        cancel();
     }
 
     public void test(){

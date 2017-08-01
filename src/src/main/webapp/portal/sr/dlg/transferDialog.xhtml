@@ -7,7 +7,7 @@
       xmlns:p="http://primefaces.org/ui">
 
 <ui:composition>
-    <p:dialog id="transferOrderDialog" widgetVar="transferOrderDialog" modal="true" width="500"  resizable="true" draggable="true" appendTo="@(body)" header="转单">
+    <p:dialog id="transferOrderDialog" widgetVar="transferOrderDialog" modal="true" width="300"  resizable="true" draggable="true" appendTo="@(body)" header="转单">
         <h:form id="transferOrderDialogForm" >
             <!--<h:panelGroup id="display2" rendered="#{not empty workOrderListController.selectedWorkOrder}">-->
             <h:panelGroup id="display2" rendered="#{not empty workOrderListController.selectedWorkOrder}">
@@ -26,8 +26,8 @@
 
             </h:panelGroup>
             <h:panelGroup>
-                <p:commandButton validateClient="true" actionListener="#{workOrderListController.transferWorkOrder()}" value="转单" update=":transferOrderDialogForm :growl" icon="ui-icon-check" oncomplete="handleSubmit(args, 'transferOrderDialog');"/>
-                <p:commandButton immediate="true" value="#{msg.Cancel}" icon="ui-icon-cancel" onclick="PF('transferOrderDialog').hide()"/>
+                <p:commandButton validateClient="true" actionListener="#{workOrderListController.reassignWorkOrder()}" value="转单" update=":transferOrderDialogForm :growl :processListForm:datalist" icon="ui-icon-check" oncomplete="handleSubmit(args, 'transferOrderDialog');"/>
+                <p:commandButton immediate="true" value="#{msg.Cancel}" actionListener="#{workOrderListController.cancel()}" icon="ui-icon-cancel" onclick="PF('transferOrderDialog').hide()"/>
             </h:panelGroup>
         </h:form>
     </p:dialog>

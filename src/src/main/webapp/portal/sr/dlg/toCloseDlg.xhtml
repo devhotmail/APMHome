@@ -70,7 +70,7 @@
 
 
                     <h:panelGroup>
-                        <p:commandButton validateClient="true" actionListener="#{workOrderListController.closeWorkOrder}" value="关单" update=":toCloseDialogForm :growl" icon="ui-icon-check" oncomplete="handleSubmit(args, 'toCloseDialog');"/>
+                        <p:commandButton validateClient="true" actionListener="#{workOrderListController.closeWorkOrder}" value="关单" update=":expenseDlgForm :toCloseDialogForm :growl :processListForm:datalist" icon="ui-icon-check" oncomplete="handleSubmit(args, 'toCloseDialog');"/>
                         <p:commandButton immediate="true" value="#{msg.Cancel}" icon="ui-icon-cancel" actionListener="#{workOrderListController.initWorkOrderDetailList}" onclick="PF('toCloseDialog').hide()"/>
                     </h:panelGroup>
                 </p:panelGrid>
