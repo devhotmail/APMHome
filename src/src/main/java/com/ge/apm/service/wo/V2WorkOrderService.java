@@ -3,7 +3,8 @@ package com.ge.apm.service.wo;
 import com.ge.apm.dao.*;
 import com.ge.apm.domain.*;
 import com.ge.apm.view.sysutil.UserContextService;
-import com.hazelcast.util.CollectionUtil;
+
+import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -73,7 +74,7 @@ public class V2WorkOrderService {
             List<UserAccount> assetOwnerList=  userAccountRepository.getResponserWithAsset(assetId);
             List<UserAccount> defaultUserList=null;
             //如果该设备没有相应的owner并且根据设备标签找不到对应的负责人，就获取默认的医工.
-            if(CollectionUtil.isEmpty(userListTag) &  CollectionUtil.isEmpty(assetOwnerList)){
+            if(CollectionUtils.isEmpty(userListTag) &  CollectionUtils.isEmpty(assetOwnerList)){
                 //search List from   (siteId and  roleid=3)
                 defaultUserList=  userAccountRepository.getDefaultUsers(assetId);
                 //duplication remove
@@ -82,16 +83,16 @@ public class V2WorkOrderService {
                 return defaultUserList;
             }
 
-            if(CollectionUtil.isNotEmpty(userListTag) & CollectionUtil.isNotEmpty(assetOwnerList)){
+            if(CollectionUtils.isNotEmpty(userListTag) & CollectionUtils.isNotEmpty(assetOwnerList)){
                 userListTag.addAll(assetOwnerList);
                 userListTag = new ArrayList<UserAccount>(new HashSet<UserAccount>(userListTag));
                 userListTag = userListTag.stream().filter(id -> id != null).collect(Collectors.toList());
                 return userListTag;
-            }else if(CollectionUtil.isEmpty(assetOwnerList)){
+            }else if(CollectionUtils.isEmpty(assetOwnerList)){
                 userListTag = userListTag.stream().filter(id -> id != null).collect(Collectors.toList());
                 userListTag = new ArrayList<UserAccount>(new HashSet<UserAccount>(userListTag));
                 return userListTag;
-            }else if(CollectionUtil.isEmpty(userListTag)){
+            }else if(CollectionUtils.isEmpty(userListTag)){
                 userListTag = new ArrayList<UserAccount>(new HashSet<UserAccount>(assetOwnerList));
                 defaultUserList=  userAccountRepository.getDefaultUsers(assetId);
                 userListTag.addAll(defaultUserList);

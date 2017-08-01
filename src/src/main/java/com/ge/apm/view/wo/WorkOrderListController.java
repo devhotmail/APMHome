@@ -251,8 +251,16 @@ public void repairWorkOrder(){
             searchFilters.add(new SearchFilter("status", SearchFilter.Operator.EQ, 2));
             removeFilterOnField("currentStepId");
             searchFilters.add(new SearchFilter("currentStepId", SearchFilter.Operator.EQ, queryIndex));
-        } else {
-           /* if(queryIndex==3){
+        }
+        else  { //待接单(queryIndex == 3)
+            removeFilterOnField("currentPersonId");
+            searchFilters.add(new SearchFilter("currentPersonId", SearchFilter.Operator.EQ, ua.getId()));
+            searchFilters.add(new SearchFilter("status", SearchFilter.Operator.EQ, 1));
+            removeFilterOnField("currentStepId");
+            searchFilters.add(new SearchFilter("currentStepId", SearchFilter.Operator.EQ, queryIndex));
+        }
+        /*else {
+            if(queryIndex==3){
                 Integer groupCount = groupDao.getCountByHospital(ua.getSiteId(),ua.getHospitalId());
                 Sort sort = new Sort(Sort.Direction.DESC, "current_step_id");
                 PageRequest pr = new PageRequest(pageRequest.getPageNumber(), pageRequest.getPageSize(), sort);
@@ -264,13 +272,10 @@ public void repairWorkOrder(){
 
                 }
                 return pages;
-            }*/
 
 
-            searchFilters.add(new SearchFilter("status", SearchFilter.Operator.EQ, 1));
-            removeFilterOnField("currentStepId");
-            searchFilters.add(new SearchFilter("currentStepId", SearchFilter.Operator.EQ, queryIndex));
-        }
+
+        }}*/
         this.selected = null;
         if (this.searchFilters == null) {
             return dao.findAll(pageRequest);

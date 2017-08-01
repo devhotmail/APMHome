@@ -30,7 +30,7 @@
                 </p:panelGrid>
                 <br/>
                 <h:panelGroup>
-                    <p:commandButton validateClient="true" actionListener="#{workOrderListController.acceptWorkOrder()}" value="接单" update=":takeOrderDialogForm :growl" icon="ui-icon-check" oncomplete="handleSubmit(args, 'takeOrderDialog');"/>
+                    <p:commandButton validateClient="true" actionListener="#{workOrderListController.acceptWorkOrder()}" value="接单" update=":takeOrderDialogForm :growl :processListForm:datalist" icon="ui-icon-check" oncomplete="handleSubmit(args, 'takeOrderDialog');"/>
                     <p:commandButton immediate="true" value="#{msg.Cancel}" icon="ui-icon-cancel" onclick="PF('takeOrderDialog').hide()"/>
                 </h:panelGroup>
             </h:panelGroup>

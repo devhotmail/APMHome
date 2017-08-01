@@ -151,7 +151,7 @@ return "success";
         asm1.setSubPartId(1);
         asm1.setStepId(1);
         if(assinfo==null){
-            System.out.println("gl: accrp.getAssetIds() is null not allowed"+accrp.getAssetIds());
+            logger.info("gl: accrp.getAssetIds() is null not allowed"+accrp.getAssetIds());
         }
         asm1.setDeptId(assinfo.getClinicalDeptId());
         asm1.setAssetGroup(assinfo.getAssetGroup());

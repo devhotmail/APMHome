@@ -49,16 +49,6 @@
                         <p:commandButton value="同院" id="btn13" rendered="#{workOrderListController.queryIndex==3}" process="@this" update="datalist buttonSet :processDetailForm " actionListener="#{workOrderListController.searchList(13)}" disabled="#{workOrderListController.queryIndex==6}"/>
                         <p:commandButton value="他院" id="btn14"  rendered="#{workOrderListController.queryIndex==3}" process="@this" update="datalist buttonSet :processDetailForm " actionListener="#{workOrderListController.searchList(14)}" disabled="#{workOrderListController.queryIndex==6}"/>-->
                     </h:panelGrid>
-                  <!--  <h:panelGroup>
-                        <label class="label">xxxx</label>
-                        <p:selectOneMenu  value="4" required="true" >
-                            <f:selectItem itemLabel="a" itemValue="1"></f:selectItem>
-                            <f:selectItem itemLabel="b" itemValue="2"></f:selectItem>
-                            <f:selectItem itemLabel="c" itemValue="3"></f:selectItem>
-                            <f:selectItem itemLabel="d" itemValue="4"></f:selectItem>
-                        </p:selectOneMenu>
-                    </h:panelGroup>-->
-
                     <p:dataTable id="datalist" value="#{workOrderListController.lazyModel}" var="item" widgetVar="varDataList"
                                  selectionMode="single" selection="#{workOrderListController.selected}"
                                  lazy="true" paginator="true" paginatorPosition="top" paginatorAlwaysVisible="true"
