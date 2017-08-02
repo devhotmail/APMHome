@@ -68,13 +68,7 @@
                                         <f:convertDateTime timeZone="GMT+8" pattern="yyyy/MM/dd HH:mm" />
                                     </h:outputText>
                                 </p:column>
-                                <p:column headerText="#{msg.requestorName}" sortBy="#{item.requestorName}" filterBy="#{item.requestorId}" filterMatchMode="EQ">
-                                    <f:facet name="filter">
-                                        <p:selectOneMenu onchange="PF('varDataList').filter()" >
-                                            <f:selectItem itemLabel="#{msg.SelectOneMessage}" itemValue="#{null}" noSelectionOption="true" />
-                                            <f:selectItems value="#{serviceRequestController.usersInHospital}" var="item" itemLabel="#{item.name}" itemValue="#{item.id}"/>
-                                        </p:selectOneMenu>
-                                    </f:facet>
+                                <p:column headerText="#{msg.requestorName}" sortBy="#{item.requestorName}" filterMatchMode="EQ">
                                     <h:outputText value="#{item.requestorName}"/>
                                 </p:column>
                                 <p:column headerText="#{msg.assetName}" sortBy="#{item.assetName}" filterBy="#{item.assetName}" filterMatchMode="LIKE">
