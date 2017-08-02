@@ -104,11 +104,12 @@ public class V2_WorkOrderService {
     }
 
     public void dispatchWorkOrder(V2_WorkOrder selectedWorkOrder) {
+        V2_WorkOrder tmpwo=woDao.findById(selectedWorkOrder.getId());
         String token = UserContextService.getAccessToken();
         WorkOrderActionForm formData = new WorkOrderActionForm();
         formData.setAssigneeId(selectedWorkOrder.getCurrentPersonId().toString());
         formData.setIntExtType(selectedWorkOrder.getIntExtType().toString());
-        formData.setCurrentStepId(selectedWorkOrder.getCurrentStepId());
+        formData.setCurrentStepId(tmpwo.getCurrentStepId());
         String res = srApi.invokeWorkOrderAction(token,formData,"assign",selectedWorkOrder.getId());
         if (res==null || !res.contains("success")) {
             WebUtil.addErrorMessage(WebUtil.getMessage("OperationFail"),WebUtil.getMessage("dispatchWorkOrder"));
@@ -116,9 +117,10 @@ public class V2_WorkOrderService {
     }
 
     public void ackWorkOrder(V2_WorkOrder selectedWorkOrder) {
+        V2_WorkOrder tmpwo=woDao.findById(selectedWorkOrder.getId());
         String token = UserContextService.getAccessToken();
         WorkOrderActionForm formData = new WorkOrderActionForm();
-        formData.setCurrentStepId(selectedWorkOrder.getCurrentStepId());
+        formData.setCurrentStepId(tmpwo.getCurrentStepId());
         String res = srApi.invokeWorkOrderAction(token,formData,"ack",selectedWorkOrder.getId());
         if (res==null || !res.contains("success")) {
             WebUtil.addErrorMessage(WebUtil.getMessage("OperationFail"),WebUtil.getMessage("Acknowledge"));
@@ -126,9 +128,10 @@ public class V2_WorkOrderService {
     }
 
     public void rejectWorkOrder(V2_WorkOrder selectedWorkOrder,String reason, Integer status, Date confirmedDowntime) {
+        V2_WorkOrder tmpwo=woDao.findById(selectedWorkOrder.getId());
         String token = UserContextService.getAccessToken();
         WorkOrderActionForm formData = new WorkOrderActionForm();
-        formData.setCurrentStepId(selectedWorkOrder.getCurrentStepId());
+        formData.setCurrentStepId(tmpwo.getCurrentStepId());
         formData.setDesc(reason);
         formData.setAssetStatus(String.valueOf(status));
         String res = srApi.invokeWorkOrderAction(token,formData,"ackFailed",selectedWorkOrder.getId());
@@ -138,9 +141,10 @@ public class V2_WorkOrderService {
     }
 
     public void rateWorkOrder(V2_WorkOrder selectedWorkOrder, Integer rating, String comments) {
+        V2_WorkOrder tmpwo=woDao.findById(selectedWorkOrder.getId());
         String token = UserContextService.getAccessToken();
         WorkOrderActionForm formData = new WorkOrderActionForm();
-        formData.setCurrentStepId(selectedWorkOrder.getCurrentStepId());
+        formData.setCurrentStepId(tmpwo.getCurrentStepId());
         formData.setDesc(comments);
         formData.setFeedbackRating(String.valueOf(rating));
         String res = srApi.invokeWorkOrderAction(token,formData,"rate",selectedWorkOrder.getId());
@@ -150,9 +154,10 @@ public class V2_WorkOrderService {
     }
 
     public void acceptWorkOrder(V2_WorkOrder selectedWorkOrder, Date estimatedCloseTime, String extType,String comments) {
+        V2_WorkOrder tmpwo=woDao.findById(selectedWorkOrder.getId());
         String token = UserContextService.getAccessToken();
         WorkOrderActionForm formData = new WorkOrderActionForm();
-        formData.setCurrentStepId(selectedWorkOrder.getCurrentStepId());
+        formData.setCurrentStepId(tmpwo.getCurrentStepId());
         formData.setEstimatedCloseTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(estimatedCloseTime));
         formData.setIntExtType(extType);
         formData.setDesc(comments);
@@ -163,9 +168,10 @@ public class V2_WorkOrderService {
     }
 
     public void takeWorkOrder(V2_WorkOrder selectedWorkOrder, Date takeTime, String taker) {
+        V2_WorkOrder tmpwo=woDao.findById(selectedWorkOrder.getId());
         String token = UserContextService.getAccessToken();
         WorkOrderActionForm formData = new WorkOrderActionForm();
-        formData.setCurrentStepId(selectedWorkOrder.getCurrentStepId());
+        formData.setCurrentStepId(tmpwo.getCurrentStepId());
         formData.setTakeTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(takeTime));
         formData.setEquipmentTaker(taker);
         String res = srApi.invokeWorkOrderAction(token,formData,"take",selectedWorkOrder.getId());
@@ -175,9 +181,10 @@ public class V2_WorkOrderService {
     }
 
     public void reassignWorkOrder(V2_WorkOrder selectedWorkOrder, Integer assigneeId,String comments) {
+        V2_WorkOrder tmpwo=woDao.findById(selectedWorkOrder.getId());
         String token = UserContextService.getAccessToken();
         WorkOrderActionForm formData = new WorkOrderActionForm();
-        formData.setCurrentStepId(selectedWorkOrder.getCurrentStepId());
+        formData.setCurrentStepId(tmpwo.getCurrentStepId());
         formData.setAssigneeId(String.valueOf(assigneeId));
         formData.setDesc(comments);
         String res = srApi.invokeWorkOrderAction(token,formData,"reassign",selectedWorkOrder.getId());
@@ -187,9 +194,11 @@ public class V2_WorkOrderService {
     }
 
     public void repairWorkOrder(V2_WorkOrder selectedWorkOrder, Date confirmedUpTime,Integer assetStatus,List<V2_WorkOrder_Detail> details) {
+
+        V2_WorkOrder tmpwo=woDao.findById(selectedWorkOrder.getId());
         String token = UserContextService.getAccessToken();
         WorkOrderActionForm formData = new WorkOrderActionForm();
-        formData.setCurrentStepId(selectedWorkOrder.getCurrentStepId());
+        formData.setCurrentStepId(tmpwo.getCurrentStepId());
         formData.setDesc(selectedWorkOrder.getComment());
         formData.setIntExtType(selectedWorkOrder.getIntExtType().toString());
         formData.setPatActions(selectedWorkOrder.getPatActions());
@@ -206,9 +215,10 @@ public class V2_WorkOrderService {
     }
 
     public void closeWorkOrder(V2_WorkOrder selectedWorkOrder, List<V2_WorkOrder_Detail> details) {
+        V2_WorkOrder tmpwo=woDao.findById(selectedWorkOrder.getId());
         String token = UserContextService.getAccessToken();
         WorkOrderActionForm formData = new WorkOrderActionForm();
-        formData.setCurrentStepId(selectedWorkOrder.getCurrentStepId());
+        formData.setCurrentStepId(tmpwo.getCurrentStepId());
         formData.setDesc(selectedWorkOrder.getComment());
         formData.setIntExtType(selectedWorkOrder.getIntExtType().toString());
         formData.setPatActions(selectedWorkOrder.getPatActions());

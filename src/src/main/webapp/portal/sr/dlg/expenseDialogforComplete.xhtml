@@ -35,7 +35,7 @@
                     </h:panelGroup>
                     <h:panelGroup>
                         <label class="label">协作者</label>
-                        <p:selectOneMenu id="selectEmployee" value="#{workOrderListController.itemDetail.cowokerUserId}">
+                        <p:selectOneMenu id="selectEmployee" required="true" value="#{workOrderListController.itemDetail.cowokerUserId}">
                             <f:selectItem itemLabel="#{msg.selectOneMessage}"/>
                             <f:selectItems value="#{workOrderListController.findRepairPerson()}" var="item1" itemLabel="#{item1.name}" itemValue="#{item1.id}"/>
                         </p:selectOneMenu>

@@ -32,7 +32,7 @@
                     </h:panelGroup>
                     <h:panelGroup>
                         <label class="label">#{msg.coworker}</label>
-                        <p:selectOneMenu id="selectEmployee" value="#{workOrderListController.itemDetail.cowokerUserId}">
+                        <p:selectOneMenu id="selectEmployee" value="#{workOrderListController.itemDetail.cowokerUserId}" required="true">
                             <f:selectItem itemLabel="#{msg.selectOneMessage}"/>
                             <f:selectItems value="#{workOrderListController.findRepairPerson()}" var="item1" itemLabel="#{item1.name}" itemValue="#{item1.id}"/>
                         </p:selectOneMenu>

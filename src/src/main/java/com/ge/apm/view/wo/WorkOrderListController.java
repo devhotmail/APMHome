@@ -51,6 +51,7 @@ public class WorkOrderListController extends GenericCRUDUUIDController<V2_WorkOr
     private String testMethod;
     private String solution;
     private String problemDes;
+    private String comments;
     protected void init() {
         dao = WebUtil.getBean(V2_WorkOrderRepository.class);
         srDao = WebUtil.getBean(ServiceRequestRepository.class);
@@ -73,6 +74,10 @@ public class WorkOrderListController extends GenericCRUDUUIDController<V2_WorkOr
         workOrderDetailsList.add(itemDetail);
 
     }
+
+    /*public boolean showmy(){
+        if(queryIndex==3 &&)
+    }*/
     public boolean isManHours(){
        return  itemDetail.getManHours()==null?false:true;
     }
@@ -97,7 +102,8 @@ public class WorkOrderListController extends GenericCRUDUUIDController<V2_WorkOr
         v2.setApartsQuantity(itemDetail.getApartsQuantity());
         v2.setOtherExpense(itemDetail.getOtherExpense());
         v2.setCowokerUserId(itemDetail.getCowokerUserId());
-        username=userAccountRepository.findById(itemDetail.getCowokerUserId()).getName();
+        if(itemDetail!=null)
+         username=userAccountRepository.findById(itemDetail.getCowokerUserId()).getName();
         v2.setCowokerUserName(username);
         workOrderDetailsList.add(v2);
     }
@@ -154,7 +160,9 @@ public class WorkOrderListController extends GenericCRUDUUIDController<V2_WorkOr
 
     }
     public void updateEditDetail(){
-        itemDetail.setCowokerUserName(userAccountRepository.getById(itemDetail.getCowokerUserId()).getName());
+        if(itemDetail!=null) {
+            itemDetail.setCowokerUserName(userAccountRepository.getById(itemDetail.getCowokerUserId()).getName());
+        }
         setAddOrUpdate(false);
     }
     public void prepareCreateDetail(){
@@ -227,9 +235,18 @@ public class WorkOrderListController extends GenericCRUDUUIDController<V2_WorkOr
             removeFilterOnField("currentStepId");
             searchFilters.add(new SearchFilter("currentStepId", SearchFilter.Operator.EQ, queryIndex));
         }
-        else  { //待接单(queryIndex == 3)
+        if(queryIndex == 3)
+        { //待接单(queryIndex == 3)
             removeFilterOnField("currentPersonId");
-           // searchFilters.add(new SearchFilter("currentPersonId", SearchFilter.Operator.EQ, ua.getId()));
+            searchFilters.add(new SearchFilter("currentPersonId", SearchFilter.Operator.EQ, ua.getId()));
+            searchFilters.add(new SearchFilter("status", SearchFilter.Operator.EQ, 1));
+            removeFilterOnField("currentStepId");
+            searchFilters.add(new SearchFilter("currentStepId", SearchFilter.Operator.EQ, queryIndex));
+        }
+        if(queryIndex == 4)//维修中(queryIndex == 4)
+        {
+            removeFilterOnField("currentPersonId");
+             searchFilters.add(new SearchFilter("currentPersonId", SearchFilter.Operator.EQ, ua.getId()));
             searchFilters.add(new SearchFilter("status", SearchFilter.Operator.EQ, 1));
             removeFilterOnField("currentStepId");
             searchFilters.add(new SearchFilter("currentStepId", SearchFilter.Operator.EQ, queryIndex));
@@ -247,9 +264,6 @@ public class WorkOrderListController extends GenericCRUDUUIDController<V2_WorkOr
 
                 }
                 return pages;
-
-
-
         }}*/
         this.selected = null;
         if (this.searchFilters == null) {
@@ -260,7 +274,7 @@ public class WorkOrderListController extends GenericCRUDUUIDController<V2_WorkOr
 
 
     }
-private String comments;
+
 
     public String getComments() {
         return comments;
@@ -307,7 +321,12 @@ private String comments;
         queryIndex = buttonIndex;
         cancel();
     }
-
+public void my(){
+        category =13;
+}
+    public void sameteam(){
+        category =14;
+    }
     public void cancel() {
         selected=null;
         selectedServiceRequest = null;
@@ -362,7 +381,6 @@ public void expenseDialogClose(){
     }
 
     public void acceptWorkOrder(){
-        //gl:question:1 为什么这里的esTime要比预估时间慢一天? 2 repairType到底传过去的是中文字符还是就数值型?
         String repairType =selectedWorkOrder.getRepairType().toString();
         woService.acceptWorkOrder(selectedWorkOrder,esTime,repairType,comments);
     }
