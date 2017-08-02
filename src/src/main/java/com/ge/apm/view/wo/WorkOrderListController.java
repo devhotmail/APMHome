@@ -228,7 +228,7 @@ public class WorkOrderListController extends GenericCRUDUUIDController<V2_WorkOr
         }
         else  { //待接单(queryIndex == 3)
             removeFilterOnField("currentPersonId");
-            searchFilters.add(new SearchFilter("currentPersonId", SearchFilter.Operator.EQ, ua.getId()));
+           // searchFilters.add(new SearchFilter("currentPersonId", SearchFilter.Operator.EQ, ua.getId()));
             searchFilters.add(new SearchFilter("status", SearchFilter.Operator.EQ, 1));
             removeFilterOnField("currentStepId");
             searchFilters.add(new SearchFilter("currentStepId", SearchFilter.Operator.EQ, queryIndex));
