@@ -186,9 +186,9 @@ and open the template in the editor.
                                     <div class="weui-panel__hd">设备基本属性<h:panelGroup rendered="#{userContextService.hasRole('AssetStaff')}"><span id="modifyFields" style="float: right" onclick="updateMForm();">#{wxAssetInfoController.isModifying[1]?"完成修改":"修改"}</span></h:panelGroup></div>
                                     <div class="weui-panel__bd ">
                                         <div class="weui-cell">
-<!--                                            <div class="weui-cell__hd" style="position: relative;margin-right: 10px;">
-                                                <img style="width: 50px;display: block"  src="#{wechatUtilService.getContextPath()}/resources/wechat/icons/assetgroup#{wxAssetInfoController.assetInfo.assetGroup}.ico"/>
-                                            </div>-->
+                                            <!--                                            <div class="weui-cell__hd" style="position: relative;margin-right: 10px;">
+                                                                                            <img style="width: 50px;display: block"  src="#{wechatUtilService.getContextPath()}/resources/wechat/icons/assetgroup#{wxAssetInfoController.assetInfo.assetGroup}.ico"/>
+                                                                                        </div>-->
                                             <div class="weui-cell__bd">
                                                 <p>#{wxAssetInfoController.assetInfo.name}</p>
                                                 <p style="font-size: 13px;color: #888888;">#{wxAssetInfoController.assetInfo.aliasName}</p>
@@ -208,7 +208,7 @@ and open the template in the editor.
                                                 <h:selectOneMenu class="weui-select" value="#{wxAssetInfoController.assetInfo.status}" rendered="#{wxAssetInfoController.isModifying[1]}">
                                                     <f:selectItems value="#{fieldMsg.getFieldValueList('assetStatus')}" var="item" itemLabel="#{item.value}" itemValue="#{item.msgKey}"/>
                                                 </h:selectOneMenu>
-                                                
+
                                             </div>
                                             <div class="weui-cell__ft">
                                                 <i class="#{wxAssetInfoController.assetInfo.status==1?'weui-icon-success':(wxAssetInfoController.assetInfo.status==2?'weui-icon-warn':'weui-icon-info-circle')}" />
@@ -286,15 +286,21 @@ and open the template in the editor.
                                             </div>
                                             <div class="weui-cell__ft"><h:outputText id="assetOwnerTel2" value="#{wxAssetInfoController.assetInfo.assetOwnerTel2}"/></div>
                                         </div>
+
                                         <div class="weui-cell weui-cell_access">
                                             <div class="weui-cell__hd">
-                                                <label class="weui-label">#{msg.purchaseDate}</label>
+                                                <label class="weui-label">#{msg.startUsingDate}</label>
                                             </div>
                                             <div class="weui-cell__bd">
-                                                <h:outputText value="#{wxAssetInfoController.assetInfo.purchaseDate}" rendered="#{!wxAssetInfoController.isModifying[1]}">
+                                                <h:outputText value="#{wxAssetInfoController.assetInfo.startUsingDate}" rendered="#{!wxAssetInfoController.isModifying[1]}">
                                                     <f:convertDateTime pattern="yyyy-MM-dd"/>
                                                 </h:outputText>
-                                                <p:calendar id="purchaseDate" class="weui-input"  value="#{wxAssetInfoController.assetInfo.purchaseDate}" pattern="yyyy-MM-dd" rendered="#{wxAssetInfoController.isModifying[1]}"/>
+                                                <h:panelGroup rendered="#{wxAssetInfoController.isModifying[1]}">
+                                                    <input class="weui-input" type="date" value="#{wxAssetInfoController.assetInfo.startUsingDate}"  onchange="js:$('#updateMasterFieldForm\\:startUsingDate').val(this.value);"/>
+                                                    <h:inputHidden id="startUsingDate"  value="#{wxAssetInfoController.assetInfo.startUsingDate}" ><f:convertDateTime pattern="yyyy-MM-dd"/></h:inputHidden>
+                                                </h:panelGroup>
+
+                                                <!--<p:calendar id="purchaseDate" class="weui-input"  value="#{wxAssetInfoController.assetInfo.purchaseDate}" pattern="yyyy-MM-dd" rendered="#{wxAssetInfoController.isModifying[1]}"/>-->
                                             </div>
                                         </div>
                                         <div class="weui-cell weui-cell_access">
@@ -305,7 +311,11 @@ and open the template in the editor.
                                                 <h:outputText value="#{wxAssetInfoController.assetInfo.warrantyDate}" rendered="#{!wxAssetInfoController.isModifying[1]}">
                                                     <f:convertDateTime pattern="yyyy-MM-dd"/>
                                                 </h:outputText>
-                                                <p:calendar id="warrantyDate" class="weui-input"  value="#{wxAssetInfoController.assetInfo.warrantyDate}" pattern="yyyy-MM-dd" rendered="#{wxAssetInfoController.isModifying[1]}"/>
+                                                <h:panelGroup rendered="#{wxAssetInfoController.isModifying[1]}">
+                                                    <input class="weui-input" type="date" value="#{wxAssetInfoController.assetInfo.warrantyDate}"  onchange="js:$('#updateMasterFieldForm\\:warrantyDate').val(this.value);"/>
+                                                    <h:inputHidden id="warrantyDate"  value="#{wxAssetInfoController.assetInfo.warrantyDate}" ><f:convertDateTime pattern="yyyy-MM-dd"/></h:inputHidden>
+                                                </h:panelGroup>
+                                                <!--<p:calendar id="warrantyDate" class="weui-input"  value="#{wxAssetInfoController.assetInfo.warrantyDate}" pattern="yyyy-MM-dd" rendered="#{wxAssetInfoController.isModifying[1]}"/>-->
                                             </div>
                                         </div>
 
@@ -483,7 +493,27 @@ and open the template in the editor.
                                                 <h:outputText value="#{wxAssetInfoController.assetInfo.manufactDate}" rendered="#{!wxAssetInfoController.isModifying[2]}">
                                                     <f:convertDateTime pattern="yyyy-MM-dd"/>
                                                 </h:outputText>
-                                                <p:calendar  class="weui-input"  value="#{wxAssetInfoController.assetInfo.manufactDate}" pattern="yyyy-MM-dd" rendered="#{wxAssetInfoController.isModifying[2]}"/>
+                                                <h:panelGroup rendered="#{wxAssetInfoController.isModifying[2]}">
+                                                    <input class="weui-input" type="date" value="#{wxAssetInfoController.assetInfo.manufactDate}"  onchange="js:$('#updateDetailFieldForm\\:manufactDate').val(this.value);"/>
+                                                    <h:inputHidden id="manufactDate"  value="#{wxAssetInfoController.assetInfo.manufactDate}" ><f:convertDateTime pattern="yyyy-MM-dd"/></h:inputHidden>
+                                                </h:panelGroup>
+                                                <!--<p:calendar  class="weui-input"  value="#{wxAssetInfoController.assetInfo.manufactDate}" pattern="yyyy-MM-dd" rendered="#{wxAssetInfoController.isModifying[2]}"/>-->
+                                            </div>
+                                        </div>
+                                        <div class="weui-cell weui-cell_access">
+                                            <div class="weui-cell__hd">
+                                                <label class="weui-label">#{msg.purchaseDate}</label>
+                                            </div>
+                                            <div class="weui-cell__bd">
+                                                <h:outputText value="#{wxAssetInfoController.assetInfo.purchaseDate}" rendered="#{!wxAssetInfoController.isModifying[2]}">
+                                                    <f:convertDateTime pattern="yyyy-MM-dd"/>
+                                                </h:outputText>
+                                                <h:panelGroup rendered="#{wxAssetInfoController.isModifying[2]}">
+                                                    <input class="weui-input" type="date" value="#{wxAssetInfoController.assetInfo.purchaseDate}"  onchange="js:$('#updateDetailFieldForm\\:purchaseDate').val(this.value);"/>
+                                                    <h:inputHidden id="purchaseDate"  value="#{wxAssetInfoController.assetInfo.purchaseDate}" ><f:convertDateTime pattern="yyyy-MM-dd"/></h:inputHidden>
+                                                </h:panelGroup>
+
+                                                <!--<p:calendar id="purchaseDate" class="weui-input"  value="#{wxAssetInfoController.assetInfo.purchaseDate}" pattern="yyyy-MM-dd" rendered="#{wxAssetInfoController.isModifying[1]}"/>-->
                                             </div>
                                         </div>
                                         <div class="weui-cell">
@@ -494,7 +524,11 @@ and open the template in the editor.
                                                 <h:outputText value="#{wxAssetInfoController.assetInfo.arriveDate}" rendered="#{!wxAssetInfoController.isModifying[2]}">
                                                     <f:convertDateTime pattern="yyyy-MM-dd"/>
                                                 </h:outputText>
-                                                <p:calendar  class="weui-input"  value="#{wxAssetInfoController.assetInfo.arriveDate}" pattern="yyyy-MM-dd" rendered="#{wxAssetInfoController.isModifying[2]}"/>
+                                                <h:panelGroup rendered="#{wxAssetInfoController.isModifying[2]}">
+                                                    <input class="weui-input" type="date" value="#{wxAssetInfoController.assetInfo.arriveDate}"  onchange="js:$('#updateDetailFieldForm\\:arriveDate').val(this.value);"/>
+                                                    <h:inputHidden id="arriveDate"  value="#{wxAssetInfoController.assetInfo.arriveDate}" ><f:convertDateTime pattern="yyyy-MM-dd"/></h:inputHidden>
+                                                </h:panelGroup>
+                                                <!--<p:calendar  class="weui-input"  value="#{wxAssetInfoController.assetInfo.arriveDate}" pattern="yyyy-MM-dd" rendered="#{wxAssetInfoController.isModifying[2]}"/>-->
                                             </div>
                                         </div>
                                         <div class="weui-cell">
@@ -505,7 +539,11 @@ and open the template in the editor.
                                                 <h:outputText value="#{wxAssetInfoController.assetInfo.installDate}" rendered="#{!wxAssetInfoController.isModifying[2]}">
                                                     <f:convertDateTime pattern="yyyy-MM-dd"/>
                                                 </h:outputText>
-                                                <p:calendar  class="weui-input"  value="#{wxAssetInfoController.assetInfo.installDate}" pattern="yyyy-MM-dd" rendered="#{wxAssetInfoController.isModifying[2]}"/>
+                                                <h:panelGroup rendered="#{wxAssetInfoController.isModifying[2]}">
+                                                    <input class="weui-input" type="date" value="#{wxAssetInfoController.assetInfo.installDate}"  onchange="js:$('#updateDetailFieldForm\\:installDate').val(this.value);"/>
+                                                    <h:inputHidden id="installDate"  value="#{wxAssetInfoController.assetInfo.installDate}" ><f:convertDateTime pattern="yyyy-MM-dd"/></h:inputHidden>
+                                                </h:panelGroup>
+                                                <!--<p:calendar  class="weui-input"  value="#{wxAssetInfoController.assetInfo.installDate}" pattern="yyyy-MM-dd" rendered="#{wxAssetInfoController.isModifying[2]}"/>-->
                                             </div>
                                         </div>
                                         <div class="weui-cell">
@@ -516,7 +554,11 @@ and open the template in the editor.
                                                 <h:outputText value="#{wxAssetInfoController.assetInfo.factoryWarrantyDate}" rendered="#{!wxAssetInfoController.isModifying[2]}">
                                                     <f:convertDateTime pattern="yyyy-MM-dd"/>
                                                 </h:outputText>
-                                                <p:calendar  class="weui-input"  value="#{wxAssetInfoController.assetInfo.factoryWarrantyDate}" pattern="yyyy-MM-dd" rendered="#{wxAssetInfoController.isModifying[2]}"/>
+                                                <h:panelGroup rendered="#{wxAssetInfoController.isModifying[2]}">
+                                                    <input class="weui-input" type="date" value="#{wxAssetInfoController.assetInfo.factoryWarrantyDate}"  onchange="js:$('#updateDetailFieldForm\\:factoryWarrantyDate').val(this.value);"/>
+                                                    <h:inputHidden id="factoryWarrantyDate"  value="#{wxAssetInfoController.assetInfo.factoryWarrantyDate}" ><f:convertDateTime pattern="yyyy-MM-dd"/></h:inputHidden>
+                                                </h:panelGroup>
+                                                <!--<p:calendar  class="weui-input"  value="#{wxAssetInfoController.assetInfo.factoryWarrantyDate}" pattern="yyyy-MM-dd" rendered="#{wxAssetInfoController.isModifying[2]}"/>-->
                                             </div>
                                         </div>
                                         <div class="weui-cell">
@@ -604,13 +646,22 @@ and open the template in the editor.
                                                 </h:selectOneMenu>
                                             </div>
                                         </div>
+                                        <div class="weui-cell">
+                                            <div class="weui-cell__hd">
+                                                <label class="weui-label">#{msg.comments}</label>
+                                            </div>
+                                            <div class="weui-cell__bd">
+                                                <h:outputText value="#{wxAssetInfoController.assetInfo.comments}" rendered="#{!wxAssetInfoController.isModifying[2]}"/>
+                                                <h:inputText class="weui-input"  value="#{wxAssetInfoController.assetInfo.comments}" rendered="#{wxAssetInfoController.isModifying[2]}"/>
+                                            </div>
+                                        </div>
                                     </div>
                                 </h:form>
                             </div>
                             <h:panelGroup rendered="#{userContextService.hasRole('AssetHead')}">
-	                            <p class="weui-btn-area" >
-	                                <a id="viewMore" href="javascript:showDetails();" class="weui-btn weui-btn_primary" >查看更多信息</a>
-	                            </p>
+                                <p class="weui-btn-area" >
+                                    <a id="viewMore" href="javascript:showDetails();" class="weui-btn weui-btn_primary" >查看更多信息</a>
+                                </p>
                             </h:panelGroup>
                         </div>
                         <div id="tab2Panel" class="weui-tab__content">
@@ -645,7 +696,7 @@ and open the template in the editor.
                                             <div class="ftitle weui-cell__ft" style="#{srItem.casePriority==1?'color:red':''}#{srItem.casePriority==2?'color:orange':'color:green'};">#{fieldMsg.fieldValue("casePriority",srItem.casePriority)}</div>
                                         </div>
                                         <c:forEach  items="#{wxAssetInfoController.getWorkOrderList(srItem.id)}" var="woItem" >
-                                        
+
                                             <a class="weui-cell weui-cell_access" href="/wx/workorder/#{woItem.id}?openid=#{wxAssetInfoController.getUserOpenId()}">
                                                 <div class="show-data weui-cell__bd">
                                                     <h4>当前步骤：</h4>
