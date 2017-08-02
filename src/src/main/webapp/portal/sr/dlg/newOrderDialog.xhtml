@@ -8,7 +8,7 @@
 
 <ui:composition>
 
-    <p:dialog id="newWorkorderDlg" widgetVar="newWorkorderDlg" modal="true" width="500"  resizable="true" draggable="true" appendTo="@(body)" header="新建工单">
+    <p:dialog id="newWorkorderDlg" widgetVar="newWorkorderDlg" modal="true" width="500"  resizable="true" draggable="true" appendTo="@(body)" header="#{msg.newWorkOrder}">
         <h:form id="newWorkorderDlgForm" >
             <h:panelGroup id="display5">
                 <p:panelGrid columns="2" layout="grid" styleClass="ui-panelgrid-blank form-group">
@@ -16,20 +16,20 @@
                     <h:panelGroup id="display43" >
                         <p:panelGrid columns="1" layout="grid" styleClass="ui-panelgrid-blank form-group">
                             <h:panelGroup>
-                                <label class="label">工单类型</label>
+                                <label class="label">#{msg.intExtType}</label>
                                 <p:selectOneMenu  value="#{workOrderListController.selectedWorkOrder.intExtType}" required="true" requiredMessage="#{msg.intExtType} #{msg.ValidationRequire}">
                                     <f:selectItem itemLabel="#{msg.selectOneMessage}"/>
                                     <f:selectItems value="#{fieldMsg.getFieldValueList('intExtType')}" var="item3" itemLabel="#{item3.value}" itemValue="#{item3.msgKey}"/>
 
                                 </p:selectOneMenu>
                                 <br/>
-                                <label class="label">维修人员</label>
+                                <label class="label">#{msg.WorkOrderAssignee}</label>
                                 <p:selectOneMenu  value="#{workOrderListController.selectedWorkOrder.currentPersonId}" required="true" requiredMessage="#{msg.currentPersonId} #{msg.ValidationRequire}">
                                     <f:selectItem itemLabel="#{msg.selectOneMessage}"/>
                                     <f:selectItems value="#{workOrderListController.findRepairPerson()}" var="item" itemLabel="#{item.name}" itemValue="#{item.id}"/>
                                 </p:selectOneMenu>
                                 <br/>
-                                <label class="label">故障文字描述</label>
+                                <label class="label">#{msg.FaultyDesc}</label>
                                 <p:inputTextarea value="#{workOrderListController.comments}" rows="3"  cols="40"  queryDelay="750" minQueryLength="4"/>
                             </h:panelGroup>
                         </p:panelGrid>

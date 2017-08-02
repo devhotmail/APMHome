@@ -76,14 +76,9 @@
                         </f:facet>
                     </p:dataTable>
                 </h:form>
-
                 <ui:include src="dispatchView.xhtml"/>
-
             </div>
         </div>
-
-
-
         <p:dialog id="dispatchDialog" widgetVar="dispatchDialog" modal="true" width="500"  resizable="true" draggable="true" appendTo="@(body)" header="#{msg.dispatchWorkOrder}">
             <h:form id="dispatchDialogForm" >
                 <h:panelGroup id="display" rendered="#{not empty workOrderDispatchController.selectedWorkOrder}">

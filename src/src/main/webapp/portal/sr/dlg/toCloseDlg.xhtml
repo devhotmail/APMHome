@@ -7,7 +7,7 @@
       xmlns:p="http://primefaces.org/ui">
 <ui:composition>
     <p:dialog id="toCloseDialog" widgetVar="toCloseDialog" modal="true" width="500"  resizable="true" draggable="true" appendTo="@(body)" header="关单" >
-       <!-- <p:ajax event="close" actionListener="#{workOrderListController.closeWorkOrder}"></p:ajax>-->
+        <!-- <p:ajax event="close" actionListener="#{workOrderListController.closeWorkOrder}"></p:ajax>-->
         <h:form id="toCloseDialogForm" >
             <h:panelGroup id="display3" rendered="#{not empty workOrderListController.selectedWorkOrder}">
                 <p:panelGrid columns="1" layout="grid" styleClass="ui-panelgrid-blank form-group">
@@ -21,13 +21,13 @@
                     <h:panelGroup>
                         <label class="label">问题描述</label>
                         <p:inputTextarea value="#{workOrderListController.selectedWorkOrder.patProblems}" rows="2"  cols="40"  queryDelay="750" minQueryLength="4"/>
-                    <br/>
+                        <br/>
                         <label class="label">解决方案</label>
                         <p:inputTextarea value="#{workOrderListController.selectedWorkOrder.patActions}" rows="2"  cols="40"  queryDelay="750" minQueryLength="4"/>
-                    <br/>
+                        <br/>
                         <label class="label">测试方法</label>
                         <p:inputTextarea value="#{workOrderListController.selectedWorkOrder.patTests}" rows="3"  cols="40"  queryDelay="750" minQueryLength="4"/>
-                    <br/>
+                        <br/>
                         <label class="label">备注</label>
                         <p:inputTextarea value="#{workOrderListController.selectedWorkOrder.comment}" rows="3"  cols="40"  queryDelay="750" minQueryLength="4"/>
                     </h:panelGroup>
@@ -39,44 +39,37 @@
                                 <h:outputText value="#{item.manHours}"/>
                             </p:column>
 
-                            <p:column headerText="备件名称">
+                            <p:column headerText="#{msg.accessory}">
                                 <h:outputText value="#{item.parts}"/>
                             </p:column>
 
-                            <p:column headerText="备件数量">
+                            <p:column headerText="#{msg.accessoryQuantity}">
                                 <h:outputText value="#{item.apartsQuantity}"/>
                             </p:column>
-                            <p:column headerText="备件单价(元)">
+                            <p:column headerText="#{msg.accessoryPrice}">
                                 <h:outputText value="#{item.partsPrice}"/>
                             </p:column>
                             <p:column headerText="#{msg.otherExpense}">
                                 <h:outputText value="#{item.otherExpense}"/>
                             </p:column>
-                            <p:column headerText="协作者">
+                            <p:column headerText="#{msg.coworker}">
                                 <h:outputText value="#{item.cowokerUserName}"/>
                             </p:column>
-                            <p:column headerText="操作"><!--:expenseDlgForm:datalist-->
+                            <p:column headerText="#{msg.Actions}"><!--:expenseDlgForm:datalist-->
                                 <p:commandButton process="@this" icon="ui-icon-add" style="zoom:0.8;" title="#{msg.Create}" actionListener="#{workOrderListController.prepareCreateDetail()}" update=" :toCloseDialogForm :toCloseDialogForm:datalist :expenseDlgForm" oncomplete="PF('expenseDlg').show()" rendered="#{!workOrderListController.isWoListEmpty()}"/>
                                 <p:commandButton process="@this" icon="ui-icon-pencil" style="zoom:0.8;" title="#{msg.Edit}" actionListener="#{workOrderListController.prepareEditDetail(item)}" update=":expenseDlg" oncomplete="PF('expenseDlg').show()" rendered="#{!workOrderListController.isWoListEmpty()}" />
-
-
                                 <p:commandButton process="@this" icon="ui-icon-close" style="zoom:0.8;" title="#{msg.Delete}" actionListener="#{workOrderListController.deleteWoDetail(item.id)}" update=":toCloseDialogForm :toCloseDialogForm:datalist" rendered="#{!workOrderListController.isWoListEmpty()}">
                                     <p:confirm header="#{msg.DeleteConformation}" message="#{msg.DeleteConformationMsg}" icon="ui-icon-alert"/>
                                 </p:commandButton>
                             </p:column>
                         </p:dataTable>
-
                     </h:panelGroup>
-
-
                     <h:panelGroup>
-                        <p:commandButton validateClient="true" actionListener="#{workOrderListController.closeWorkOrder}" value="关单" update=":expenseDlgForm :toCloseDialogForm :growl :processListForm:datalist" icon="ui-icon-check" oncomplete="handleSubmit(args, 'toCloseDialog');"/>
+                        <p:commandButton validateClient="true" actionListener="#{workOrderListController.closeWorkOrder}" value="#{msg.closeWo}" update=":expenseDlgForm :toCloseDialogForm :growl :processListForm:datalist" icon="ui-icon-check" oncomplete="handleSubmit(args, 'toCloseDialog');"/>
                         <p:commandButton immediate="true" value="#{msg.Cancel}" icon="ui-icon-cancel" actionListener="#{workOrderListController.initWorkOrderDetailList}" onclick="PF('toCloseDialog').hide()"/>
                     </h:panelGroup>
                 </p:panelGrid>
                 <br/>
-
-
             </h:panelGroup>
         </h:form>
     </p:dialog>

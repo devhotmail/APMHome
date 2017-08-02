@@ -7,17 +7,17 @@
       xmlns:p="http://primefaces.org/ui">
 
 <ui:composition>
-    <p:dialog id="takeOrderDialog" widgetVar="takeOrderDialog" modal="true" width="400"  resizable="true" draggable="true" appendTo="@(body)" header="接单">
+    <p:dialog id="takeOrderDialog" widgetVar="takeOrderDialog" modal="true" width="400"  resizable="true" draggable="true" appendTo="@(body)" header="#{msg.takeorder}">
         <h:form id="takeOrderDialogForm" >
             <h:panelGroup id="display1" rendered="#{not empty workOrderListController.selectedWorkOrder}">
                 <p:panelGrid columns="1" layout="grid" styleClass="ui-panelgrid-blank form-group">
                     <h:panelGroup>
-                        <label class="label">预估时间</label>
+                        <label class="label">#{msg.estimatetime}</label>
                         <p:calendar timeZone="GMT+8" id="fillDate" pattern="yyyy/MM/dd"  value="#{workOrderListController.esTime}" showOn="button" showButtonPanel="true" navigator="true" readonlyInput="false" locale= "zh" required="true" requiredMessage="预估时间 #{msg.ValidationRequire}"></p:calendar>
                     </h:panelGroup>
                  <br/>
                 <h:panelGroup>
-                        <label class="label">维修类型</label>
+                        <label class="label">#{msg.repairType}</label>
                         <p:selectOneMenu  value="#{workOrderListController.selectedWorkOrder.repairType}" required="true" requiredMessage="#{msg.repairType} #{msg.ValidationRequire}">
                             <f:selectItem itemLabel="#{msg.selectOneMessage}"/>
                             <f:selectItems value="#{fieldMsg.getFieldValueList('repairType')}" var="item" itemLabel="#{item.value}" itemValue="#{item.msgKey}"/>
@@ -25,7 +25,7 @@
                 </h:panelGroup>
                     <br/>
                 <h:panelGroup>
-                        <label class="label">备注</label>
+                        <label class="label">#{msg.comments}</label>
                         <p:inputTextarea value="#{workOrderListController.comments}" rows="3"  cols="40"  queryDelay="750" minQueryLength="4"/>
                     </h:panelGroup>
 

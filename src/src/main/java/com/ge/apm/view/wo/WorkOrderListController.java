@@ -9,7 +9,6 @@ import com.ge.apm.dao.*;
 import com.ge.apm.domain.*;
 import com.ge.apm.service.asset.AssetFaultTypeService;
 import com.ge.apm.service.wo.V2_WorkOrderService;
-import com.ge.apm.service.wo.WorkOrderMsgService;
 import com.ge.apm.view.sysutil.UserContextService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -30,37 +29,35 @@ import java.util.*;
 @ManagedBean
 @ViewScoped
 public class WorkOrderListController extends GenericCRUDUUIDController<V2_WorkOrder> implements Serializable {
-     Date confirmedUpDate;
-    V2_WorkOrderRepository dao;
-    I18nMessageRepository i18nDao;
+    private Date esTime;
+    private Date confirmedUpDate;
+    private V2_WorkOrderRepository dao;
     private ServiceRequestRepository srDao;
     private V2_WorkOrderService woService;
-   // private V2_WorkOrderStepRepository workOrderStepRepository;
     private List<I18nMessage>   msgModeList;
     //status：0-待派工/1-待接单/2-维修中/3-已完成/4-已派工/10-已取消  待验收-5, 待关单-6, 已关单-7
     private Integer queryIndex;
-
     private Integer category;
     private boolean addOrUpdate;
     private V2_ServiceRequest selectedServiceRequest;
     private BiomedGroupRepository groupDao;
     private V2_WorkOrder selectedWorkOrder;
-    AssetFaultTypeService assetFaultTypeService;
-    //ServiceRequestApiService serviceRequestApiService;
-    AssetInfoRepository assetInfoRepository;
-    UserAccount ua;
-    List<V2_WorkOrder_Detail> workOrderDetailsList;
-    V2_WorkOrder_Detail itemDetail ;
-    WorkOrderMsgService workOrderMsgService;
-    UserAccountRepository userAccountRepository;
+    private AssetFaultTypeService assetFaultTypeService;
+    private AssetInfoRepository assetInfoRepository;
+    private UserAccount ua;
+    private List<V2_WorkOrder_Detail> workOrderDetailsList;
+    private V2_WorkOrder_Detail itemDetail ;
+    private UserAccountRepository userAccountRepository;
+    private String testMethod;
+    private String solution;
+    private String problemDes;
     protected void init() {
         dao = WebUtil.getBean(V2_WorkOrderRepository.class);
         srDao = WebUtil.getBean(ServiceRequestRepository.class);
         woService = WebUtil.getBean(V2_WorkOrderService.class);
         groupDao = WebUtil.getBean(BiomedGroupRepository.class);
-      //  workOrderStepRepository = WebUtil.getBean(V2_WorkOrderStepRepository.class);
         this.filterBySite = true;
-        queryIndex = 2;
+        queryIndex = 3;
         ua = UserContextService.getCurrentUserAccount();
         assetFaultTypeService=WebUtil.getBean(AssetFaultTypeService.class);
         assetInfoRepository=WebUtil.getBean(AssetInfoRepository.class);
@@ -76,67 +73,50 @@ public class WorkOrderListController extends GenericCRUDUUIDController<V2_WorkOr
         workOrderDetailsList.add(itemDetail);
     }
     public boolean isManHours(){
-        if(itemDetail.getManHours()==null)
-        return false;
-     else
-         return true;
+       return  itemDetail.getManHours()==null?false:true;
     }
 
-public void saveDetail(){
-    String username=null;
-    if(woUid!=null){
-        Iterator<V2_WorkOrder_Detail> sListIterator = workOrderDetailsList.iterator();
-        while(sListIterator.hasNext()){
-            V2_WorkOrder_Detail workOrderDetail = sListIterator.next();
-            if(workOrderDetail.getId().equals(woUid)){
-                sListIterator.remove();
+    public void saveDetail(){
+        String username=null;
+        if(woUid!=null){
+            Iterator<V2_WorkOrder_Detail> sListIterator = workOrderDetailsList.iterator();
+            while(sListIterator.hasNext()){
+                V2_WorkOrder_Detail workOrderDetail = sListIterator.next();
+                if(workOrderDetail.getId().equals(woUid)){
+                    sListIterator.remove();
+                }
             }
+            woUid=null;
         }
-        woUid=null;
+        V2_WorkOrder_Detail v2 = new V2_WorkOrder_Detail();
+        v2.setManHours(itemDetail.getManHours());
+        v2.setId(UUID.randomUUID().toString().replace("-", ""));
+        v2.setParts(itemDetail.getParts());
+        v2.setPartsPrice(itemDetail.getPartsPrice());
+        v2.setApartsQuantity(itemDetail.getApartsQuantity());
+        v2.setOtherExpense(itemDetail.getOtherExpense());
+        v2.setCowokerUserId(itemDetail.getCowokerUserId());
+        username=userAccountRepository.findById(itemDetail.getCowokerUserId()).getName();
+        v2.setCowokerUserName(username);
+        workOrderDetailsList.add(v2);
     }
-    V2_WorkOrder_Detail v2 = new V2_WorkOrder_Detail();
-    v2.setManHours(itemDetail.getManHours());
-    v2.setId(UUID.randomUUID().toString().replace("-", ""));
-    v2.setParts(itemDetail.getParts());
-    v2.setPartsPrice(itemDetail.getPartsPrice());
-    v2.setApartsQuantity(itemDetail.getApartsQuantity());
-    v2.setOtherExpense(itemDetail.getOtherExpense());
-    v2.setCowokerUserId(itemDetail.getCowokerUserId());
 
-    username=userAccountRepository.findById(itemDetail.getCowokerUserId()).getName();
-    v2.setCowokerUserName(username);
+    public void createWorkOrder(){
+        selectedWorkOrder.setComment(comments);
+        V2_ServiceRequest sr = srDao.findById(selectedWorkOrder.getSrId());
+        sr.setRequestReason(comments);
+        woService.reCreateWorkOrder(selectedWorkOrder,selectedWorkOrder.getCurrentPersonId(),2,comments,selectedWorkOrder.getIntExtType());
+    }
 
-    workOrderDetailsList.add(v2);
+    public void newOrderCancel(){
+        comments =null;
+    }
 
-}
+    public void repairWorkOrder(){
+        //gl:1表示是正常
+        woService.repairWorkOrder(selectedWorkOrder,confirmedUpDate,1,workOrderDetailsList);
 
-public void clickNewWorkOrder(){
-    System.out.println(selectedWorkOrder);
-    //V2_WorkOrder selectedWorkOrder,Integer assigneeId, Integer assetSuatus,String reason,Integer extType
-   // selectedWorkOrder = dao.findById(woId);
-   /* selectedWorkOrder.getSrId();*/
-
-/*
-    woService.reCreateWorkOrder(selectedWorkOrder,selectedWorkOrder.getCurrentPersonId(),2,comments,selectedWorkOrder.getIntExtType());*/
-
-}
-public void createWorkOrder(){
-    selectedWorkOrder.setComment(comments);
-    V2_ServiceRequest sr = srDao.findById(selectedWorkOrder.getSrId());
-    sr.setRequestReason(comments);
-
-    woService.reCreateWorkOrder(selectedWorkOrder,selectedWorkOrder.getCurrentPersonId(),2,comments,selectedWorkOrder.getIntExtType());
-}
-
-public void newOrderCancel(){
-comments =null;
-}
-
-public void repairWorkOrder(){
-   //gl:1表示是正常
-    woService.repairWorkOrder(selectedWorkOrder,confirmedUpDate,1,workOrderDetailsList);
-
-}
+    }
     public V2_WorkOrder_Detail getItemDetail() {
         return itemDetail;
     }
@@ -146,9 +126,8 @@ public void repairWorkOrder(){
     }
 
     public boolean isWoListEmpty(){
-       return  (workOrderDetailsList.size()==0);
+        return  (workOrderDetailsList.size()==0);
     }
-    List<V2_WorkOrder_Detail> wodetailList=new ArrayList<V2_WorkOrder_Detail>();
     String woUid=null;
 
 
@@ -201,13 +180,8 @@ public void repairWorkOrder(){
                }
            }
        }
-
-
-
    }
-    private String testMethod;
-    private String solution;
-    private String problemDes;
+
 
     public String getTestMethod() {
         return testMethod;
@@ -244,7 +218,6 @@ public void repairWorkOrder(){
         Page<V2_WorkOrder> pages = null;
         this.setSiteFilter();
         removeFilterOnField("status");
-
         if (queryIndex == 10) {
             searchFilters.add(new SearchFilter("status", SearchFilter.Operator.EQ, 3));
         }
@@ -305,18 +278,13 @@ private String comments;
         this.workOrderDetailsList = workOrderDetailsList;
     }
 
-   /* public List<UserAccount> findRepairPerson(){
-        List<UserAccount> assetResponser = woService.getAssetResponser(this.selectedWorkOrder.getAssetId());
-        return assetResponser;
-    }*/
-
     public List<UserAccount> findRepairPerson(){
         List<UserAccount> assetResponser=null;
         if(this.selectedWorkOrder!=null)
             assetResponser = woService.getAssetResponser(this.selectedWorkOrder.getAssetId());
         return assetResponser;
     }
-Date esTime;
+
 
     public Date getEsTime() {
         return esTime;
@@ -372,16 +340,12 @@ public void expenseDialogClose(){
     public List<V2_WorkOrder_Detail> getWOrkOrderDetail(String woId) {
         return woService.getWorkOrderDetails(woId);
     }
-    
-
 
     public List<UserAccount> getWorkerList(){
         return woService.getWorkerList();
     }
 
-
     public List<AssetFaultType> getAssetFaultType(){
-
         AssetInfo assetinfo = assetInfoRepository.findById(this.selectedWorkOrder.getAssetId());
         return assetFaultTypeService.getFaultTypeList(assetinfo.getAssetGroup());
     }
@@ -394,20 +358,6 @@ public void expenseDialogClose(){
     public void closeWorkOrder(){
         woService.closeWorkOrder(selectedWorkOrder,workOrderDetailsList);
         cancel();
-    }
-
-    public void test(){
-        //维修完成  V2_WorkOrder selectedWorkOrder, Date confirmedUpTime,Integer assetStatus,List<V2_WorkOrder_Detail> details   confirmedUpTime:恢复时间
-      //  woService.repairWorkOrder(selectedWorkOrder,null,1,workOrderDetailsList); //1表示正常
-        //转单 --V2_WorkOrder selectedWorkOrder, Integer assigneeId,String comments
-       // woService.reassignWorkOrder(selectedWorkOrder);
-        //新建工单 -- V2_WorkOrder selectedWorkOrder,Integer assigneeId, Integer assetSuatus,String reason,Integer extType
-        Integer assetId = selectedWorkOrder.getAssetId();
-       int assetStatus = assetInfoRepository.getById(assetId).getStatus();
-
-      //  woService.reCreateWorkOrder(selectedWorkOrder,null,assetStatus,null,null);
-
-
     }
 
     public void acceptWorkOrder(){
@@ -454,14 +404,6 @@ public void expenseDialogClose(){
 
     public void setManHours(Integer manHours) {
         this.manHours = manHours;
-    }
-
-    public List<V2_WorkOrder_Detail> getWodetailList() {
-        return wodetailList;
-    }
-
-    public void setWodetailList(List<V2_WorkOrder_Detail> wodetailList) {
-        this.wodetailList = wodetailList;
     }
 
     public Date getConfirmedUpDate() {

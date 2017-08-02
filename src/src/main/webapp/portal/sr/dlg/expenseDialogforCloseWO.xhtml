@@ -5,57 +5,49 @@
       xmlns:h="http://xmlns.jcp.org/jsf/html"
       xmlns:f="http://xmlns.jcp.org/jsf/core"
       xmlns:p="http://primefaces.org/ui">
-
 <ui:composition>
-
-    <p:dialog id="expenseDlg" widgetVar="expenseDlg" modal="true" width="500"  resizable="true" draggable="true" appendTo="@(body)" header="费用明细">
+    <p:dialog id="expenseDlg" widgetVar="expenseDlg" modal="true" width="500"  resizable="true" draggable="true" appendTo="@(body)" header="#{msg.expensedetail}">
         <h:form id="expenseDlgForm" >
             <h:panelGroup id="display41">
                 <p:panelGrid columns="2" layout="grid" styleClass="ui-panelgrid-blank form-group">
-
                     <h:panelGroup>
-                        <label class="label">工时(小时)</label>
+                        <label class="label">#{msg.manhourPrice}</label>
                         <p:inputText id="manHours" value="#{workOrderListController.itemDetail.manHours}" />
                     </h:panelGroup>
                     <h:panelGroup>
-                        <label class="label">备件名称</label>
+                        <label class="label">#{msg.accessory}</label>
                         <p:inputText id="parts" value="#{workOrderListController.itemDetail.parts}" />
                     </h:panelGroup>
                     <h:panelGroup>
-                        <label class="label">备件数量)</label>
+                        <label class="label">#{msg.accessoryQuantity}</label>
                         <p:inputText id="apartsQuantity" value="#{workOrderListController.itemDetail.apartsQuantity}" />
                     </h:panelGroup>
                     <h:panelGroup>
-                        <label class="label">备件单价(元)</label>
+                        <label class="label">#{msg.accessoryPrice}</label>
                         <p:inputText id="partsPrice" value="#{workOrderListController.itemDetail.partsPrice}" />
                     </h:panelGroup>
                     <h:panelGroup>
-                        <label class="label">其他费用(元)</label>
+                        <label class="label">#{msg.otherExpense}</label>
                         <p:inputText id="otherExpense" value="#{workOrderListController.itemDetail.otherExpense}" />
                     </h:panelGroup>
                     <h:panelGroup>
-
-                        <label class="label">协作者</label>
+                        <label class="label">#{msg.coworker}</label>
                         <p:selectOneMenu id="selectEmployee" value="#{workOrderListController.itemDetail.cowokerUserId}">
                             <f:selectItem itemLabel="#{msg.selectOneMessage}"/>
                             <f:selectItems value="#{workOrderListController.findRepairPerson()}" var="item1" itemLabel="#{item1.name}" itemValue="#{item1.id}"/>
                         </p:selectOneMenu>
-
                     </h:panelGroup>
                 </p:panelGrid>
                 <br/>
                 <h:panelGroup>
-                    <p:commandButton validateClient="true" actionListener="#{workOrderListController.saveDetail}" value="添加" update=":toCloseDialogForm :toCloseDialogForm:datalist :growl" rendered="#{workOrderListController.renderAddUpdate()}" icon="ui-icon-check" oncomplete="handleSubmit(args, 'expenseDlg');"/>
+                    <p:commandButton validateClient="true" actionListener="#{workOrderListController.saveDetail}" value="#{msg.Add}" update=":toCloseDialogForm :toCloseDialogForm:datalist :growl" rendered="#{workOrderListController.renderAddUpdate()}" icon="ui-icon-check" oncomplete="handleSubmit(args, 'expenseDlg');"/>
 
-                    <p:commandButton validateClient="true" actionListener="#{workOrderListController.updateEditDetail}" value="更新" update=":toCloseDialogForm :toCloseDialogForm:datalist :growl" rendered="#{!workOrderListController.renderAddUpdate()}" icon="ui-icon-check" oncomplete="handleSubmit(args, 'expenseDlg');"/>
+                    <p:commandButton validateClient="true" actionListener="#{workOrderListController.updateEditDetail}" value="#{msg.Edit}" update=":toCloseDialogForm :toCloseDialogForm:datalist :growl" rendered="#{!workOrderListController.renderAddUpdate()}" icon="ui-icon-check" oncomplete="handleSubmit(args, 'expenseDlg');"/>
 
-                    <p:commandButton validateClient="true" actionListener="#{workOrderListController.expenseDialogClose}" value="取消" update="toCloseDialogForm :growl" icon="ui-icon-check" oncomplete="handleSubmit(args, 'expenseDlg');"/>
+                    <p:commandButton validateClient="true" actionListener="#{workOrderListController.expenseDialogClose}" value="#{msg.Cancel}" update="toCloseDialogForm :growl" icon="ui-icon-check" oncomplete="handleSubmit(args, 'expenseDlg');"/>
                 </h:panelGroup>
             </h:panelGroup>
         </h:form>
-
-
     </p:dialog>
-
 </ui:composition>
 </html>
