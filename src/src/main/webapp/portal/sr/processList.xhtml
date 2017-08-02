@@ -33,8 +33,8 @@
                         <p:commandButton value="#{msg.Closed}" id="btn6" process="@this" update="datalist buttonSet :processDetailForm " actionListener="#{workOrderListController.searchList(7)}" disabled="#{workOrderListController.queryIndex==7}"/>
                         <p:commandButton value="#{msg.toClose}" id="btn8" process="@this" update="datalist buttonSet :processDetailForm " actionListener="#{workOrderListController.searchList(6)}" disabled="#{workOrderListController.queryIndex==6}"/>
 
-                      <!--  <p:commandButton value="我的" id="btn11" rendered="#{workOrderListController.queryIndex==3}" process="@this" update="datalist buttonSet :processDetailForm" actionListener="#{workOrderListController.searchList(6)}" disabled="#{workOrderListController.queryIndex==6}"/>
-                        <p:commandButton value="同组" id="btn12" rendered="#{workOrderListController.queryIndex==3}"  process="@this" update="datalist buttonSet :processDetailForm " actionListener="#{workOrderListController.defineCategory(12)}" disabled="#{workOrderListController.category==12}"/>-->
+                      <p:commandButton value="我的" id="btn11" rendered="#{workOrderListController.queryIndex==3}" process="@this" update="datalist buttonSet :processDetailForm" actionListener="#{workOrderListController.searchList(6)}" disabled="#{workOrderListController.queryIndex==6}"/>
+                        <p:commandButton value="同组" id="btn12" rendered="#{workOrderListController.queryIndex==3}"  process="@this" update="datalist buttonSet :processDetailForm " actionListener="#{workOrderListController.defineCategory(12)}" disabled="#{workOrderListController.category==12}"/>
                         <!--    <p:commandButton value="我的xx" id="btn21" rendered="#{workOrderListController.queryIndex==3}" process="@this" update="datalist buttonSet :processDetailForm" actionListener="#{workOrderListController.defineCategory(11)}" disabled="#{workOrderListController.category==11}"/>
 
 

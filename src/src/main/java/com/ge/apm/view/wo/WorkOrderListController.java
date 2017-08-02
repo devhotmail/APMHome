@@ -71,6 +71,7 @@ public class WorkOrderListController extends GenericCRUDUUIDController<V2_WorkOr
         itemDetail.setId(woUid);
         itemDetail.setManHours(0);
         workOrderDetailsList.add(itemDetail);
+
     }
     public boolean isManHours(){
        return  itemDetail.getManHours()==null?false:true;
