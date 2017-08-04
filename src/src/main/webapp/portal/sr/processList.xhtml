@@ -24,22 +24,19 @@
 
                 <h:form id="processListForm">
                     <h:panelGrid id="buttonSet" columns="7" cellpadding="5">
-                        <p:commandButton value="#{fieldMsg.fieldValue('woSteps',3)}" id="btn1" process="@this" update="datalist buttonSet :processDetailForm " actionListener="#{workOrderListController.searchList(3)}"  disabled="#{workOrderListController.queryIndex==3}" />
-                        <p:commandButton value="#{fieldMsg.fieldValue('woSteps',4)}" id="btn2" process="@this" update="datalist buttonSet :processDetailForm " actionListener="#{workOrderListController.searchList(4)}" disabled="#{workOrderListController.queryIndex==4}"/>
+                        <p:commandButton value="#{fieldMsg.fieldValue('woSteps',3)}" id="btn1" process="@this" update="datalist buttonSet :processDetailForm :processListForm " actionListener="#{workOrderListController.searchList(3)}"  disabled="#{workOrderListController.queryIndex==3}" />
+                        <p:commandButton value="#{fieldMsg.fieldValue('woSteps',4)}" id="btn2" process="@this" update="datalist buttonSet :processDetailForm :processListForm  " actionListener="#{workOrderListController.searchList(4)}" disabled="#{workOrderListController.queryIndex==4}"/>
 
 
-                        <p:commandButton value="#{msg.Canceled}" id="btn5" process="@this" update="datalist buttonSet :processDetailForm " actionListener="#{workOrderListController.searchList(10)}" disabled="#{workOrderListController.queryIndex==10}"/>
+                        <p:commandButton value="待验收" id="btn5" process="@this" update="datalist buttonSet :processDetailForm :processListForm " actionListener="#{workOrderListController.searchList(5)}" disabled="#{workOrderListController.queryIndex==5}"/>
 
-                        <p:commandButton value="#{msg.Closed}" id="btn6" process="@this" update="datalist buttonSet :processDetailForm " actionListener="#{workOrderListController.searchList(7)}" disabled="#{workOrderListController.queryIndex==7}"/>
-                        <p:commandButton value="#{msg.toClose}" id="btn8" process="@this" update="datalist buttonSet :processDetailForm " actionListener="#{workOrderListController.searchList(6)}" disabled="#{workOrderListController.queryIndex==6}"/>
-
-                        <!--    <p:commandButton value="我的xx" id="btn21" rendered="#{workOrderListController.queryIndex==3}" process="@this" update="datalist buttonSet :processDetailForm" actionListener="#{workOrderListController.defineCategory(11)}" disabled="#{workOrderListController.category==11}"/>
-                        <p:commandButton value="同院" id="btn13" rendered="#{workOrderListController.queryIndex==3}" process="@this" update="datalist buttonSet :processDetailForm " actionListener="#{workOrderListController.searchList(13)}" disabled="#{workOrderListController.queryIndex==6}"/>
-                        <p:commandButton value="他院" id="btn14"  rendered="#{workOrderListController.queryIndex==3}" process="@this" update="datalist buttonSet :processDetailForm " actionListener="#{workOrderListController.searchList(14)}" disabled="#{workOrderListController.queryIndex==6}"/>-->
+                        <p:commandButton value="#{msg.Closed}" id="btn6" process="@this" update="datalist buttonSet :processDetailForm :processListForm " actionListener="#{workOrderListController.searchList(7)}" disabled="#{workOrderListController.queryIndex==7}"/>
+                        <p:commandButton value="#{msg.toClose}" id="btn8" process="@this" update="datalist buttonSet :processDetailForm :processListForm " actionListener="#{workOrderListController.searchList(6)}" disabled="#{workOrderListController.queryIndex==6}"/>
                     </h:panelGrid>
                     <h:panelGrid columns="4">
-                      <!--  <p:commandButton value="我的" id="btn11" rendered="#{workOrderListController.queryIndex==3}" process="@this" update="datalist buttonSet :processDetailForm" actionListener="#{workOrderListController.my()}" disabled="#{workOrderListController.category==13}"/>
-                        <p:commandButton value="同组" id="btn12" rendered="#{workOrderListController.queryIndex==3}"  process="@this" update="datalist buttonSet :processDetailForm " actionListener="#{workOrderListController.sameteam}" disabled="#{workOrderListController.category==14}"/>-->
+                        <p:commandButton value="我的" id="btn11" rendered="#{workOrderListController.queryIndex==3}" process="@this" update="datalist buttonSet :processListForm :processDetailForm" actionListener="#{workOrderListController.defineCate(0)}" disabled="#{workOrderListController.category==0}"/>
+                        <p:commandButton value="同组" id="btn12" rendered="#{workOrderListController.queryIndex==3}"  process="@this" update="datalist buttonSet :processDetailForm :processListForm" actionListener="#{workOrderListController.defineCate(1)}" disabled="#{workOrderListController.category==1}"/>
+                        <p:commandButton value="同院" id="btn13" rendered="#{workOrderListController.queryIndex==3}"  process="@this" update="datalist buttonSet :processDetailForm :processListForm" actionListener="#{workOrderListController.defineCate(2)}" disabled="#{workOrderListController.category==2}"/>
                     </h:panelGrid>
                     <p:dataTable id="datalist" value="#{workOrderListController.lazyModel}" var="item" widgetVar="varDataList"
                                  selectionMode="single" selection="#{workOrderListController.selected}"
@@ -85,7 +82,7 @@
                         </p:column>
 
                         <p:column headerText="" rendered="#{workOrderListController.queryIndex==6}">
-                            <p:commandButton value="#{msg.Closed}" actionListener="#{workOrderListController.clickCloseOrder(item.id)}" update=":toCloseDialogForm" oncomplete="PF('toCloseDialog').show()"/>
+                            <p:commandButton value="#{msg.closeWo}" actionListener="#{workOrderListController.clickCloseOrder(item.id)}" update=":toCloseDialogForm" oncomplete="PF('toCloseDialog').show()"/>
                         </p:column>
 
                         <f:facet name="{Toolbar}">

@@ -12,6 +12,7 @@ import com.ge.apm.service.wo.V2_WorkOrderService;
 import com.ge.apm.view.sysutil.UserContextService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import webapp.framework.dao.GenericRepositoryUUID;
 import webapp.framework.dao.SearchFilter;
 import webapp.framework.web.WebUtil;
@@ -37,10 +38,10 @@ public class WorkOrderListController extends GenericCRUDUUIDController<V2_WorkOr
     private List<I18nMessage>   msgModeList;
     //status：0-待派工/1-待接单/2-维修中/3-已完成/4-已派工/10-已取消  待验收-5, 待关单-6, 已关单-7
     private Integer queryIndex;
-    private Integer category;
+    private Integer category=100;
     private boolean addOrUpdate;
     private V2_ServiceRequest selectedServiceRequest;
-    private BiomedGroupRepository groupDao;
+    //private BiomedGroupRepository groupDao;
     private V2_WorkOrder selectedWorkOrder;
     private AssetFaultTypeService assetFaultTypeService;
     private AssetInfoRepository assetInfoRepository;
@@ -56,7 +57,7 @@ public class WorkOrderListController extends GenericCRUDUUIDController<V2_WorkOr
         dao = WebUtil.getBean(V2_WorkOrderRepository.class);
         srDao = WebUtil.getBean(ServiceRequestRepository.class);
         woService = WebUtil.getBean(V2_WorkOrderService.class);
-        groupDao = WebUtil.getBean(BiomedGroupRepository.class);
+       // groupDao = WebUtil.getBean(BiomedGroupRepository.class);
         this.filterBySite = true;
         queryIndex = 3;
         ua = UserContextService.getCurrentUserAccount();
@@ -75,9 +76,7 @@ public class WorkOrderListController extends GenericCRUDUUIDController<V2_WorkOr
 
     }
 
-    /*public boolean showmy(){
-        if(queryIndex==3 &&)
-    }*/
+
     public boolean isManHours(){
        return  itemDetail.getManHours()==null?false:true;
     }
@@ -121,6 +120,9 @@ public class WorkOrderListController extends GenericCRUDUUIDController<V2_WorkOr
 
     public void repairWorkOrder(){
         //gl:1表示是正常
+        if(woUid!=null){ //没有添加任何detail，将初始化时默认的detail去掉
+            workOrderDetailsList=null;
+        }
         woService.repairWorkOrder(selectedWorkOrder,confirmedUpDate,1,workOrderDetailsList);
 
     }
@@ -221,50 +223,33 @@ public class WorkOrderListController extends GenericCRUDUUIDController<V2_WorkOr
         return dao;
     }
 
-
+    private PageRequest buildPageRequest(Integer pageNumber, int pagzSize) {
+        Sort sort = new Sort(Sort.Direction.DESC, "createdDate");
+        return new PageRequest(pageNumber, pagzSize, sort);
+    }
     @Override
     protected Page<V2_WorkOrder> loadData(PageRequest pageRequest) {
         Page<V2_WorkOrder> pages = null;
         this.setSiteFilter();
         removeFilterOnField("status");
-        if (queryIndex == 10) {
-            searchFilters.add(new SearchFilter("status", SearchFilter.Operator.EQ, 3));
-        }
-        if (queryIndex == 7) {
-            searchFilters.add(new SearchFilter("status", SearchFilter.Operator.EQ, 2));
-            removeFilterOnField("currentStepId");
-            searchFilters.add(new SearchFilter("currentStepId", SearchFilter.Operator.EQ, queryIndex));
-        }
-        if(queryIndex == 3)
-        { //待接单(queryIndex == 3)
-            removeFilterOnField("currentPersonId");
+        //7->已关单 3->待接单 4->维修中 6->待关单
+        if (queryIndex == 5 ||queryIndex == 3||queryIndex == 4||queryIndex == 6) {
             searchFilters.add(new SearchFilter("currentPersonId", SearchFilter.Operator.EQ, ua.getId()));
             searchFilters.add(new SearchFilter("status", SearchFilter.Operator.EQ, 1));
             removeFilterOnField("currentStepId");
             searchFilters.add(new SearchFilter("currentStepId", SearchFilter.Operator.EQ, queryIndex));
         }
-        if(queryIndex == 4)//维修中(queryIndex == 4)
-        {
-            removeFilterOnField("currentPersonId");
-             searchFilters.add(new SearchFilter("currentPersonId", SearchFilter.Operator.EQ, ua.getId()));
+        if ( queryIndex ==  7) {//已关单
+            searchFilters.add(new SearchFilter("currentPersonId", SearchFilter.Operator.EQ, ua.getId()));
             searchFilters.add(new SearchFilter("status", SearchFilter.Operator.EQ, 1));
             removeFilterOnField("currentStepId");
             searchFilters.add(new SearchFilter("currentStepId", SearchFilter.Operator.EQ, queryIndex));
         }
-        /*else {
-            if(queryIndex==3){
-                Integer groupCount = groupDao.getCountByHospital(ua.getSiteId(),ua.getHospitalId());
-                Sort sort = new Sort(Sort.Direction.DESC, "current_step_id");
-                PageRequest pr = new PageRequest(pageRequest.getPageNumber(), pageRequest.getPageSize(), sort);
-                pages= dao.fetchAvailableWorkOrderByUser(ua.getId(),pr);
-                pages= dao.findByHospitalIdAndStatusAndCurrentStepIdAndCurrentPersonIdIn(ua.getHospitalId(),1,3, Arrays.asList(-1,ua.getId()),pageRequest);
-                switch(category){
-                    case 11: pages = groupCount>0? dao.fetchAvailableWorkOrderByUser(ua.getId(),pageRequest):dao.findByHospitalIdAndStatusAndCurrentStepIdAndCurrentPersonIdIn(ua.getHospitalId(),1,3, Arrays.asList(-1,ua.getId()),pageRequest); break;
-                    case 12: pages =
+        if(category!=100 && queryIndex == 3 ){
+            pages =woService.getWorkOrderListToPickup(category,pageRequest,ua);
+            return pages;
+        }
 
-                }
-                return pages;
-        }}*/
         this.selected = null;
         if (this.searchFilters == null) {
             return dao.findAll(pageRequest);
@@ -321,11 +306,14 @@ public class WorkOrderListController extends GenericCRUDUUIDController<V2_WorkOr
         queryIndex = buttonIndex;
         cancel();
     }
-public void my(){
-        category =13;
+/*public void my(){
+        category =0;
 }
     public void sameteam(){
-        category =14;
+        category =1;
+    }*/
+    public void defineCate(int cate){
+category =cate;
     }
     public void cancel() {
         selected=null;
@@ -383,9 +371,11 @@ public void expenseDialogClose(){
     public void acceptWorkOrder(){
         String repairType =selectedWorkOrder.getRepairType().toString();
         woService.acceptWorkOrder(selectedWorkOrder,esTime,repairType,comments);
+        cancel();
     }
-    public void reassignWorkOrder(){
-        woService.reassignWorkOrder(selectedWorkOrder, selectedWorkOrder.getCurrentPersonId(), comments);
+    public void reassignWorkOrder(int step){
+        woService.reassignWorkOrder(step,selectedWorkOrder, selectedWorkOrder.getCurrentPersonId(), comments);
+        cancel();
     }
     
 

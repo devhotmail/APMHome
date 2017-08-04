@@ -40,6 +40,19 @@ public class BiomedGroup  implements Serializable {
     @Column(name = "group_name")
     private String groupName;
 
+
+    @Column(name="tenant_uid",columnDefinition = "CHAR(32)")
+    private String tenantUID;
+
+    @Column(name="institution_uid",columnDefinition = "CHAR(32)")
+    private String institutionUID;
+
+    @Column(name="hospital_uid",columnDefinition = "CHAR(32)")
+    private String hospitalUID;
+
+    @Column(name="site_uid",columnDefinition = "CHAR(32)")
+    private String siteUID;
+
     @JsonIgnore
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "biomedGroup", fetch = FetchType.LAZY)
     private List<BiomedGroupUser> biomedGroupUserList;
@@ -82,6 +95,38 @@ public class BiomedGroup  implements Serializable {
 
     public void setBiomedGroupUserList(List<BiomedGroupUser> biomedGroupUserList) {
         this.biomedGroupUserList = biomedGroupUserList;
+    }
+
+    public String getTenantUID() {
+        return tenantUID;
+    }
+
+    public void setTenantUID(String tenantUID) {
+        this.tenantUID = tenantUID;
+    }
+
+    public String getInstitutionUID() {
+        return institutionUID;
+    }
+
+    public void setInstitutionUID(String institutionUID) {
+        this.institutionUID = institutionUID;
+    }
+
+    public String getHospitalUID() {
+        return hospitalUID;
+    }
+
+    public void setHospitalUID(String hospitalUID) {
+        this.hospitalUID = hospitalUID;
+    }
+
+    public String getSiteUID() {
+        return siteUID;
+    }
+
+    public void setSiteUID(String siteUID) {
+        this.siteUID = siteUID;
     }
 
     @Override

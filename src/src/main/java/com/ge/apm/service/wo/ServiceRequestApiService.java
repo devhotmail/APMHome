@@ -12,6 +12,9 @@ import com.ge.apm.service.utils.*;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.List;
+import java.util.logging.Logger;
+
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.ResponseEntity;
@@ -23,7 +26,7 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class ServiceRequestApiService extends MicroServiceInvoker {
-
+    private org.slf4j.Logger logger = LoggerFactory.getLogger(getClass());
     @Value("#{urlProperties.url_serviceRequestCreate}")
     private String url_serviceRequestCreate;
     @Value("#{urlProperties.url_workOrderAction}")
@@ -57,6 +60,7 @@ public class ServiceRequestApiService extends MicroServiceInvoker {
         ResponseEntity<LinkedHashMap> response = template.postForEntity(url, requestEntity, LinkedHashMap.class);
         if (isOkay(response)) {
             LinkedHashMap<String, Object> responseMap = (LinkedHashMap<String, Object>) response.getBody();
+           logger.info("Invoke WorkOrderAction "+actionName+" has finished "+responseMap.get("data"));
             return (String) responseMap.get("data");
         } else {
             return null;

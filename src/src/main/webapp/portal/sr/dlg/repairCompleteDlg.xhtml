@@ -49,7 +49,7 @@
                             <p:dataTable id="datalist" class="uiTransparent" value="#{workOrderListController.workOrderDetailsList}" var="item" widgetVar="varStepDetailDataList" lazy="false" paginator="false"
                                          rowKey="#{item.id}" rows="1000" emptyMessage="#{msg.noRecordFound}">
                                 <p:column headerText="#{msg.manHours}">
-                                    <h:outputText value="#{item.manHours}"/>
+                                    <h:outputText value="#{item.manHours}" />
                                 </p:column>
                                 <p:column headerText="#{msg.accessory}">
                                     <h:outputText value="#{item.parts}"/>
@@ -106,7 +106,7 @@
 
             </h:panelGroup>
             <h:panelGroup>
-                <p:commandButton validateClient="true" actionListener="#{workOrderListController.reassignWorkOrder()}" value="#{msg.transfer}" update=":transferOrderDialogForm1 :growl :processListForm:datalist" icon="ui-icon-check" oncomplete="handleSubmit(args, 'transferOrderDialog1')" onclick="PF('repairCompleteDialog').hide();('transferOrderDialog1').hide()"/>
+                <p:commandButton validateClient="true" actionListener="#{workOrderListController.reassignWorkOrder(4)}" value="#{msg.transfer}" update=":transferOrderDialogForm1 :growl :processListForm:datalist" icon="ui-icon-check" oncomplete="handleSubmit(args, 'transferOrderDialog1')" onclick="PF('repairCompleteDialog').hide();('transferOrderDialog1').hide()"/>
                 <p:commandButton immediate="true" value="#{msg.Cancel}" icon="ui-icon-cancel" onclick="PF('transferOrderDialog1').hide()"/>
             </h:panelGroup>
         </h:form>

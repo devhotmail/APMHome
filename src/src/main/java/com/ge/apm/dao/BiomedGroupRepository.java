@@ -10,4 +10,11 @@ import webapp.framework.dao.GenericRepository;
 public interface BiomedGroupRepository extends GenericRepository<BiomedGroup> {
     @Query("select count(*) from BiomedGroup bg where bg.siteId=?1 and bg.hospitalId=?2")
     public Integer getCountByHospital(Integer siteId,Integer hospitalId);
+
+    @Query("select count(*) from BiomedGroup where institutionUID = ?1")
+    public Integer getCountByUserOrgLevel1(String institutionUid);
+    @Query("select count(*) from BiomedGroup where hospitalUID = ?1")
+    public Integer getCountByUserOrgLevel2(String hospitalUid);
+    @Query("select count(*) from BiomedGroup where siteUID = ?1")
+    public Integer getCountByUserOrgLevel3(String siteUid);
 }

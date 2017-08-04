@@ -5,12 +5,7 @@
  */
 package com.ge.apm.service.wo;
 
-import com.ge.apm.dao.AssetInfoRepository;
-import com.ge.apm.dao.ServiceRequestRepository;
-import com.ge.apm.dao.UserAccountRepository;
-import com.ge.apm.dao.V2_WorkOrderRepository;
-import com.ge.apm.dao.V2_WorkOrderStepRepository;
-import com.ge.apm.dao.WorkOrderDetailRepository;
+import com.ge.apm.dao.*;
 import com.ge.apm.domain.AssetInfo;
 import com.ge.apm.domain.UserAccount;
 import com.ge.apm.domain.V2_ServiceRequest;
@@ -25,7 +20,10 @@ import java.util.Map;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Component;
+import webapp.framework.dao.SearchFilter;
 import webapp.framework.web.WebUtil;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -36,6 +34,9 @@ import java.util.stream.Collectors;
  */
 @Component
 public class V2_WorkOrderService {
+
+    @Autowired
+    private BiomedGroupRepository groupDao;
 
     @Autowired
     private V2_WorkOrderRepository woDao;
@@ -154,10 +155,11 @@ public class V2_WorkOrderService {
     }
 
     public void acceptWorkOrder(V2_WorkOrder selectedWorkOrder, Date estimatedCloseTime, String extType,String comments) {
-        V2_WorkOrder tmpwo=woDao.findById(selectedWorkOrder.getId());
+        //V2_WorkOrder tmpwo=woDao.findById(selectedWorkOrder.getId());
+        selectedWorkOrder.setCurrentStepId(3);
         String token = UserContextService.getAccessToken();
         WorkOrderActionForm formData = new WorkOrderActionForm();
-        formData.setCurrentStepId(tmpwo.getCurrentStepId());
+        formData.setCurrentStepId(3);
         formData.setEstimatedCloseTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(estimatedCloseTime));
         formData.setIntExtType(extType);
         formData.setDesc(comments);
@@ -165,13 +167,16 @@ public class V2_WorkOrderService {
         if (res==null || !res.contains("success")) {
             WebUtil.addErrorMessage(WebUtil.getMessage("OperationFail"),"接单");
         }
+        selectedWorkOrder.setCurrentStepId(4);
     }
 
     public void takeWorkOrder(V2_WorkOrder selectedWorkOrder, Date takeTime, String taker) {
-        V2_WorkOrder tmpwo=woDao.findById(selectedWorkOrder.getId());
+        //V2_WorkOrder tmpwo=woDao.findById(selectedWorkOrder.getId());
+        selectedWorkOrder.setCurrentStepId(3);
+        selectedWorkOrder.setCurrentStepName("待接单");
         String token = UserContextService.getAccessToken();
         WorkOrderActionForm formData = new WorkOrderActionForm();
-        formData.setCurrentStepId(tmpwo.getCurrentStepId());
+        formData.setCurrentStepId(selectedWorkOrder.getCurrentStepId());
         formData.setTakeTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(takeTime));
         formData.setEquipmentTaker(taker);
         String res = srApi.invokeWorkOrderAction(token,formData,"take",selectedWorkOrder.getId());
@@ -180,11 +185,17 @@ public class V2_WorkOrderService {
         }
     }
 
-    public void reassignWorkOrder(V2_WorkOrder selectedWorkOrder, Integer assigneeId,String comments) {
-        V2_WorkOrder tmpwo=woDao.findById(selectedWorkOrder.getId());
+    public void reassignWorkOrder(int step, V2_WorkOrder selectedWorkOrder, Integer assigneeId,String comments) {
+       // V2_WorkOrder tmpwo=woDao.findById(selectedWorkOrder.getId());
+        selectedWorkOrder.setCurrentStepId(step);
+        if(step==3){
+            selectedWorkOrder.setCurrentStepName("待接单");
+        }else{
+            selectedWorkOrder.setCurrentStepName("维修中");
+        }
         String token = UserContextService.getAccessToken();
         WorkOrderActionForm formData = new WorkOrderActionForm();
-        formData.setCurrentStepId(tmpwo.getCurrentStepId());
+        formData.setCurrentStepId(step);
         formData.setAssigneeId(String.valueOf(assigneeId));
         formData.setDesc(comments);
         String res = srApi.invokeWorkOrderAction(token,formData,"reassign",selectedWorkOrder.getId());
@@ -195,10 +206,12 @@ public class V2_WorkOrderService {
 
     public void repairWorkOrder(V2_WorkOrder selectedWorkOrder, Date confirmedUpTime,Integer assetStatus,List<V2_WorkOrder_Detail> details) {
 
-        V2_WorkOrder tmpwo=woDao.findById(selectedWorkOrder.getId());
+       // V2_WorkOrder tmpwo=woDao.findById(selectedWorkOrder.getId());
+        selectedWorkOrder.setCurrentStepId(4);
         String token = UserContextService.getAccessToken();
         WorkOrderActionForm formData = new WorkOrderActionForm();
-        formData.setCurrentStepId(tmpwo.getCurrentStepId());
+        formData.setCurrentStepId(4);
+        selectedWorkOrder.setCurrentStepName("维修中");
         formData.setDesc(selectedWorkOrder.getComment());
         formData.setIntExtType(selectedWorkOrder.getIntExtType().toString());
         formData.setPatActions(selectedWorkOrder.getPatActions());
@@ -215,10 +228,13 @@ public class V2_WorkOrderService {
     }
 
     public void closeWorkOrder(V2_WorkOrder selectedWorkOrder, List<V2_WorkOrder_Detail> details) {
-        V2_WorkOrder tmpwo=woDao.findById(selectedWorkOrder.getId());
+
         String token = UserContextService.getAccessToken();
         WorkOrderActionForm formData = new WorkOrderActionForm();
-        formData.setCurrentStepId(tmpwo.getCurrentStepId());
+        selectedWorkOrder.setCurrentStepId(6);
+        selectedWorkOrder.setCurrentStepName("待关单");
+        formData.setCurrentStepId(6);
+
         formData.setDesc(selectedWorkOrder.getComment());
         formData.setIntExtType(selectedWorkOrder.getIntExtType().toString());
         formData.setPatActions(selectedWorkOrder.getPatActions());
@@ -289,6 +305,40 @@ public class V2_WorkOrderService {
             e.printStackTrace();
         }
         return userListTag;
+    }
+//Type：0-我的/1-同一group的/2-同院区的/3-其它院区的
+    public Page<V2_WorkOrder> getWorkOrderListToPickup(int type,PageRequest pr, UserAccount ua) {
+       //PageRequest pr = buildPageRequest(page, pageSize);
+        Page<V2_WorkOrder> pages = null;
+        //base on the orgLevel
+        Integer orgLevel = ua.getOrgLevel();
+        if (orgLevel == null || orgLevel == 0)
+            orgLevel = 3;
+        Integer groupCount = 0;
+        List<SearchFilter> searchFilters = new ArrayList<>();
+        switch (orgLevel) {
+            case 1: searchFilters.add(new SearchFilter("institutionUID", SearchFilter.Operator.EQ, ua.getInstitutionUID()));
+                groupCount = groupDao.getCountByUserOrgLevel1(ua.getInstitutionUID());break;
+            case 2: searchFilters.add(new SearchFilter("hospitalUID", SearchFilter.Operator.EQ, ua.getHospitalUID()));
+                groupCount = groupDao.getCountByUserOrgLevel2(ua.getHospitalUID());break;
+            case 3: searchFilters.add(new SearchFilter("siteUID", SearchFilter.Operator.EQ, ua.getSiteUID()));
+                groupCount = groupDao.getCountByUserOrgLevel3(ua.getSiteUID());
+        }
+        if (groupCount > 0 && (type == 0 || type == 1)) {
+            switch(type) {
+                case 0: pages = woDao.fetchAvailableWorkOrderByUser(ua.getId(), pr);break;
+                case 1: pages = woDao.fetchAvailableSameGroupWorkOrderByUser(ua.getId(),pr);
+            }
+            return pages;
+        }
+
+        searchFilters.add(new SearchFilter("status", SearchFilter.Operator.EQ, 1));
+        searchFilters.add(new SearchFilter("currentStepId", SearchFilter.Operator.EQ, 3));
+        if(type == 0) {
+            searchFilters.add(new SearchFilter("currentPersonId", SearchFilter.Operator.IN, Arrays.asList(-1,ua.getId())));
+        }
+
+        return woDao.findBySearchFilter(searchFilters, pr);
     }
 
 }
